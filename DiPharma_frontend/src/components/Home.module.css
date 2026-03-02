@@ -1,0 +1,358 @@
+.hero {
+    position: relative;
+    min-height: 100vh;
+     background:url("../assets/home_background.png");
+    background-size: cover;        /* KEY */
+    background-position: center;   /* KEY */
+    background-repeat: no-repeat;
+    /* Subtle glowing center */
+    color: white;
+    overflow: hidden;
+    padding-top: 100px;
+    /* Space for fixed header */
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 1400px;
+    /* Wider container */
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+}
+
+/* --- Text Section --- */
+.textContainer {
+    text-align: center;
+    margin-top: 3rem;
+    z-index: 10;
+}
+
+.title {
+    font-size: 62px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #FFFFFF;
+}
+
+.subtitle {
+    font-size: 24px;
+    color: #E3E3E3;
+    line-height: 1.5;
+}
+
+/* --- Visuals Section --- */
+.visualsContainer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -80px;
+    /* 🔥 PUSH DOWN */
+    height: 70%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 1;
+    pointer-events: none;
+}
+
+
+/* --- Bottom Elements --- */
+.bottomLeft {
+    
+    width: 100%;
+    max-width: 550px;
+}
+
+.social {
+    position: absolute;
+    bottom: 70px;
+    left: 125px;
+    font-size: 20px;
+    z-index: 40;
+}
+
+.social span {
+    color: #FFFFFF;
+    font-weight: 500;
+}
+
+.social a {
+    color: #68769D;
+    margin: 0 5px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.networkSvg {
+    width: 100%;
+    max-width: 900px;
+    margin: auto;
+}
+
+.svgWrapper {
+    width: 620px;
+    /* 🔽 reduce size here */
+    max-width: 100%;
+    margin: 0px auto 0;
+}
+
+.svgWrapper svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+
+.exploreWrapper {
+    background: white;
+    padding: 1.5rem 3rem;
+    display: inline-block;
+    /* Use clip-path or absolute + width to mimicking the "sticking out" look */
+    width: 450px;
+    /* clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%); */
+    text-align: right;
+}
+
+.exploreButton {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    font-weight: 500;
+    color: #191538;
+    text-align: right;
+    cursor: pointer;
+}
+
+.bottomRight {
+    position: absolute;
+    bottom: 20px;
+    right: 60px;
+    text-align: left;
+    max-width: 400px;
+    padding-right: 20px;
+}
+
+.bottomRight p {
+    color: #7C8DBC;
+    font-size: 20px;
+    line-height: 1.6;
+}
+
+.bottomRight strong {
+    color: white;
+}
+
+@media (max-width: 1024px) {
+    .hero{
+        min-height: 80vh;
+    }
+    .visualsContainer {
+        transform: scale(0.8);
+    }
+
+    .title {
+        font-size: 48px;
+    }
+
+    .subtitle {
+        font-size: 20px;
+    }
+    /* Keep bottomLeft and bottomRight side by side */
+    .bottomLeft {
+        position: relative;
+        bottom: 60px;
+        left: 10px;
+        max-width: 45%;
+    }
+
+    .social {
+        position: relative;
+        bottom: 0px;
+        left: 20px;
+        font-size: 16px;
+        margin-bottom: 1rem;
+    }
+    .bottomRight{
+        max-width: 45%;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero{
+        min-height: fit-content;
+        padding-bottom: 30px;
+    }
+    .title {
+        font-size: 36px;
+    }
+
+    .subtitle {
+        font-size: 18px;
+    }
+
+    .visualsContainer {
+        height: 400px;
+        margin-bottom: 50px;
+    }
+
+    .isometricGrid {
+        transform: rotateX(60deg) rotateZ(-45deg) scale(0.6);
+    }
+
+    /* Keep bottomLeft and bottomRight side by side */
+    .bottomLeft {
+        left: 10px;
+        max-width: 45%;
+    }
+
+    .social {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        font-size: 16px;
+        margin-bottom: 1rem;
+    }
+
+    .exploreWrapper {
+        width: 100%;
+        max-width: 250px;
+        padding: 1rem 2rem;
+        text-align: center;
+    }
+
+    .exploreButton {
+        font-size: 18px;
+    }
+
+    .bottomRight {
+        position: static;
+        bottom: 40px;
+         margin-left: auto;
+        max-width: 45%;
+    }
+
+    .bottomRight p {
+        font-size: 16px;
+    }
+    
+}
+
+@media (max-width: 480px) {
+    .textContainer{
+        margin-top: 8px;
+    }
+    .subtitle{
+        font-size: 16px;
+    }
+    /* Keep bottomLeft and bottomRight side by side */
+    .bottomLeft {
+        position: relative;
+        left: 10px;
+        max-width: 45%;
+        bottom: -100px;
+    }
+
+    .social {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        font-size: 16px;
+        margin-bottom: 1rem;
+    }
+
+    .exploreWrapper {
+        width: 100%;
+        max-width: 250px;
+        padding: 1rem 2rem;
+        text-align: center;
+    }
+
+    .exploreButton {
+        font-size: 18px;
+    }
+
+    .bottomRight {
+        bottom: 90px;
+        right: 10px;
+        max-width: 45%;
+    }
+
+    .bottomRight p {
+        font-size: 16px;
+    }
+    
+}
+@media (max-width: 420px) {
+    .social{
+        font-size: 14px;
+    }
+    .bottomRight p{
+        font-size: 14px;
+    }
+    .subtitle{
+        font-size: 14px;
+    }
+    
+}
+
+@media (max-width: 390px) {
+    .container {
+        max-width: 390px;
+    }
+    .title {
+        font-size: 24px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+
+    .bottomLeft {
+        left: 5px;
+        max-width: 48%;
+        bottom: -45px;
+    }
+    .social {
+        font-size: 10px;
+    }
+
+    .social a {
+        margin: 0 2px;
+        font-size: 10px;
+    }
+
+    .exploreWrapper {
+        max-width: 160px;
+        padding: 0.75rem 1rem;
+    }
+
+    .exploreButton {
+        font-size: 12px;
+    }
+
+    .bottomRight {
+        bottom: 30px;
+        right: 3px;
+        max-width: 40%;
+    }
+
+    .bottomRight p {
+        font-size: 10px;
+        line-height: 1.2;
+    }
+}
+
+@media (max-width: 345px) {
+    .subtitle{
+        font-size: 10px;
+    }
+}

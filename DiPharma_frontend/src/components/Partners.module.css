@@ -1,0 +1,410 @@
+.partners {
+    position: relative;
+    width: 100%;
+    min-height: 600px;
+    padding: 80px 0;
+    z-index: 1;
+    background-image: url('../assets/about/globe.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* .globeContainer {
+  position: relative;
+  width: 100%;
+  height: 500px;
+} */
+
+
+.header h2 {
+    font-size: 48px;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.logos {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    opacity: 0.7;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    color: #FFFFFF87;
+}
+
+/* brands strip */
+/* OUTER WRAPPER */
+.brandsWrapper {
+    width: 100%;
+    overflow: hidden;
+    height: 100px;
+}
+
+/* BRAND STRIP */
+.brands_section {
+    padding: 10px 0;
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    gap: 58px;
+
+    width: max-content;
+    animation: marqueeScroll 18s linear infinite;
+}
+
+/* BRAND STYLE (UNCHANGED) */
+.brand_pills {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 28px;
+    color: #FFFFFF87;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.brand_image {
+    opacity: 53%;
+    width: 48px;
+    height: 48px;
+}
+
+.brandImage {
+    height: 80px;
+    opacity: 53%;
+}
+.g7{
+    height: 100px;
+    opacity: 53%;
+}
+
+/* 🔑 TRUE INFINITE MARQUEE */
+@keyframes marqueeScroll {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+
+
+/* Globe Container */
+.globeContainer {
+    height: 570px;
+    /* Visible height */
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* Align top of container */
+    overflow: hidden;
+    margin-top: 2rem;
+}
+
+.globe {
+    width: 900px;
+    height: 900px;
+    /* Big sphere */
+    position: relative;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 30%, #2563eb 0%, #0f172a 60%, #000 100%);
+    box-shadow: 0 0 100px rgba(37, 99, 235, 0.3), inset 0 0 60px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    /* Key to half-globe: shift it down so only top arc is visible in container */
+    margin-top: 50px;
+}
+
+.sphereSurface {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(37, 99, 235, 0.1) 0%, transparent 80%);
+    z-index: 1;
+}
+
+.meshSvg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0.5;
+    transform: scale(1.05);
+    /* Slightly larger than sphere surface */
+}
+
+/* Simulated Map Texture */
+.mapTexture {
+    position: absolute;
+    inset: 0;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_map_blank_without_borders.svg/2000px-World_map_blank_without_borders.svg.png');
+    background-size: 140%;
+    background-position: 50% 20%;
+    opacity: 0.2;
+    mix-blend-mode: screen;
+    z-index: 1;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+}
+
+/* Pins */
+.pinWrapper {
+    position: absolute;
+    width: 40px;
+    height: 60px;
+    transform: translate(-50%, -100%);
+    /* Bottom centered on coordinate */
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pinHead {
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+}
+
+.pinCenter {
+    width: 10px;
+    height: 10px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    transform: rotate(45deg);
+    /* Counter rotate */
+}
+
+.pinPulse {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translateX(-50%) scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateX(-50%) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Particles/Network Nodes */
+.particles {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #60a5fa;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #60a5fa;
+    animation: flicker 3s infinite alternate;
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+
+/* Responsive Styles */
+
+/* Laptop (1024px - 1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+    .partners {
+        min-height: 550px;
+        padding: 60px 0;
+    }
+
+    .header h2 {
+        font-size: 42px;
+    }
+
+    .globeContainer {
+        height: 500px;
+    }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .partners {
+        min-height: 500px;
+        padding: 50px 0;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .header h2 {
+        font-size: 36px;
+        margin-bottom: 1.5rem;
+    }
+
+    .brands_section {
+        height: 35px;
+
+    }
+
+    .brand_pills {
+        font-size: 22px;
+        gap: 8px;
+    }
+
+    .brand_image {
+        width: 20px;
+        height: 20px;
+    }
+
+    .brandImage {
+        height: 40px;
+        opacity: 53%;
+    }
+    .g7{
+        height: 60px;
+        opacity: 53%;
+    }
+
+    .globeContainer {
+        height: 450px;
+        margin-top: 1.5rem;
+    }
+
+    .globe {
+        width: 600px;
+        height: 600px;
+    }
+}
+
+/* Mobile (up to 767px) */
+@media (max-width: 767px) {
+    .partners {
+        min-height: 350px;
+        padding: 40px 0;
+        background-size: cover;
+        background-position: center center;
+    }
+
+    .header h2 {
+        font-size: 28px;
+        margin-bottom: 1.25rem;
+    }
+
+    .brand_pills {
+        font-size: 18px;
+        gap: 6px;
+        height: 40px;
+    }
+
+    .brand_pills svg {
+        height: 40px;
+        width: 40px;
+    }
+
+    .brand_image {
+        width: 32px;
+        height: 32px;
+    }
+
+    .brandImage {
+        height: 45px;
+        opacity: 53%;
+    }
+    .g7{
+        height: 55px;
+        opacity: 53%;
+    }
+
+    .brands_section {
+        gap: 40px;
+        height: 50px;
+    }
+
+    .globeContainer {
+        height: 400px;
+        margin-top: 1.25rem;
+    }
+
+    .globe {
+        width: 500px;
+        height: 500px;
+    }
+}
+
+/* Extra small mobile */
+@media (max-width: 390px) {
+    .partners {
+        min-height: auto;
+        padding: 30px 0;
+    }
+
+    .header h2 {
+        font-size: 24px;
+    }
+
+    .brand_pills {
+        height: 30px;
+    }
+
+    .brand_pills svg {
+        height: 30px;
+        width: 30px;
+    }
+
+    .brand_image {
+        width: 28px;
+        height: 28px;
+    }
+
+    .brandImage {
+        height: 38px;
+        opacity: 53%;
+    }
+    .g7{
+        height: 45px;
+        opacity: 53%;
+    }
+
+    .globeContainer {
+        height: 250px;
+    }
+
+    .globe {
+        width: 250px;
+        height: 250px;
+    }
+}

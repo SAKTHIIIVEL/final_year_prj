@@ -1,0 +1,33 @@
+.map-section {
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    #1f2a83 0%,
+    #1b2f73 45%,
+    #0b1347 100%
+  );
+}
+
+.map-container {
+  width: 100%;
+  height: 750px;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+@media (max-width: 640px) {
+  .map-container {
+    height: 300px;
+  }
+}
+

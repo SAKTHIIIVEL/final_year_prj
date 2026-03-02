@@ -1,0 +1,70 @@
+.iso-container {
+  width: 100%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iso-container svg {
+  width: 620px;
+  height: 510px;
+  position: relative;
+  bottom: 70px;
+}
+
+.server {
+  transition: transform 0.4s ease;
+  cursor: pointer;
+}
+
+.shadow {
+  fill: black;
+  opacity: 0.25;
+}
+
+.connection {
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+  opacity: 0.3;
+  animation: dash 2s linear infinite;
+}
+
+.connection.active {
+  opacity: 1;
+  stroke-width: 3;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.status {
+  fill: #4ade80;
+  animation: pulse 1.6s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
+
+@media (max-width: 390px) {
+  .iso-container svg {
+    bottom: 50px;
+    width: 390px;
+    height: 350px;
+  }
+}

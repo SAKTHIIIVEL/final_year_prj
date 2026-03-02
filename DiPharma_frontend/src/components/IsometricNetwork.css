@@ -1,0 +1,79 @@
+.network-svg {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+}
+
+/* ===== BUILDINGS ===== */
+.building polygon {
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+}
+
+.building .top {
+  fill: #eaf1ff;
+}
+
+.building .left {
+  fill: #1e3a8a;
+}
+
+.building .right {
+  fill: #3b82f6;
+}
+
+/* Hover glow & pulse */
+.building:hover {
+  filter: url(#glow);
+  animation: pulse 1.6s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+/* Center building glow */
+.building.glow {
+  filter: url(#glow);
+}
+
+/* ===== DATA FLOW ===== */
+.flow-line {
+  stroke: #60a5fa;
+  stroke-width: 2;
+  fill: none;
+  stroke-dasharray: 6 8;
+  animation: flow 2s linear infinite;
+}
+
+.building {
+   /* start lower */
+  opacity: 0;
+  transition: transform 1.5s ease-out, opacity 1.5s ease-out;
+}
+
+.building.active {
+  transform: translate(0px, -35px); /* final position */
+  opacity: 1;
+}
+
+.base {
+  transform: translateY(0);
+  transition: transform 1.5s ease-out;
+}
+
+.base.active {
+  transform: translateY(10px); /* moves down slightly */
+}
+
+
+@keyframes flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -28;
+  }
+}

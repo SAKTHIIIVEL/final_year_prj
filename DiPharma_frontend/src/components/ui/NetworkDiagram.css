@@ -1,0 +1,1076 @@
+/* ================= WRAPPER ================= */
+.diagram-wrapper {
+  width: 100%;
+  height: 610px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden; /* 🔥 important */
+  z-index: 10;
+}
+
+
+/* ================= MAIN DIAGRAM ================= */
+.diagram {
+  position: relative;
+  width: 700px;
+  height: 510px;
+  margin: auto;
+  background: transparent;
+  transition: transform 0.3s ease;
+}
+
+/* ================= SVG ================= */
+.connections {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* .connections path {
+  fill: none;
+  stroke: #0B0D25;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+} */
+
+.base-line {
+  fill: none;
+  stroke: #0B0D25;
+  stroke-width: 4;
+  opacity: 0.45;
+}
+
+
+/* Animated data flow */
+.flow {
+  fill: none;
+  stroke: #2634F6;
+  stroke-width: 6;
+  stroke-linecap: round;
+
+  stroke-dasharray: 60 1000;
+  stroke-dashoffset: 1100;
+  animation-fill-mode: both;
+  will-change: stroke-dashoffset, opacity;
+
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+
+  filter:
+    drop-shadow(0 0 10px rgba(103, 175, 242, 0.897))
+    drop-shadow(0 0 20px rgba(107, 152, 235, 0.692));
+
+  opacity: 0;
+}
+
+
+
+
+/* Slower secondary paths */
+.flow.slow {
+  animation-duration: 3.8s;
+  opacity: 0.6;
+}
+
+/* Glow pulse */
+.flow {
+  filter: drop-shadow(0 0 6px rgba(80, 159, 255, 0.689));
+}
+
+/* ================= KEYFRAMES ================= */
+
+@keyframes dataFlow {
+  0% {
+    stroke-dashoffset: -120;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 1;
+  }
+  65% {
+    opacity: 0.5;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+
+
+.center-out {
+  animation: centerFlow 12s linear infinite;
+}
+
+@keyframes centerFlow {
+  /* idle */
+  0%   { opacity: 0; stroke-dashoffset: -460; }
+
+  /* active */
+  8%   { opacity: 1; }
+  30%  { opacity: 1; stroke-dashoffset: 0; }
+
+  /* stop */
+  35%  { opacity: 0; }
+
+  /* silent for rest of cycle */
+  100% { opacity: 0; }
+}
+
+
+/* .delay-0 { animation-delay: 0s; }
+.delay-1 { animation-delay: 0.3s; } */
+
+.relay {
+  animation: relayFlow 12s linear infinite;
+animation-fill-mode: both; /* 🔒 CRITICAL */
+}
+
+@keyframes relayFlow {
+  /* packet fully hidden & outside */
+  0%   { opacity: 0; stroke-dashoffset: 1000; }
+  49%  { opacity: 0; stroke-dashoffset: 1000; }
+
+  /* appear at source */
+  50%  { opacity: 1; stroke-dashoffset: 1000; }
+
+  /* slow travel */
+  90%  { opacity: 1; stroke-dashoffset: 0; }
+
+  /* 🔒 FADE FIRST (packet ends cleanly) */
+  92%  { opacity: 0; stroke-dashoffset: 0; }
+
+  /* 🔒 RESET AFTER INVISIBLE */
+  100% { opacity: 0; stroke-dashoffset: 1000; }
+}
+
+
+/* .delay-2 { animation-delay: 0.9s; }
+.delay-3 { animation-delay: 1.2s; }
+.delay-4 { animation-delay: 1.5s; } */
+
+/* ================= BUILDINGS ================= */
+/* .server {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  z-index: 2;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55));
+} */
+.server {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  z-index: 2;
+
+  /* base transform */
+  transform: translate3d(0, 0, 0) scale(1);
+
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55));
+
+  animation: floatServer 4s ease-in-out infinite;
+
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.35s ease;
+}
+
+@keyframes floatServer {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) rotate(0.4deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+.server-wrap {
+  position: absolute;
+  z-index: 2;
+
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.35s ease;
+}
+
+/* ================= HOVER BUTTON ================= */
+.server-btn {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%) translateY(14px);
+
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 400;
+  font-family: 'Poppins', sans-serif;
+
+  color: black;
+  background: #ffffff;
+  border: none;
+  border-radius: 8px;
+  z-index: 33;
+  cursor: pointer;
+
+  opacity: 0;
+  pointer-events: none;
+
+  animation:
+    btnReveal 0.6s ease forwards,
+    btnFloat 2.4s ease-in-out infinite;
+
+  animation-delay:
+    var(--btn-delay),
+    calc(var(--btn-delay) + 0.6s);
+
+  box-shadow: 0 8px 18px rgba(38, 52, 246, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 🔥 key */
+  gap: 8px;
+  max-width: 200px;      /* 🔒 control width */
+  white-space: nowrap;
+}
+
+@keyframes btnReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(14px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+    pointer-events: auto;
+  }
+}
+@keyframes btnFloat {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-6px);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.lt  { --btn-delay: 0.4s; }
+.rt  { --btn-delay: 0.8s; }
+.lb  { --btn-delay: 1.2s; }
+.rb  { --btn-delay: 1.6s; }
+
+.wl  { --btn-delay: 2s; }
+.wr  { --btn-delay: 2.4s; }
+
+.center { --btn-delay: 3s; }
+
+.btn-text {
+  flex: 1;
+}
+.btn-arrow {
+  flex-shrink: 0; 
+  width: 0;
+  overflow: hidden;
+  transition: width 0.4s ease;
+}
+.btn-arrow svg {
+  transform: scale(0.9);
+  transform-origin: center;
+}
+.server-wrap:hover .btn-arrow {
+  width: 26px;
+}
+
+.btn-arrow path.one {
+  transform: translateX(-60%);
+  transition: 0.4s;
+}
+
+.btn-arrow path.two {
+  transform: translateX(-30%);
+  transition: 0.5s;
+}
+
+.server-wrap:hover .btn-arrow path.one,
+.server-wrap:hover .btn-arrow path.two {
+  transform: translateX(0);
+}
+
+@keyframes arrowPulse {
+  0% { fill: #000; }
+  50% { fill: #4f7cff; }
+  100% { fill: #000; }
+}
+
+/* FORWARD FLOW (left ➜ right) */
+
+.server-wrap:hover .btn-arrow path.one {
+  animation: arrowPulse 1s infinite 0.4s;
+}
+
+.server-wrap:hover .btn-arrow path.two {
+  animation: arrowPulse 1s infinite 0.2s;
+}
+
+.server-wrap:hover .btn-arrow path.three {
+  animation: arrowPulse 1s infinite 0s;
+}
+
+/* ================= RIGHT SIDE BUTTONS ================= */
+.server-wrap.rt .server-btn,
+.server-wrap.wr .server-btn {
+  left: auto;
+  right: -250px;
+  transform: translateX(0) translateY(14px);
+  z-index: 30;
+}
+.server-wrap.rb .server-btn{
+  left: auto;
+  right: -220px;
+  z-index: 30;
+  transform: translateX(0) translateY(14px);
+}
+
+
+/* ================= HOVER BUTTON for center ================= */
+.server-wrap.center .server-btn {
+  bottom: auto;
+  top: -38px;
+
+  transform: translateX(-50%) translateY(10px);
+}
+
+
+/* 🔥 POP ON HOVER */
+.server-wrap:hover {
+  transform: translateY(-28px) scale(1.12);
+  z-index: 32;
+
+  filter:
+    drop-shadow(0 20px 40px rgba(0, 0, 0, 0.7))
+    drop-shadow(0 0 20px rgba(80, 160, 255, 0.9));
+}
+
+.server-wrap:hover .server-btn {
+  font-size: 16px;
+  opacity: 1;
+  pointer-events: auto;
+  animation-play-state: paused;
+  transform: translateX(-50%) scale(1.08);
+  box-shadow: 0 14px 30px rgba(80, 160, 255, 0.9);
+}
+
+
+/* ================= CENTER ================= */
+.center {
+  position: absolute;
+  bottom: 145px;
+  left: -25px;
+  width: 118px;
+  z-index: 4;
+  animation-duration: 5.5s;
+  animation-delay: 0.5s;
+}
+
+/* ================= TOP ================= */
+.lt {
+  top: 15px;
+  left: 140px;
+  animation-delay: 0s;
+}
+
+.rt {
+  top: 15px;
+  right: 260px;
+  animation-delay: 0.8s;
+}
+
+/* ================= BOTTOM ================= */
+.lb {
+  top: 160px;
+  left: 5px;
+  animation-delay: 1.4s;
+}
+
+.rb {
+  top: 160px;
+  right: 140px;
+  animation-delay: 2s;
+}
+
+/* ================= WHITE LOWER ================= */
+.wl {
+  top: 290px;
+  left: 130px;
+  animation-delay: 1s;
+}
+
+.wr {
+  top: 290px;
+  right: 265px;
+  animation-delay: 1.8s;
+}
+
+/* ================= CENTER GROUP ================= */
+.center-group {
+  position: absolute;
+  top: 125px;
+  left: 326px;
+  width: 180px;
+  height: 140px;
+  z-index: 3;
+}
+
+/* ================= CENTER BASE ================= */
+.center-base {
+  position: absolute;
+  bottom: 0;
+  left: -20px;
+  width: 150px;
+  height: 120px;
+
+  background:
+    linear-gradient(#1c345a 1px, transparent 1px),
+    linear-gradient(90deg, #1c345a 1px, transparent 1px),
+    #0e2344;
+
+  background-size: 40px 40px;
+  border-radius: 12px;
+
+  transform: skewX(-10deg) rotateX(50deg) rotateZ(38deg);
+  transform-origin: center;
+
+  box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6);
+}
+
+/* ================= RESPONSIVE SCALING ================= */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .diagram {
+    transform: scale(0.9);
+    transform-origin: top center;
+  }
+}
+
+@media (max-width: 900px) {
+  .diagram {
+    transform: scale(0.8);
+    transform-origin: top center;
+  }
+  .diagram-wrapper {
+    margin-bottom: -80px;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+  .diagram-wrapper {
+    margin-bottom: -100px;
+  }
+  
+}
+
+
+@media (max-width: 670px) {
+  
+  .diagram-wrapper {
+    margin-bottom: -140px;
+  }
+  .center-base{
+    width: 120px;
+    height: 100px;
+  }
+  .center-group{
+    top: 115px;
+  left: 300px;
+  }
+}
+
+@media (max-width: 650px) {
+  /* ================= MOBILE DEFAULT ================= */
+
+.btn-arrow {
+  width: auto;          /* 🔑 allow SVG to show */
+  
+}
+
+.btn-arrow svg {
+  width: 14px;
+  
+}
+
+.btn-arrow path.one,
+.btn-arrow path.two,
+.btn-arrow path.three {
+  transform: translateX(0);
+}
+/* FORWARD FLOW (left ➜ right) */
+
+.btn-arrow path.one {
+  
+  animation: arrowPulse 1s infinite 0.4s;
+}
+
+.btn-arrow path.two {
+  animation: arrowPulse 1s infinite 0.2s;
+}
+
+.btn-arrow path.three {
+  animation: arrowPulse 1s infinite 0s;
+}
+.server-wrap {
+  transform: none;
+  filter: none;
+}
+
+.server-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+  .server-wrap:not(.center) {
+    position: absolute; /* ensure positioning context */
+  }
+
+  .server-wrap:not(.center) .server-btn {
+    left: auto;
+    right: -140px;          /* distance from building */
+    top: 30%;
+    bottom: auto;
+
+    transform: translateY(-60%);
+    font-size: 9px;
+    padding: 6px 9px;
+
+    animation:
+      btnRevealRight 0.6s ease forwards,
+      btnFloatRight 2.2s ease-in-out infinite;
+
+      animation-delay:
+    var(--btn-delay),
+    calc(var(--btn-delay) + 0.6s);
+  }
+
+  @keyframes btnRevealRight {
+    from {
+      opacity: 0;
+      transform: translateY(-60%) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-60%) scale(1);
+      pointer-events: auto;
+    }
+  }
+
+  @keyframes btnFloatRight {
+    0%   { transform: translateY(-65%); }
+    50%  { transform: translateY(calc(-65% - 4px)); }
+    100% { transform: translateY(-65%); }
+  }
+
+  .lt  { --btn-delay: 0.4s; }
+.rt  { --btn-delay: 0.8s; }
+.lb  { --btn-delay: 1.2s; }
+.rb  { --btn-delay: 1.6s; }
+
+.wl  { --btn-delay: 2s; }
+.wr  { --btn-delay: 2.4s; }
+
+.center { --btn-delay: 3s; }
+
+  .server-wrap:not(.center):hover .server-btn {
+    transform: translateY(-60%) scale(1.05);
+  }
+
+
+  /* ---------------- CENTER BUILDING ---------------- */
+  .server-wrap.center {
+    position: absolute; /* 🔒 critical */
+  }
+
+  .server-wrap.center .server-btn {
+    left: 50%;
+    right: auto;
+    top: -42px;
+    bottom: auto;
+
+    transform: translateX(-50%);
+    font-size: 10px;
+    padding: 6px 10px;
+
+    animation:
+      btnRevealCenter 0.5s ease forwards,
+      btnFloatCenter 2.2s ease-in-out infinite;
+  }
+
+  @keyframes btnRevealCenter {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+      pointer-events: auto;
+    }
+  }
+
+  @keyframes btnFloatCenter {
+    0%   { transform: translateX(-50%) translateY(0); }
+    50%  { transform: translateX(-50%) translateY(-4px); }
+    100% { transform: translateX(-50%) translateY(0); }
+  }
+
+  .server-wrap.center:hover .server-btn {
+    transform: translateX(-50%) scale(1.05);
+  }
+
+  
+}
+
+@media (max-width: 580px) {
+  
+  .diagram-wrapper {
+    margin-bottom: -140px;
+  }
+  .center-base{
+    width: 100px;
+    height: 80px;
+  }
+  .center-group{
+    top: 105px;
+  left: 260px;
+  }
+}
+
+/* 🔥 MOBILE FIX */
+@media (max-width: 480px) {
+  .diagram-wrapper {
+    margin-bottom: -280px;
+  }
+  .diagram {
+  position: relative;
+  width: 900px;
+  height: 400px;
+  margin: auto;
+  background: transparent;
+  transition: transform 0.3s ease;
+}
+
+  .server {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  z-index: 2;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55));
+}
+  /* ================= TOP ================= */
+.lt {
+  top: 5px;
+  left: 80px;
+  animation-delay: 0s;
+}
+
+.rt {
+  top: 5px;
+  right: 200px;
+  animation-delay: 0.8s;
+}
+
+/* ================= BOTTOM ================= */
+.lb {
+  top: 90px;
+  left: -20px;
+  animation-delay: 1.4s;
+}
+
+.rb {
+  top: 90px;
+  right: 100px;
+  animation-delay: 2s;
+}
+
+/* ================= WHITE LOWER ================= */
+.wl {
+  top: 180px;
+  left: 60px;
+  animation-delay: 1s;
+}
+
+.wr {
+  top: 180px;
+  right: 185px;
+  animation-delay: 1.8s;
+}
+
+/* ================= MOBILE DEFAULT ================= */
+
+.btn-arrow {
+  width: auto;          /* 🔑 allow SVG to show */
+  
+}
+
+.btn-arrow svg {
+  width: 14px;
+  
+}
+
+.btn-arrow path.one,
+.btn-arrow path.two,
+.btn-arrow path.three {
+  transform: translateX(0);
+}
+/* FORWARD FLOW (left ➜ right) */
+
+.btn-arrow path.one {
+  
+  animation: arrowPulse 1s infinite 0.4s;
+}
+
+.btn-arrow path.two {
+  animation: arrowPulse 1s infinite 0.2s;
+}
+
+.btn-arrow path.three {
+  animation: arrowPulse 1s infinite 0s;
+}
+.server-wrap {
+  transform: none;
+  filter: none;
+}
+
+.server-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* ---------------- SIDE BUILDINGS ---------------- */
+.server-wrap:not(.center) {
+  position: absolute;
+}
+
+.server-wrap:not(.center) .server-btn {
+  left: auto;
+  right: -140px;
+  top: 30%;
+  bottom: auto;
+
+  transform: translateY(-60%);
+  font-size: 9px;
+  padding: 6px 9px;
+  opacity: 0;
+  pointer-events: none;
+
+  animation:
+    btnRevealRight 0.6s ease forwards,
+    btnFloatRight 2.2s ease-in-out infinite;
+
+  animation-delay:
+    var(--btn-delay),
+    calc(var(--btn-delay) + 0.6s);
+}
+
+@keyframes btnRevealRight {
+  from {
+    opacity: 0;
+    transform: translateY(-60%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-60%) scale(1);
+    pointer-events: auto;
+  }
+}
+
+@keyframes btnFloatRight {
+  0%   { transform: translateY(-60%); }
+  50%  { transform: translateY(calc(-60% - 4px)); }
+  100% { transform: translateY(-60%); }
+}
+
+/* Delays */
+.lt { --btn-delay: 0.4s; }
+.rt { --btn-delay: 0.8s; }
+.lb { --btn-delay: 1.2s; }
+.rb { --btn-delay: 1.6s; }
+.wl { --btn-delay: 2s; }
+.wr { --btn-delay: 2.4s; }
+
+/* ---------------- CENTER BUILDING ---------------- */
+.server-wrap.center {
+  position: absolute;
+  --btn-delay: 3s;
+}
+
+.server-wrap.center .server-btn {
+  left: 50%;
+  top: -42px;
+  right: auto;
+  bottom: auto;
+
+  transform: translateX(-50%);
+  font-size: 10px;
+  padding: 6px 10px;
+  opacity: 0;
+  pointer-events: none;
+
+  animation:
+    btnRevealCenter 0.5s ease forwards,
+    btnFloatCenter 2.2s ease-in-out infinite;
+
+  animation-delay:
+    var(--btn-delay),
+    calc(var(--btn-delay) + 0.5s);
+}
+
+@keyframes btnRevealCenter {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+    pointer-events: auto;
+  }
+}
+
+@keyframes btnFloatCenter {
+  0%   { transform: translateX(-50%) translateY(0); }
+  50%  { transform: translateX(-50%) translateY(-4px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
+ .server-wrap.lt .server-btn,
+.server-wrap.wl .server-btn {
+  right: -50px;
+  z-index: 30;
+}
+.server-wrap.lb .server-btn{
+   right: -90px;
+  z-index: 30;
+}
+
+/* ================= CENTER GROUP ================= */
+.center-group {
+  position: absolute;
+  top: 60px;
+  left: 200px;
+  width: 150px;
+  height: 120px;
+  z-index: 3;
+}
+.center-base {
+  position: absolute;
+  bottom: 0;
+  left: -05px;
+  width: 100px;
+  height: 80px;
+}
+.center {
+  position: absolute;
+  bottom: 105px;
+  left: -25px;
+  width: 118px;
+  z-index: 4;
+  animation-duration: 5.5s;
+  animation-delay: 0.5s;
+}
+}
+
+@media (max-width: 390px) {
+  .diagram-wrapper {
+    margin-bottom: -280px;
+  }
+  .diagram {
+  position: relative;
+  width: 900px;
+  height: 400px;
+  margin: auto;
+  background: transparent;
+  transition: transform 0.3s ease;
+}
+
+  .server {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  z-index: 2;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55));
+}
+  /* ================= TOP ================= */
+.lt {
+  top: -10px;
+  left: 50px;
+  animation-delay: 0s;
+}
+
+.rt {
+  top: -10px;
+  right: 150px;
+  animation-delay: 0.8s;
+}
+
+/* ================= BOTTOM ================= */
+.lb {
+  top: 60px;
+  left: -35px;
+  animation-delay: 1.4s;
+}
+
+.rb {
+  top: 60px;
+  right: 100px;
+  animation-delay: 2s;
+}
+
+/* ================= WHITE LOWER ================= */
+.wl {
+  top: 150px;
+  left: 40px;
+  animation-delay: 1s;
+}
+
+.wr {
+  top: 150px;
+  right: 145px;
+  animation-delay: 1.8s;
+}
+
+/* ================= CENTER GROUP ================= */
+.center-group {
+  position: absolute;
+  top: 40px;
+  left: 170px;
+  width: 150px;
+  height: 120px;
+  z-index: 3;
+}
+.center-base {
+  position: absolute;
+  bottom: -1px;
+  left: -30px;
+  width: 90px;
+  height: 70px;
+}
+.center {
+  position: absolute;
+  bottom: 95px;
+  left: -25px;
+  width: 108px;
+  z-index: 4;
+  animation-duration: 5.5s;
+  animation-delay: 0.5s;
+}
+}
+
+@media (max-width: 345px) {
+  .diagram-wrapper {
+    margin-bottom: -330px;
+  }
+  .diagram {
+  position: relative;
+  width: 500px;
+  height: 450px;
+  margin: auto;
+  background: transparent;
+  transition: transform 0.3s ease;
+}
+
+  .server {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  z-index: 2;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.55));
+}
+
+ .server-wrap.lt .server-btn,
+.server-wrap.wl .server-btn {
+  right: -70px;
+  z-index: 30;
+}
+.server-wrap.lb .server-btn{
+   right: -110px;
+  z-index: 30;
+}
+.server-wrap.rb .server-btn{
+   right: -110px;
+  z-index: 30;
+}
+
+  /* ================= TOP ================= */
+.lt {
+  top: -10px;
+  left: 35px;
+  animation-delay: 0s;
+}
+
+.rt {
+  top: -10px;
+  right: 130px;
+  animation-delay: 0.8s;
+}
+
+/* ================= BOTTOM ================= */
+.lb {
+  top: 50px;
+  left: -40px;
+  animation-delay: 1.4s;
+}
+
+.rb {
+  top: 50px;
+  right: 90px;
+  animation-delay: 2s;
+}
+
+/* ================= WHITE LOWER ================= */
+.wl {
+  top: 130px;
+  left: 30px;
+  animation-delay: 1s;
+}
+
+.wr {
+  top: 130px;
+  right: 135px;
+  animation-delay: 1.8s;
+}
+
+/* ================= CENTER GROUP ================= */
+.center-group {
+  position: absolute;
+  top: 20px;
+  left: 160px;
+  width: 100px;
+  height: 90px;
+  z-index: 3;
+}
+.center-base {
+  position: absolute;
+  bottom: -1px;
+  left: -30px;
+  width: 80px;
+  height: 60px;
+}
+.center {
+  position: absolute;
+  bottom: 85px;
+  left: -35px;
+  width: 99px;
+  z-index: 4;
+  animation-duration: 5.5s;
+  animation-delay: 0.5s;
+}
+}

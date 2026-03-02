@@ -1,0 +1,392 @@
+.products {
+    padding: 6rem 2rem;
+    margin-left: 0px;
+    color: white;
+    padding-bottom: 150px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.headingContainer {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.headingContainer h2 {
+    font-size: 48px;
+    margin-bottom: 2rem;
+}
+
+.headingContainer p {
+    max-width: 900px;
+    margin: 0 auto;
+    opacity: 0.8;
+    font-size: 24px;
+    color: #E3E3E3;
+}
+
+.grid {
+    position: relative;
+    /* 🔑 required */
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 1rem;
+    align-items: center;
+
+    z-index: 1;
+}
+
+.grid::before {
+    content: "";
+    position: absolute;
+    inset: -40px;
+    /* controls glow spread */
+
+    background: radial-gradient(ellipse at 50% 70%,
+            #4846FFB2,
+            transparent 70%);
+
+    filter: blur(190px);
+    z-index: -1;
+    pointer-events: none;
+}
+
+
+.card {
+    padding: 1.7rem;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    height: 100%;
+}
+
+.card p {
+    max-width: 285px;
+}
+
+.darkCard {
+    background-color: #0d0f36;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.lightCard {
+    background-color: #D9D9D9;
+    color: #191538;
+}
+
+.centerImage {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* 🔥 DARK SQUARE */
+.darksqu {
+    position: absolute;
+
+    /* ⬇️ push it down */
+    top: 300px;
+    /* increase this to move further down */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 340px;
+    height: 400px;
+
+    background: #151952;
+    border-radius: 15%;
+    z-index: 1;
+}
+
+/* IMAGE */
+.imagePlaceholder img {
+    position: relative;
+    z-index: 2;
+    border-radius: 22px;
+}
+
+.imagePlaceholder {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border-radius: 50px 50px 0 0;
+    /* Dome shape */
+    overflow: hidden;
+}
+
+
+
+
+
+/* Responsive Design */
+
+/* Laptop (1024px - 1439px) */
+@media (min-width: 1024px) and (max-width: 1439px) {
+    .products {
+        padding: 5rem 2rem;
+        margin-left: 30px;
+        padding-bottom: 150px;
+    }
+
+    .container {
+        max-width: 1000px;
+    }
+
+    .headingContainer h2 {
+        font-size: 40px;
+    }
+
+    .headingContainer p {
+        font-size: 20px;
+    }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .products {
+        padding: 4rem 2rem;
+        margin-left: 0;
+    }
+
+    .headingContainer h2 {
+        font-size: 36px;
+        margin-bottom: 1.5rem;
+    }
+
+    .headingContainer p {
+        font-size: 18px;
+    }
+
+    .grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+        gap: 1.5rem;
+    }
+
+    .centerImage {
+        grid-column: 1 / span 2;
+        grid-row: auto;
+        height: 500px;
+        margin: 2rem 0;
+        order: -1;
+    }
+
+    .darksqu {
+        top: 200px;
+        width: 350px;
+        height: 400px;
+    }
+}
+
+/* Mobile (up to 767px) */
+@media (max-width: 767px) {
+    .products {
+        padding: 2rem 1rem;
+        margin-left: 0;
+    }
+
+    .headingContainer {
+        margin-bottom: 0rem;
+    }
+
+    .headingContainer h2 {
+        font-size: 28px;
+        margin-bottom: 1.25rem;
+    }
+
+    .headingContainer p {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .centerImage {
+        grid-column: 1;
+        grid-row: auto;
+        height: 450px;
+        margin: 1.5rem 0;
+        order: -1;
+    }
+
+    .doc {
+        order: 1;
+    }
+
+    .heart {
+        order: 2;
+    }
+
+    .ai {
+        order: 4;
+    }
+
+    .nurse {
+        order: 3;
+    }
+
+    .darksqu {
+        top: 180px;
+        width: 300px;
+        height: 350px;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    .card p {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .products {
+        padding: 3rem 1rem;
+        margin-left: 0;
+    }
+
+    .headingContainer {
+        margin-bottom: 0rem;
+    }
+
+    .headingContainer h2 {
+        font-size: 28px;
+        margin-bottom: 1.25rem;
+    }
+
+    .headingContainer p {
+        font-size: 16px;
+        line-height: 1.6;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    .centerImage {
+        grid-column: 1;
+        grid-row: auto;
+        height: 450px;
+        margin: 1.5rem 0;
+        order: -1;
+    }
+    .centerImage::before {
+        content: "";
+        position: absolute;
+        inset: -20px;
+
+        background: radial-gradient(ellipse at 50% 10%,
+                /* 🔼 moved up */
+                #4846FFB2,
+                transparent 70%);
+
+        filter: blur(210px);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .doc {
+        order: 1;
+    }
+
+    .heart {
+        order: 2;
+    }
+
+    .ai {
+        order: 4;
+    }
+
+    .nurse {
+        order: 3;
+    }
+
+    .darksqu {
+        top: 180px;
+        width: 300px;
+        height: 350px;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+
+    .card p {
+        max-width: 90%;
+        font-size: 20px;
+    }
+}
+
+@media (max-width:420px) {
+    .headingContainer p{
+        font-size: 14px;
+    }
+    .card p{
+        font-size: 14px;
+    }
+}
+
+/* Extra small mobile */
+@media (max-width: 390px) {
+    .products {
+        padding: 1rem 1rem;
+    }
+
+    .headingContainer h2 {
+        font-size: 28px;
+    }
+
+    .headingContainer p {
+        font-size: 14px;
+    }
+
+    .centerImage {
+        height: 380px;
+    }
+
+    .centerImage::before {
+        content: "";
+        position: absolute;
+        inset: -20px;
+
+        background: radial-gradient(ellipse at 50% 10%,
+                /* 🔼 moved up */
+                #4846FFB2,
+                transparent 70%);
+
+        filter: blur(190px);
+        z-index: -1;
+        pointer-events: none;
+    }
+
+
+    .darksqu {
+        width: 260px;
+        height: 320px;
+    }
+
+    .grid::before {
+        content: none;
+    }
+    .card p{
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 345px) {
+    .card p{
+        font-size: 14px;
+    }
+}

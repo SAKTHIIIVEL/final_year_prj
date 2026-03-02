@@ -1,0 +1,98 @@
+<svg
+  width="900"
+  height="600"
+  viewBox="0 0 900 600"
+  xmlns="http://www.w3.org/2000/svg"
+>
+
+  <!-- ===== CONNECTION LINES ===== -->
+  <g stroke="#2f5fa8" stroke-width="4" fill="none" opacity="0.7">
+    <line x1="450" y1="300" x2="250" y2="180" />
+    <line x1="450" y1="300" x2="650" y2="180" />
+    <line x1="450" y1="300" x2="250" y2="420" />
+    <line x1="450" y1="300" x2="650" y2="420" />
+  </g>
+
+  <!-- ===== DEFINITIONS ===== -->
+  <defs>
+
+    <!-- DARK 3D SERVER -->
+    <g id="server-3d">
+      <!-- Top -->
+      <polygon
+        points="0,-70 40,-50 0,-30 -40,-50"
+        fill="#2c4f85"
+      />
+
+      <!-- Left face -->
+      <polygon
+        points="-40,-50 0,-30 0,40 -40,20"
+        fill="#1f3d6d"
+      />
+
+      <!-- Right face -->
+      <polygon
+        points="0,-30 40,-50 40,20 0,40"
+        fill="#295a9d"
+      />
+
+      <!-- Left slots -->
+      <rect x="-28" y="-10" width="22" height="6" rx="3" fill="#4da3ff"/>
+      <rect x="-28" y="2" width="22" height="6" rx="3" fill="#4da3ff"/>
+      <rect x="-28" y="14" width="22" height="6" rx="3" fill="#4da3ff"/>
+
+      <!-- Right slots -->
+      <rect x="6" y="-6" width="22" height="6" rx="3" fill="#6fb5ff"/>
+      <rect x="6" y="6" width="22" height="6" rx="3" fill="#6fb5ff"/>
+      <rect x="6" y="18" width="22" height="6" rx="3" fill="#6fb5ff"/>
+    </g>
+
+    <!-- LIGHT 3D SERVER -->
+    <g id="server-3d-light">
+      <!-- Top -->
+      <polygon
+        points="0,-70 40,-50 0,-30 -40,-50"
+        fill="#f5f8fc"
+      />
+
+      <!-- Left face -->
+      <polygon
+        points="-40,-50 0,-30 0,40 -40,20"
+        fill="#dbe4f0"
+      />
+
+      <!-- Right face -->
+      <polygon
+        points="0,-30 40,-50 40,20 0,40"
+        fill="#eef3f9"
+      />
+
+      <!-- Left slots -->
+      <rect x="-28" y="-10" width="22" height="6" rx="3" fill="#b0bfd6"/>
+      <rect x="-28" y="2" width="22" height="6" rx="3" fill="#b0bfd6"/>
+      <rect x="-28" y="14" width="22" height="6" rx="3" fill="#b0bfd6"/>
+
+      <!-- Right slots -->
+      <rect x="6" y="-6" width="22" height="6" rx="3" fill="#c9d4e6"/>
+      <rect x="6" y="6" width="22" height="6" rx="3" fill="#c9d4e6"/>
+      <rect x="6" y="18" width="22" height="6" rx="3" fill="#c9d4e6"/>
+    </g>
+
+  </defs>
+
+  <!-- ===== SERVERS ===== -->
+  <use href="#server-3d" x="250" y="180" />
+  <use href="#server-3d" x="650" y="180" />
+  <use href="#server-3d" x="250" y="420" />
+  <use href="#server-3d" x="650" y="420" />
+
+  <!-- ===== CENTRAL PLATFORM ===== -->
+  <polygon
+    points="360,300 450,260 540,300 450,340"
+    fill="#223f6d"
+  />
+
+  <!-- ===== CENTRAL SERVER ===== -->
+  <use href="#server-3d-light" x="450" y="260" />
+
+</svg>

@@ -1,0 +1,155 @@
+.building-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 800px;
+    padding: 100px;
+}
+
+.building {
+    position: relative;
+    transform-style: preserve-3d;
+    transform: rotateX(-30deg) rotateY(-45deg);
+    transition: transform 0.3s ease;
+    z-index: 999;
+}
+
+.building:hover {
+    transform: rotateX(-25deg) rotateY(-40deg);
+}
+
+/* ============================================
+   ISOMETRIC RISING ANIMATION (UPDATED)
+   ============================================
+   Changes:
+   - All faces start simultaneously (no delays).
+   - Top rises visibly from bottom with walls (no delayed opacity, matching opacity animation).
+   - Removed scale on top for smoother rise.
+   - Shadow starts earlier with matching opacity.
+   ============================================ */
+
+/* Front face of the building */
+.building-front {
+    position: absolute;
+    background: #1e3a5f;
+    border-radius: 4px;
+    overflow: hidden;
+    transform-origin: bottom center;
+    animation: riseFront 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes riseFront {
+    0% {
+        clip-path: inset(100% 0 0 0);
+        opacity: 0.5;
+    }
+
+    100% {
+        clip-path: inset(0 0 0 0);
+        opacity: 1;
+    }
+}
+
+/* Horizontal stripes on front */
+.building-front::before {
+    content: '';
+    position: absolute;
+    top: 8%;
+    left: 12%;
+    right: 12%;
+    bottom: 8%;
+    background: repeating-linear-gradient(180deg,
+            #3d6a99 0px,
+            #3d6a99 8px,
+            transparent 8px,
+            transparent 18px);
+    border-radius: 2px;
+}
+
+/* Right side face of the building */
+.building-side {
+    position: absolute;
+    background: #152c4a;
+    border-radius: 4px;
+    overflow: hidden;
+    transform-origin: bottom center;
+    animation: riseSide 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    /* Removed animation-delay */
+}
+
+@keyframes riseSide {
+    0% {
+        clip-path: inset(100% 0 0 0);
+        opacity: 0.5;
+    }
+
+    100% {
+        clip-path: inset(0 0 0 0);
+        opacity: 1;
+    }
+}
+
+/* Horizontal stripes on side */
+.building-side::before {
+    content: '';
+    position: absolute;
+    top: 8%;
+    left: 12%;
+    right: 12%;
+    bottom: 8%;
+    background: repeating-linear-gradient(180deg,
+            #2d5a89 0px,
+            #2d5a89 8px,
+            transparent 8px,
+            transparent 18px);
+    border-radius: 2px;
+}
+
+/* Top face of the building */
+.building-top {
+    position: absolute;
+    background: #2a4a6f;
+    border-radius: 4px;
+    animation: riseTop 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes riseTop {
+    0% {
+        opacity: 0.5;
+        /* Match walls, visible from start */
+        transform: rotateX(90deg) translateZ(-50px);
+        /* Removed scale(0.8) */
+    }
+
+    100% {
+        opacity: 1;
+        /* Final position set by inline style */
+    }
+}
+
+/* Ground shadow - animates in sync with building rise */
+.building::after {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    left: -30%;
+    width: 180%;
+    height: 80px;
+    background: radial-gradient(ellipse at center, rgba(10, 20, 40, 0.6) 0%, transparent 70%);
+    transform: rotateX(90deg) translateZ(-40px);
+    pointer-events: none;
+    animation: shadowGrow 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes shadowGrow {
+    0% {
+        opacity: 0.5;
+        /* Start visible like others */
+        transform: rotateX(90deg) translateZ(-40px) scale(0.3);
+    }
+
+    100% {
+        opacity: 1;
+        transform: rotateX(90deg) translateZ(-40px) scale(1);
+    }
+}
