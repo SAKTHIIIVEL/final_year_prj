@@ -1,0 +1,155 @@
+/* ═══ ProductsPage — Premium Theme ═══ */
+.pp-page {
+  background: #161952;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── Hero ── */
+.pp-hero {
+  position: relative;
+  padding: 110px 0 60px;
+  text-align: center;
+  overflow: hidden;
+}
+.pp-hero-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(72,70,255,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+.pp-hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+.pp-kicker {
+  display: block;
+  color: #4846FF;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+}
+.pp-hero h1 {
+  font-size: 52px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 18px;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+}
+.pp-hero p {
+  font-size: 16px;
+  color: #b8b8d4;
+  line-height: 1.7;
+}
+
+/* ── Grid ── */
+.pp-products { padding: 20px 0 100px; }
+.pp-container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+.pp-loading { text-align: center; padding: 60px 0; color: #b8b8d4; }
+.pp-spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(72,70,255,0.2);
+  border-top-color: #4846FF;
+  border-radius: 50%;
+  animation: ppSpin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes ppSpin { to { transform: rotate(360deg); } }
+.pp-empty { text-align: center; color: #b8b8d4; font-size: 16px; padding: 60px 0; }
+
+.pp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 28px;
+}
+
+/* ── Card ── */
+.pp-card {
+  background: rgba(13,15,54,0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(72,70,255,0.1);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: all 0.35s ease;
+}
+.pp-card:hover {
+  border-color: rgba(72,70,255,0.3);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 40px rgba(72,70,255,0.12);
+}
+.pp-card-img-wrap {
+  position: relative;
+  height: 210px;
+  overflow: hidden;
+}
+.pp-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.pp-card:hover .pp-card-img { transform: scale(1.06); }
+.pp-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(13,15,54,0.9) 100%);
+}
+.pp-card-num {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(72,70,255,0.8);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  backdrop-filter: blur(4px);
+}
+
+/* ── Card Body ── */
+.pp-card-body { padding: 24px 24px 28px; }
+.pp-card-body h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 10px;
+}
+.pp-card-body p {
+  font-size: 14px;
+  color: #a3a3c2;
+  line-height: 1.65;
+  margin: 0 0 22px;
+}
+.pp-contact-btn {
+  display: inline-block;
+  padding: 10px 28px;
+  background: #D9D9D9;
+  color: #222065;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.pp-contact-btn:hover {
+  background: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(217,217,217,0.25);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .pp-hero h1 { font-size: 34px; }
+  .pp-grid { grid-template-columns: 1fr; }
+  .pp-hero { padding: 80px 0 40px; }
+}

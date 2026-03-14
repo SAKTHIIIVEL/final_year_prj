@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import "./ContactSection.css";
 import Swal from "sweetalert2";
 
@@ -9,13 +10,15 @@ const COUNTRY_RULES = {
 };
 
 const ContactSection = () => {
+  const [searchParams] = useSearchParams();
+  const prefilledSubject = searchParams.get("subject") || "";
   const [formData, setFormData] = useState({
     countryCode: "+91",
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
-    subject: "",
+    subject: prefilledSubject,
     message: "",
   });
   const [errors, setErrors] = useState({});
@@ -84,21 +87,24 @@ const ContactSection = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/v1/inquiries`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         },
-        body: JSON.stringify(formData),
-      });
+      );
 
       if (response.ok) {
-         Swal.fire({
-              icon: "success",
-              title: "Contact Submitted!",
-              text: "Thank you for Contacting. Our team will contact you within 24 hours.",
-              confirmButtonColor: "#222065",
-            });
+        Swal.fire({
+          icon: "success",
+          title: "Contact Submitted!",
+          text: "Thank you for Contacting. Our team will contact you within 24 hours.",
+          confirmButtonColor: "#222065",
+        });
         setFormData({
           firstName: "",
           lastName: "",
@@ -108,22 +114,22 @@ const ContactSection = () => {
           message: "",
         });
       } else {
-         Swal.fire({
-              icon: "error",
-              title: "Submission Failed",
-              text: "Something went wrong. Please try again later.",
-              confirmButtonColor: "#d33",
-            });
+        Swal.fire({
+          icon: "error",
+          title: "Submission Failed",
+          text: "Something went wrong. Please try again later.",
+          confirmButtonColor: "#d33",
+        });
       }
     } catch (error) {
       console.error(error);
       Swal.fire({
-              icon: "error",
-              title: "Submission Failed",
-              text: "Something went wrong. Please try again later.",
-              confirmButtonColor: "#d33",
-            });
-    }finally {
+        icon: "error",
+        title: "Submission Failed",
+        text: "Something went wrong. Please try again later.",
+        confirmButtonColor: "#d33",
+      });
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -139,7 +145,7 @@ const ContactSection = () => {
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
 
     if (infoRef.current) observer.observe(infoRef.current);
@@ -372,7 +378,11 @@ const ContactSection = () => {
               )}
             </div>
 
-            <button type="submit" className="send-message-btn" disabled={isSubmitting}>
+            <button
+              type="submit"
+              className="send-message-btn"
+              disabled={isSubmitting}
+            >
               {isSubmitting ? "Sending..." : "Send Message"}
             </button>
           </form>

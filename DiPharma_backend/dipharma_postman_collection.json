@@ -1,0 +1,374 @@
+{
+  "info": {
+    "name": "DiPharma Enterprise API",
+    "description": "Complete API collection for DiPharma backend. Use the environment variables: {{base_url}} = http://localhost:5000, {{token}} = JWT access token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/api/v1/health"
+      }
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Super Admin Login",
+          "event": [{ "listen": "test", "script": { "exec": ["var jsonData = pm.response.json();", "if(jsonData.data) { pm.globals.set('token', jsonData.data.token); pm.globals.set('refreshToken', jsonData.data.refreshToken); }"] } }],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/super-admin/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@dipharma.com\",\n  \"password\": \"DiPharma@2026\"\n}" }
+          }
+        },
+        {
+          "name": "Admin Login",
+          "event": [{ "listen": "test", "script": { "exec": ["var jsonData = pm.response.json();", "if(jsonData.data) { pm.globals.set('token', jsonData.data.token); }"] } }],
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/admin/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@dipharma.com\",\n  \"password\": \"DiPharma@2026\"\n}" }
+          }
+        },
+        {
+          "name": "Create Admin (Super Admin only)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/super-admin/create-admin",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test Admin\",\n  \"email\": \"testadmin@dipharma.com\",\n  \"password\": \"Admin@123\"\n}" }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/auth/refresh",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}" }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/auth/me",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products (Public)",
+          "request": { "method": "GET", "url": "{{base_url}}/api/v1/products" }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": { "method": "GET", "url": "{{base_url}}/api/v1/products/PRODUCT_ID_HERE" }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/products",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"DI Eye Care\",\n  \"description\": \"Specialized eye care services for comprehensive vision health.\",\n  \"cardType\": \"dark\",\n  \"order\": 5\n}" }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/v1/products/PRODUCT_ID_HERE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"DI Eye Care Updated\",\n  \"description\": \"Updated description.\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/products/PRODUCT_ID_HERE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Get All Services (Public)",
+          "request": { "method": "GET", "url": "{{base_url}}/api/v1/services" }
+        },
+        {
+          "name": "Get Service by Slug (Public)",
+          "request": { "method": "GET", "url": "{{base_url}}/api/v1/services/doctor-will" }
+        },
+        {
+          "name": "Get All Services (Admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/services/admin/all",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Create Service",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/services",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"DI Dental\",\n  \"slug\": \"di-dental\",\n  \"shortDescription\": \"Advanced dental care.\",\n  \"fullDescription\": \"Full dental care description here.\",\n  \"features\": [{\"title\": \"Root Canal\", \"description\": \"Painless root canal treatments\"}],\n  \"benefits\": [{\"title\": \"Affordable\", \"description\": \"Competitive pricing\"}]\n}" }
+          }
+        },
+        {
+          "name": "Update Service",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/v1/services/SERVICE_ID_HERE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"DI Dental Updated\",\n  \"slug\": \"di-dental\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Service",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/services/SERVICE_ID_HERE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "Get All Jobs (Public)",
+          "request": { "method": "GET", "url": "{{base_url}}/api/v1/jobs" }
+        },
+        {
+          "name": "Create Job",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/jobs",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Backend Developer\",\n  \"roleFocus\": \"Node.js, Express.js, MongoDB\",\n  \"location\": \"Chennai\",\n  \"type\": \"Full Time\"\n}" }
+          }
+        },
+        {
+          "name": "Update Job",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/v1/jobs/JOB_ID_HERE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"title\": \"Senior Backend Developer\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Job",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/jobs/JOB_ID_HERE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Applications",
+      "item": [
+        {
+          "name": "Submit Application (Public — form-data)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/applications",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "John Doe", "type": "text" },
+                { "key": "email", "value": "john@test.com", "type": "text" },
+                { "key": "phone", "value": "9876543210", "type": "text" },
+                { "key": "countryCode", "value": "+91", "type": "text" },
+                { "key": "role", "value": "Backend Developer", "type": "text" },
+                { "key": "message", "value": "I am interested in this role.", "type": "text" },
+                { "key": "upload", "type": "file", "src": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Applications (Admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/applications",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Update Application Status",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/v1/applications/APP_ID_HERE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"reviewed\"\n}" }
+          }
+        },
+        {
+          "name": "Export Applications Excel",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/applications/export/excel",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inquiries",
+      "item": [
+        {
+          "name": "Submit Inquiry (Public)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/inquiries",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"email\": \"jane@test.com\",\n  \"phone\": \"9876543210\",\n  \"countryCode\": \"+91\",\n  \"subject\": \"Product Inquiry\",\n  \"message\": \"I would like to know more about your products.\"\n}" }
+          }
+        },
+        {
+          "name": "Get All Inquiries (Admin)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/inquiries",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Update Inquiry Status",
+          "request": {
+            "method": "PATCH",
+            "url": "{{base_url}}/api/v1/inquiries/INQ_ID_HERE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"read\"\n}" }
+          }
+        },
+        {
+          "name": "Export Inquiries Excel",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/inquiries/export/excel",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "FAQs",
+      "item": [
+        {
+          "name": "Get All FAQs (Public)",
+          "request": { "method": "GET", "url": "{{base_url}}/api/v1/faqs" }
+        },
+        {
+          "name": "Create FAQ",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/faqs",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"question\": \"How do I contact support?\",\n  \"answer\": \"You can reach us via our contact page or call +91-9677787817.\",\n  \"order\": 5\n}" }
+          }
+        },
+        {
+          "name": "Update FAQ",
+          "request": {
+            "method": "PUT",
+            "url": "{{base_url}}/api/v1/faqs/FAQ_ID_HERE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{token}}" }],
+            "body": { "mode": "raw", "raw": "{\n  \"question\": \"Updated question\",\n  \"answer\": \"Updated answer.\"\n}" }
+          }
+        },
+        {
+          "name": "Delete FAQ",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/v1/faqs/FAQ_ID_HERE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard & Utilities",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/v1/dashboard/stats",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }]
+          }
+        },
+        {
+          "name": "Search",
+          "request": { "method": "GET", "url": "{{base_url}}/api/v1/search?q=pharma" }
+        },
+        {
+          "name": "Chatbot Message",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/v1/chatbot/message",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"What services do you offer?\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Legacy Endpoints",
+      "item": [
+        {
+          "name": "Submit Career Form (Legacy)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/submit-form",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "John Doe", "type": "text" },
+                { "key": "email", "value": "john@test.com", "type": "text" },
+                { "key": "phone", "value": "9876543210", "type": "text" },
+                { "key": "countryCode", "value": "+91", "type": "text" },
+                { "key": "role", "value": "Developer", "type": "text" },
+                { "key": "message", "value": "Test message", "type": "text" },
+                { "key": "upload", "type": "file", "src": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Submit Contact Form (Legacy)",
+          "request": {
+            "method": "POST",
+            "url": "{{base_url}}/api/contact",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"firstName\": \"Jane\",\n  \"lastName\": \"Doe\",\n  \"email\": \"jane@test.com\",\n  \"phone\": \"9876543210\",\n  \"countryCode\": \"+91\",\n  \"subject\": \"Test\",\n  \"message\": \"Test message\"\n}" }
+          }
+        }
+      ]
+    }
+  ]
+}

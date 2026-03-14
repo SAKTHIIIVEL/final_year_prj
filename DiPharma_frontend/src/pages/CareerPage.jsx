@@ -4,39 +4,39 @@ import heroBanner from "../assets/career_banner.png";
 import personOne from "../assets/career_person1.png";
 import personTwo from "../assets/career_person2.png";
 import Swal from "sweetalert2";
-
-const openRoles = [
+import { useGetJobsQuery } from "../store/api";
+const fallbackRoles = [
   {
     title: "Research Assistant - Pharmaceutical Formulations",
-    role_focus:
+    roleFocus:
       " Assisting in formulation development, sample testing, documentation.",
     location: "Chennai, Tamil Nadu",
     type: "Full Time",
   },
   {
     title: "Research Analyst - Pharmaceutical Formulations",
-    role_focus:
+    roleFocus:
       " Assisting in formulation development, sample testing, documentation.",
     location: "Chennai, Tamil Nadu",
     type: "Full Time",
   },
   {
     title: "Research Assistant - Pharmaceutical Formulations",
-    role_focus:
+    roleFocus:
       " Assisting in formulation development, sample testing, documentation.",
     location: "Chennai, Tamil Nadu",
     type: "Full Time",
   },
   {
     title: "Research Assistant - Pharmaceutical Formulations",
-    role_focus:
+    roleFocus:
       " Assisting in formulation development, sample testing, documentation.",
     location: "Chennai, Tamil Nadu",
     type: "Full Time",
   },
   {
     title: "Research Assistant - Pharmaceutical Formulations",
-    role_focus:
+    roleFocus:
       " Assisting in formulation development, sample testing, documentation.",
     location: "Chennai, Tamil Nadu",
     type: "Full Time",
@@ -44,6 +44,16 @@ const openRoles = [
 ];
 
 const CareerPage = () => {
+  const { data: jobsData } = useGetJobsQuery();
+  const openRoles =
+    jobsData?.data?.length > 0
+      ? jobsData.data.map((j) => ({
+          title: j.title,
+          role_focus: j.roleFocus,
+          location: j.location,
+          type: j.type,
+        }))
+      : fallbackRoles;
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -182,60 +192,59 @@ const CareerPage = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!validateForm()) return;
+    if (!validateForm()) return;
 
-  setIsSubmitting(true);
+    setIsSubmitting(true);
 
-  const data = new FormData();
-  data.append("name", formData.name);
-  data.append("email", formData.email);
-  data.append("phone", formData.phone);
-  data.append("countryCode", formData.countryCode);
-  data.append("role", formData.role);
-  data.append("message", formData.message);
-  data.append("upload", selectedFile);
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("email", formData.email);
+    data.append("phone", formData.phone);
+    data.append("countryCode", formData.countryCode);
+    data.append("role", formData.role);
+    data.append("message", formData.message);
+    data.append("upload", selectedFile);
 
-  try {
-    await fetch(`${import.meta.env.VITE_API_URL}/submit-form`, {
-      method: "POST",
-      body: data,
-    });
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/v1/applications`, {
+        method: "POST",
+        body: data,
+      });
 
-    // 🎉 Success popup
-    Swal.fire({
-      icon: "success",
-      title: "Application Submitted!",
-      text: "Thank you for applying. Our team will contact you within 24 hours.",
-      confirmButtonColor: "#222065",
-    });
+      // 🎉 Success popup
+      Swal.fire({
+        icon: "success",
+        title: "Application Submitted!",
+        text: "Thank you for applying. Our team will contact you within 24 hours.",
+        confirmButtonColor: "#222065",
+      });
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      role: "",
-      message: "",
-      countryCode: "+91",
-    });
-    setSelectedFile(null);
-    setFileName("No file chosen");
-    setErrors({});
-  } catch (error) {
-    // ❌ Error popup
-    Swal.fire({
-      icon: "error",
-      title: "Submission Failed",
-      text: "Something went wrong. Please try again later.",
-      confirmButtonColor: "#d33",
-    });
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        role: "",
+        message: "",
+        countryCode: "+91",
+      });
+      setSelectedFile(null);
+      setFileName("No file chosen");
+      setErrors({});
+    } catch (error) {
+      // ❌ Error popup
+      Swal.fire({
+        icon: "error",
+        title: "Submission Failed",
+        text: "Something went wrong. Please try again later.",
+        confirmButtonColor: "#d33",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const heroRef = useRef(null);
   const positionsRef = useRef(null);

@@ -131,7 +131,7 @@ const ServicePage = () => {
       ([entry]) => {
         heroRef.current.classList.toggle("active", entry.isIntersecting);
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
 
     if (heroRef.current) observer.observe(heroRef.current);
@@ -151,7 +151,7 @@ const ServicePage = () => {
       },
       {
         threshold: 0.25,
-      }
+      },
     );
 
     cards.forEach((card) => observer.observe(card));
@@ -165,7 +165,7 @@ const ServicePage = () => {
       ([entry]) => {
         communityRef.current.classList.toggle("active", entry.isIntersecting);
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
     if (communityRef.current) observer.observe(communityRef.current);
     return () => observer.disconnect();
@@ -182,7 +182,7 @@ const ServicePage = () => {
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
 
     if (infoRef.current) observer.observe(infoRef.current);
@@ -205,8 +205,8 @@ const ServicePage = () => {
         <div className="service-hero-content">
           <p className="service-hero-kicker">Our Services</p>
           <h1 className="service-hero-title">
-            DI Polyclinic offers <br className="mobile"/> comprehensive{" "}
-            <br className="desktop"/>
+            DI Polyclinic offers <br className="mobile" /> comprehensive{" "}
+            <br className="desktop" />
             medical services
           </h1>
           <p className="service-hero-subtitle">
@@ -223,7 +223,11 @@ const ServicePage = () => {
 
       {/* Services Cards */}
       <section className="service-cards-section" ref={cardsRef}>
-        <div className="service-card card-1">
+        <div
+          className="service-card card-1"
+          onClick={() => navigate("/services/doctor-will")}
+          style={{ cursor: "pointer" }}
+        >
           <div className="service-card-inner">
             <div className="service-card-icon-wrapper">
               <img
@@ -240,7 +244,11 @@ const ServicePage = () => {
             </p>
           </div>
         </div>
-        <div className="service-card card-2">
+        <div
+          className="service-card card-2"
+          onClick={() => navigate("/services/di-wholesale")}
+          style={{ cursor: "pointer" }}
+        >
           <div className="service-card-inner">
             <div className="service-card-icon-wrapper">
               <img
@@ -257,7 +265,11 @@ const ServicePage = () => {
             </p>
           </div>
         </div>
-        <div className="service-card card-3">
+        <div
+          className="service-card card-3"
+          onClick={() => navigate("/services/di-laboratory")}
+          style={{ cursor: "pointer" }}
+        >
           <div className="service-card-inner">
             <div className="service-card-icon-wrapper">
               <img src={lab} alt="Service Icon" className="service-card-icon" />
@@ -270,7 +282,11 @@ const ServicePage = () => {
             </p>
           </div>
         </div>
-        <div className="service-card card-4">
+        <div
+          className="service-card card-4"
+          onClick={() => navigate("/services/di-research")}
+          style={{ cursor: "pointer" }}
+        >
           <div className="service-card-inner">
             <div className="service-card-icon-wrapper">
               <img
@@ -287,7 +303,11 @@ const ServicePage = () => {
             </p>
           </div>
         </div>
-        <div className="service-card card-5">
+        <div
+          className="service-card card-5"
+          onClick={() => navigate("/services/indocontinental-7")}
+          style={{ cursor: "pointer" }}
+        >
           <div className="service-card-inner">
             <div className="service-card-icon-wrapper">
               <img
@@ -307,7 +327,11 @@ const ServicePage = () => {
       </section>
 
       {/* Stats & Community Section */}
-      <section className="service-community-section" ref={communityRef} id="community">
+      <section
+        className="service-community-section"
+        ref={communityRef}
+        id="community"
+      >
         <div className="service-community-text">
           <p className="service-community-kicker">Our Community</p>
           <h2 className="service-community-title">
@@ -325,7 +349,10 @@ const ServicePage = () => {
             organization committed to delivering comprehensive and accessible
             medical
           </p>
-          <button className="service-community-btn" onClick={() => navigate("/contact")}>
+          <button
+            className="service-community-btn"
+            onClick={() => navigate("/contact")}
+          >
             Join Us
             <svg
               width="31"

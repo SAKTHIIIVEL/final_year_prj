@@ -1,10 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import styles from "./Products.module.css";
+import { useNavigate } from "react-router-dom";
 import { Stethoscope, Pill, Microscope, User } from "lucide-react"; // Example icons
 import doctor2 from "../assets/about/doctor2.png";
 
 const Products = () => {
+  const navigate = useNavigate();
   return (
     <section className={styles.products} id="products">
       <div className={styles.container}>
@@ -81,7 +83,6 @@ const Products = () => {
                   height: "100%",
                   objectFit: "cover",
                   borderRadius: "20px",
-                  
                 }}
               />
               {/* In real app, use asset */}
@@ -199,6 +200,27 @@ const Products = () => {
             </p>
           </motion.div>
         </div>
+      </div>
+      <div style={{ textAlign: "center", marginTop: "40px" }}>
+        <motion.button
+          style={{
+            padding: "14px 32px",
+            background: "#D9D9D9",
+            border: "none",
+            color: "#222065",
+            borderRadius: "30px",
+            fontSize: "16px",
+            fontWeight: "500",
+            cursor: "pointer",
+            fontFamily: "Poppins, sans-serif",
+            transition: "all 0.3s",
+          }}
+          whileHover={{ scale: 1.05, background: "#fff" }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => navigate("/products")}
+        >
+          View Products
+        </motion.button>
       </div>
     </section>
   );

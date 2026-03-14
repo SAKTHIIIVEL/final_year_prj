@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import "./FAQSection.css";
 import { FiChevronDown } from "react-icons/fi";
+import { useGetFAQsQuery } from "../store/api";
 
 const FAQSection = () => {
   const [openIndex, setOpenIndex] = useState(0);
   const faqLeftRef = useRef(null);
   const faqRightRef = useRef(null);
+  const { data } = useGetFAQsQuery();
 
-  const faqs = [
+  const fallbackFaqs = [
     {
       question: "What is D Pharma?",
       answer:
@@ -29,6 +31,8 @@ const FAQSection = () => {
         "D Pharma offers a wide range of healthcare services including pharmaceutical solutions, medical consultations, health management programs, and comprehensive medical support services tailored to meet the diverse needs of our community.",
     },
   ];
+
+  const faqs = data?.data?.length > 0 ? data.data : fallbackFaqs;
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -41,7 +45,7 @@ const FAQSection = () => {
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.3 },
     );
 
     if (faqLeftRef.current) observer.observe(faqLeftRef.current);

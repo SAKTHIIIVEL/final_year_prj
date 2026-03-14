@@ -1,0 +1,18 @@
+.admin-login-page { min-height: 100vh; background: linear-gradient(135deg, #0d0f36 0%, #161952 50%, #1a1f5f 100%); display: flex; align-items: center; justify-content: center; font-family: "Poppins", sans-serif; }
+.login-container { width: 100%; max-width: 420px; padding: 20px; }
+.login-card { background: rgba(13,15,54,0.8); backdrop-filter: blur(20px); border: 1px solid rgba(72,70,255,0.2); border-radius: 24px; padding: 40px 32px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.login-header { text-align: center; margin-bottom: 32px; }
+.login-logo { font-size: 32px; font-weight: 800; color: #fff; margin: 0; letter-spacing: 1px; }
+.login-subtitle { color: #a3a3c2; font-size: 14px; margin-top: 8px; }
+.login-role-badge { text-align: center; padding: 10px 16px; border-radius: 12px; font-size: 14px; font-weight: 600; margin-bottom: 24px; }
+.sa-badge { background: rgba(72,70,255,0.15); color: #4846FF; border: 1px solid rgba(72,70,255,0.3); }
+.admin-badge { background: rgba(48,209,88,0.12); color: #30d158; border: 1px solid rgba(48,209,88,0.25); }
+.login-error { background: rgba(255,59,48,0.12); color: #ff3b30; padding: 10px 14px; border-radius: 10px; font-size: 13px; margin-bottom: 16px; text-align: center; }
+.login-field { margin-bottom: 18px; }
+.login-field label { display: block; color: #a3a3c2; font-size: 13px; margin-bottom: 6px; font-weight: 500; }
+.login-field input { width: 100%; padding: 12px 16px; background: #0a0c2e; border: 1px solid rgba(72,70,255,0.2); border-radius: 12px; color: #E3E3E3; font-size: 14px; font-family: "Poppins", sans-serif; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+.login-field input:focus { border-color: #4846FF; }
+.login-submit { width: 100%; padding: 14px; background: #4846FF; color: #fff; border: none; border-radius: 12px; font-family: "Poppins", sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 8px; }
+.login-submit:hover { background: #3634cc; }
+.login-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
