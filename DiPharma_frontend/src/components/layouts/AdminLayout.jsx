@@ -1,15 +1,27 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../store/slices/authSlice";
 import "./AdminLayout.css";
 import logo from "../../assets/brands/logo.png";
+import ChatbotIcon from "../ChatbotIcon";
 
 const AdminLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { admin } = useSelector((state) => state.auth);
+  const isMobile = () => window.innerWidth <= 768;
+
+  // Close sidebar on resize to mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768) setSidebarOpen(true);
+      else setSidebarOpen(false);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -17,6 +29,11 @@ const AdminLayout = () => {
   };
   const handlelogoclick = () => {
     navigate("/");
+  };
+
+  // Close sidebar on nav click (mobile)
+  const handleNavClick = () => {
+    if (isMobile()) setSidebarOpen(false);
   };
 
   const navItems = [
@@ -27,13 +44,18 @@ const AdminLayout = () => {
     { path: "/admin/applications", label: "Applications", icon: "📝" },
     { path: "/admin/inquiries", label: "Inquiries", icon: "📬" },
     { path: "/admin/faqs", label: "FAQs", icon: "❓" },
-    ...(admin?.role === "SUPER_ADMIN"
-      ? [{ path: "/admin/manage-admins", label: "Manage Admins", icon: "🛡️" }]
-      : []),
   ];
 
   return (
     <div className="admin-layout">
+      {/* Mobile backdrop */}
+      {sidebarOpen && isMobile() && (
+        <div
+          className="admin-sidebar-backdrop"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       <aside className={`admin-sidebar ${sidebarOpen ? "open" : "collapsed"}`}>
         <div className="sidebar-header" onClick={handlelogoclick}>
           <img src={logo} alt="DiPharma" className="sidebar-logo-img" />
@@ -50,6 +72,7 @@ const AdminLayout = () => {
               className={({ isActive }) =>
                 `sidebar-link ${isActive ? "active" : ""}`
               }
+              onClick={handleNavClick}
             >
               <span className="sidebar-icon">{item.icon}</span>
               <span className="sidebar-label">{item.label}</span>
@@ -91,6 +114,7 @@ const AdminLayout = () => {
           <Outlet />
         </div>
       </main>
+      <ChatbotIcon />
     </div>
   );
 };

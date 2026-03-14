@@ -12,6 +12,7 @@ import "./AdminLogin.css";
 const SuperAdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
@@ -23,7 +24,7 @@ const SuperAdminLogin = () => {
     try {
       const result = await superAdminLogin({ email, password }).unwrap();
       dispatch(setCredentials(result.data));
-      navigate("/admin/dashboard");
+      navigate("/super-admin/dashboard");
     } catch (err) {
       dispatch(setError(err?.data?.error?.message || "Login failed"));
     }
@@ -52,13 +53,23 @@ const SuperAdminLogin = () => {
             </div>
             <div className="login-field">
               <label>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter super admin password"
-                required
-              />
+              <div className="password-field-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter super admin password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-eye-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label="Toggle password"
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
             <button type="submit" className="login-submit" disabled={loading}>
               {loading ? "Logging in..." : "Login"}

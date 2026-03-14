@@ -442,3 +442,124 @@ Current State Summary:
     → Third-Party Integrations (#18)
 
 ================================================================================
+
+
+================================================================================
+19. SUPER ADMIN DASHBOARD — CHART DETAILS & BEHAVIOUR
+================================================================================
+
+  This section explains how each chart on the Super Admin Analytics Dashboard
+  works, what data it shows, and what actions on the site cause them to change.
+
+
+  19.1  APPLICATION STATUS PIPELINE (Pie Chart)
+  ──────────────────────────────────────────────
+  Shows: Breakdown of all job applications by their current status.
+  Statuses: pending, reviewed, shortlisted, rejected
+
+  HOW IT CHANGES:
+  - A user submits a job application on the Career page
+    → "pending" count increases by 1
+  - An admin opens the Applications page and clicks "Review"
+    → "pending" decreases, "reviewed" increases
+  - An admin clicks "Shortlist" on a reviewed application
+    → "reviewed" decreases, "shortlisted" increases
+  - An admin clicks "Reject" on an application
+    → that status decreases, "rejected" increases
+
+  EXAMPLE:
+    If 10 people apply and no admin takes action → Pie shows: pending = 10
+    Admin reviews 5 → Pie shows: pending = 5, reviewed = 5
+    Admin shortlists 2 of the reviewed → Pie shows: pending = 5, reviewed = 3, shortlisted = 2
+
+
+  19.2  APPLICATIONS BY ROLE (Bar Chart)
+  ──────────────────────────────────────
+  Shows: How many job applications were received per job role/position.
+  Each bar = one role (e.g., "Software Engineer", "Marketing Manager", etc.)
+
+  HOW IT CHANGES:
+  - When a user applies for a job on the Career page, they select a role
+  - Each application is stored with the role/position they applied for
+  - The chart groups all applications by role and shows the count
+
+  EXAMPLE:
+    3 people apply for "Software Engineer", 2 for "Sales Executive"
+    → Bar chart shows: Software Engineer = 3, Sales Executive = 2
+    If 5 more apply for "Software Engineer"
+    → Bar updates to: Software Engineer = 8, Sales Executive = 2
+
+  TO MAKE THIS CHART CHANGE:
+    1. Go to the public Career page
+    2. Click "Apply" on any job listing
+    3. Fill out the application form and submit
+    4. The chart updates on next dashboard refresh (auto-refreshes every 60 sec)
+
+
+  19.3  CONTACT INQUIRIES TREND (Area Chart — Last 30 Days)
+  ──────────────────────────────────────────────────────────
+  Shows: Daily count of contact form submissions over the last 30 days.
+
+  HOW IT CHANGES:
+  - A user visits the Contact page and submits the contact form
+  - Each submission adds +1 to that day's count
+  - The chart shows a 30-day rolling window (older data drops off)
+
+  TO MAKE THIS CHART CHANGE:
+    1. Go to the public Contact page
+    2. Fill out and submit the contact form
+    3. Dashboard refreshes → today's data point increases
+
+
+  19.4  JOB APPLICATIONS TREND (Area Chart — Last 30 Days)
+  ────────────────────────────────────────────────────────
+  Shows: Daily count of job applications submitted over the last 30 days.
+
+  HOW IT CHANGES:
+  - A user applies for a job on the Career page
+  - Each submission adds +1 to that day's count
+  - 30-day rolling window
+
+  TO MAKE THIS CHART CHANGE:
+    1. Go to the public Career page
+    2. Submit a job application
+    3. Dashboard refreshes → today's data point increases
+
+
+  19.5  CHATBOT USAGE TREND (Line Chart — Last 30 Days)
+  ─────────────────────────────────────────────────────
+  Shows: Daily count of chatbot messages sent by visitors.
+
+  HOW IT CHANGES:
+  - A visitor uses the chatbot widget on any public page
+  - Each message sent to the chatbot adds +1 to that day's count
+
+  TO MAKE THIS CHART CHANGE:
+    1. Go to any public page (Home, About, Contact, etc.)
+    2. Click the chatbot icon (🤖) and send any message
+    3. Dashboard refreshes → today's data point increases
+
+
+  19.6  INQUIRY STATUS BREAKDOWN (Pie Chart)
+  ──────────────────────────────────────────
+  Shows: Breakdown of contact inquiries by status (unread, read, resolved).
+
+  HOW IT CHANGES:
+  - New contact submission → "unread" increases
+  - Admin marks an inquiry as "Read" → "unread" decreases, "read" increases
+  - Admin marks an inquiry as "Resolved" → "read" decreases, "resolved" increases
+
+
+  19.7  OVERVIEW CARDS (Top Row)
+  ─────────────────────────────
+  Each card shows a live count. They change when:
+  - Total Inquiries: New contact form submission
+  - Total Applications: New job application
+  - Chatbot Messages: Someone uses the chatbot
+  - Active Admins: Super admin creates/deletes an admin
+  - Active Jobs: Admin creates or deactivates a job listing
+  - Products: Admin adds/removes a product
+  - Services: Admin adds/removes a service
+  - FAQs: Admin adds/removes an FAQ
+
+================================================================================

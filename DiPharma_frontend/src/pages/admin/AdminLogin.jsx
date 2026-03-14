@@ -12,6 +12,7 @@ import "./AdminLogin.css";
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.auth);
@@ -52,13 +53,23 @@ const AdminLogin = () => {
             </div>
             <div className="login-field">
               <label>Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-              />
+              <div className="password-field-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter your password"
+                  required
+                />
+                <button
+                  type="button"
+                  className="password-eye-btn"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label="Toggle password"
+                >
+                  {showPassword ? "🙈" : "👁️"}
+                </button>
+              </div>
             </div>
             <button type="submit" className="login-submit" disabled={loading}>
               {loading ? "Logging in..." : "Login"}

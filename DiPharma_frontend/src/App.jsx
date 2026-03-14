@@ -15,12 +15,14 @@ import ScrollToTop from "./components/ScrollToTop";
 // Layouts
 import PublicLayout from "./components/layouts/PublicLayout";
 import AdminLayout from "./components/layouts/AdminLayout";
+import SuperAdminLayout from "./components/layouts/SuperAdminLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Admin Pages
 import AdminLogin from "./pages/admin/AdminLogin";
 import SuperAdminLogin from "./pages/admin/SuperAdminLogin";
 import Dashboard from "./pages/admin/Dashboard";
+import SuperAdminDashboard from "./pages/admin/SuperAdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminServices from "./pages/admin/AdminServices";
 import AdminJobs from "./pages/admin/AdminJobs";
@@ -52,7 +54,7 @@ function App() {
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/super-admin/login" element={<SuperAdminLogin />} />
 
-        {/* ADMIN ROUTES — Protected + AdminLayout */}
+        {/* ADMIN ROUTES — Protected + AdminLayout (regular admins) */}
         <Route element={<ProtectedRoute />}>
           <Route element={<AdminLayout />}>
             <Route path="/admin/dashboard" element={<Dashboard />} />
@@ -62,7 +64,20 @@ function App() {
             <Route path="/admin/applications" element={<AdminApplications />} />
             <Route path="/admin/inquiries" element={<AdminInquiries />} />
             <Route path="/admin/faqs" element={<AdminFAQs />} />
-            <Route path="/admin/manage-admins" element={<ManageAdmins />} />
+          </Route>
+        </Route>
+
+        {/* SUPER ADMIN ROUTES — Protected + SuperAdminLayout */}
+        <Route element={<ProtectedRoute requiredRole="SUPER_ADMIN" />}>
+          <Route element={<SuperAdminLayout />}>
+            <Route path="/super-admin/dashboard" element={<SuperAdminDashboard />} />
+            <Route path="/super-admin/manage-admins" element={<ManageAdmins />} />
+            <Route path="/super-admin/products" element={<AdminProducts />} />
+            <Route path="/super-admin/services" element={<AdminServices />} />
+            <Route path="/super-admin/jobs" element={<AdminJobs />} />
+            <Route path="/super-admin/applications" element={<AdminApplications />} />
+            <Route path="/super-admin/inquiries" element={<AdminInquiries />} />
+            <Route path="/super-admin/faqs" element={<AdminFAQs />} />
           </Route>
         </Route>
       </Routes>

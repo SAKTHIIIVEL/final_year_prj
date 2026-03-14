@@ -12,12 +12,14 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Products", "Services", "Jobs", "Applications", "Inquiries", "FAQs", "Dashboard"],
+  tagTypes: ["Products", "Services", "Jobs", "Applications", "Inquiries", "FAQs", "Dashboard", "SuperAdminDashboard", "Admins"],
   endpoints: (builder) => ({
     // --- Auth ---
     superAdminLogin: builder.mutation({ query: (body) => ({ url: "/super-admin/login", method: "POST", body }) }),
     adminLogin: builder.mutation({ query: (body) => ({ url: "/admin/login", method: "POST", body }) }),
-    createAdmin: builder.mutation({ query: (body) => ({ url: "/super-admin/create-admin", method: "POST", body }) }),
+    createAdmin: builder.mutation({ query: (body) => ({ url: "/super-admin/create-admin", method: "POST", body }), invalidatesTags: ["Admins"] }),
+    getAdmins: builder.query({ query: () => "/super-admin/admins", providesTags: ["Admins"] }),
+    deleteAdmin: builder.mutation({ query: (id) => ({ url: `/super-admin/admins/${id}`, method: "DELETE" }), invalidatesTags: ["Admins", "SuperAdminDashboard"] }),
     getProfile: builder.query({ query: () => "/auth/me" }),
 
     // --- Products ---
@@ -59,12 +61,20 @@ export const api = createApi({
 
     // --- Dashboard ---
     getDashboardStats: builder.query({ query: () => "/dashboard/stats", providesTags: ["Dashboard"] }),
+    getSuperAdminDashboardStats: builder.query({ query: () => "/dashboard/super-admin-stats", providesTags: ["SuperAdminDashboard"] }),
 
     // --- Search ---
     searchAll: builder.query({ query: (q) => `/search?q=${q}` }),
 
     // --- Chatbot ---
-    sendChatMessage: builder.mutation({ query: (body) => ({ url: "/chatbot/message", method: "POST", body }) }),
+    sendChatMessage: builder.mutation({
+      query: ({ message, sessionId }) => ({
+        url: "/chatbot/message",
+        method: "POST",
+        body: { message },
+        headers: sessionId ? { "x-session-id": sessionId } : {},
+      }),
+    }),
 
     // --- Upload ---
     uploadImage: builder.mutation({
@@ -74,14 +84,14 @@ export const api = createApi({
 });
 
 export const {
-  useSuperAdminLoginMutation, useAdminLoginMutation, useCreateAdminMutation, useGetProfileQuery,
+  useSuperAdminLoginMutation, useAdminLoginMutation, useCreateAdminMutation, useGetAdminsQuery, useDeleteAdminMutation, useGetProfileQuery,
   useGetProductsQuery, useGetProductQuery, useCreateProductMutation, useUpdateProductMutation, useDeleteProductMutation,
   useGetServicesQuery, useGetServiceBySlugQuery, useGetAdminServicesQuery, useCreateServiceMutation, useUpdateServiceMutation, useDeleteServiceMutation,
   useGetJobsQuery, useGetJobQuery, useCreateJobMutation, useUpdateJobMutation, useDeleteJobMutation,
   useGetApplicationsQuery, useGetApplicationQuery, useUpdateApplicationStatusMutation,
   useGetInquiriesQuery, useUpdateInquiryStatusMutation,
   useGetFAQsQuery, useCreateFAQMutation, useUpdateFAQMutation, useDeleteFAQMutation,
-  useGetDashboardStatsQuery,
+  useGetDashboardStatsQuery, useGetSuperAdminDashboardStatsQuery,
   useSearchAllQuery,
   useSendChatMessageMutation,
   useUploadImageMutation,

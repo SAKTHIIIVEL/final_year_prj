@@ -54,3 +54,26 @@ export const sendContactNotification = async ({ firstName, lastName, email, phon
     htmlContent: `<p>Hi ${firstName},</p><p>Thank you for contacting us.</p><p>We've received your message regarding <b>${subject}</b> and will get back to you shortly.</p><br/><p>Best regards,<br/>Support Team</p>`,
   });
 };
+
+export const sendAdminCredentials = async ({ name, email, password }) => {
+  await sendEmail({
+    to: email,
+    subject: "Welcome to DiPharma Admin Panel",
+    senderName: "DiPharma Admin",
+    htmlContent: `
+      <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #0d0f36; color: #e4e4f8; padding: 32px; border-radius: 16px;">
+        <h2 style="color: #4846ff; margin-top: 0;">Welcome to DiPharma! 🎉</h2>
+        <p>Hi <strong>${name}</strong>,</p>
+        <p>Your admin account has been created. You can now log in to the DiPharma Admin Panel.</p>
+        <div style="background: rgba(72, 70, 255, 0.1); border: 1px solid rgba(72, 70, 255, 0.3); border-radius: 12px; padding: 20px; margin: 20px 0;">
+          <p style="margin: 0 0 8px 0;"><strong>Login URL:</strong> <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/admin/login" style="color: #4846ff;">${process.env.FRONTEND_URL || 'http://localhost:5173'}/admin/login</a></p>
+          <p style="margin: 0 0 8px 0;"><strong>Email:</strong> ${email}</p>
+          <p style="margin: 0;"><strong>Password:</strong> ${password}</p>
+        </div>
+        <p style="color: #a3a3c2; font-size: 13px;">Please change your password after your first login for security.</p>
+        <br/>
+        <p>Best regards,<br/><strong>DiPharma Team</strong></p>
+      </div>
+    `,
+  });
+};
