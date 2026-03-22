@@ -1,6 +1,6 @@
 import Application from "../models/Application.js";
 import fs from "fs";
-import { sendApplicationNotification } from "../services/emailService.js";
+import { sendApplicationNotification, sendShortlistNotification, sendRejectionNotification } from "../services/emailService.js";
 import { uploadToCloudinary } from "../middleware/upload.js";
 import { generateApplicationsExcel } from "../services/excelService.js";
 
@@ -55,8 +55,28 @@ export const getApplication = async (req, res, next) => {
 export const updateApplicationStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
-    const application = await Application.findByIdAndUpdate(req.params.id, { status }, { new: true, runValidators: true });
+    const application = await Application.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true, runValidators: true }
+    );
     if (!application) return res.status(404).json({ success: false, error: { code: "NOT_FOUND", message: "Application not found" } });
+
+    // Send status email to applicant (fire-and-forget, never blocks response)
+    if (status === "shortlisted") {
+      sendShortlistNotification({
+        name: application.name,
+        email: application.email,
+        role: application.role,
+      }).catch((err) => console.error("Shortlist email failed:", err.message));
+    } else if (status === "rejected") {
+      sendRejectionNotification({
+        name: application.name,
+        email: application.email,
+        role: application.role,
+      }).catch((err) => console.error("Rejection email failed:", err.message));
+    }
+
     res.json({ success: true, data: application });
   } catch (error) { next(error); }
 };

@@ -147,3 +147,19 @@
   .sa-topbar  { padding: 10px 14px; }
   .sa-welcome-text { font-size: 0.72rem; }
 }
+
+/* ── Super Admin Table Scrollbar (violet override) ── */
+.sa-layout .admin-table-wrapper {
+  scrollbar-color: #a78bfa rgba(167, 139, 250, 0.08);
+}
+.sa-layout .admin-table-wrapper::-webkit-scrollbar-track {
+  background: rgba(167, 139, 250, 0.06);
+}
+.sa-layout .admin-table-wrapper::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #7c3aed, #a78bfa);
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.4);
+}
+.sa-layout .admin-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #8b5cf6, #c4b5fd);
+  box-shadow: 0 0 14px rgba(167, 139, 250, 0.6);
+}

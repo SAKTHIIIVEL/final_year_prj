@@ -239,7 +239,29 @@
 .admin-table-wrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 4px 0;
+  padding: 4px 0 12px; /* extra bottom pad for scrollbar room */
+  scrollbar-width: thin;                         /* Firefox */
+  scrollbar-color: var(--accent) rgba(72,70,255,0.08); /* Firefox thumb / track */
+}
+
+/* ── Custom Webkit Scrollbar (Chrome, Edge, Safari) ── */
+.admin-table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.admin-table-wrapper::-webkit-scrollbar-track {
+  background: rgba(72, 70, 255, 0.06);
+  border-radius: 99px;
+  margin: 0 4px;
+}
+.admin-table-wrapper::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #4846ff, #6d28d9);
+  border-radius: 99px;
+  box-shadow: 0 0 8px rgba(72, 70, 255, 0.4);
+  transition: background 0.2s ease;
+}
+.admin-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #6361ff, #8b3fe8);
+  box-shadow: 0 0 14px rgba(109, 40, 217, 0.6);
 }
 
 .admin-table {

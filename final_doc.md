@@ -1,5 +1,9 @@
 # FINAL PROJECT DOCUMENTATION: DIPHARMA MANAGEMENT SYSTEM
 
+> **Document Version:** 2.0 &nbsp;|&nbsp; **Last Updated:** March 2026
+> 
+> **Change Summary (v2.0):** Added Company Info chatbot data system, Career page job-position pre-fill, complete Admin & Super Admin UI responsive redesign, chatbot CORS & rate-limit fixes, and updated all diagrams to reflect the expanded architecture.
+
 ## 1. INTRODUCTION
 
 ### 1.1 Introduction to Project
@@ -72,9 +76,9 @@ The system's processing logic is driven by a diverse set of inputs that are tran
 - **System Logs**: Comprehensive traces of API activity and error states, essential for technical monitoring and auditing.
 
 ### 2.6 Limitations
-While DiPharma is a robust enterprise-grade application, it has defined boundaries that guide its current scope. The system's chatbot utilizes a rule-based intent matching algorithm; while highly effective for structured queries, it does not possess the generative capabilities of modern LLMs. Additionally, the system's external functionalities, such as image hosting and email delivery, are dependent on the uptime of third-party cloud architectures (Cloudinary and Brevo).
+While DiPharma is a robust enterprise-grade application, it has defined boundaries that guide its current scope. The system's chatbot utilizes a rule-based intent matching algorithm; while highly effective for structured queries, it does not possess the generative capabilities of modern LLMs. The system's chatbot now also leverages a dedicated Company Info database table, which enables administrators to curate structured answers; however, this still relies on keyword matching rather than semantic understanding. Additionally, the system's external functionalities, such as image hosting and email delivery, are dependent on the uptime of third-party cloud architectures (Cloudinary and Brevo).
 
-Another limitation is its optimization for modern web browsers. While the system is highly responsive, users on extremely legacy browsers may encounter minor visual discrepancies or reduced performance in complex animations. Furthermore, the system is primarily focused on information management and lead generation; as such, it does not currently include native e-commerce transaction capabilities. These limitations are clearly documented to provide a baseline for future architectural expansions and feature updates.
+Another limitation is its optimization for modern web browsers. While the system is now fully responsive across mobile, tablet, and desktop viewports, users on extremely legacy browsers may encounter minor visual discrepancies or reduced performance in complex animations. Furthermore, the system is primarily focused on information management and lead generation; as such, it does not currently include native e-commerce transaction capabilities. These limitations are clearly documented to provide a baseline for future architectural expansions and feature updates.
 
 ### 2.7 Existing System
 Existing methods in many pharmaceutical organizations are characterized by extreme fragmentation. Many firms still rely on static websites that lack interactivity and require manual coding for updates. Communication is often handled through generic email addresses without any structured tracking, leading to delayed responses. Recruitment is particularly inefficient, with resumes scattered across multiple inboxes without a centralized database for filtering or status tracking.
@@ -103,10 +107,12 @@ Economic feasibility involves a cost-benefit analysis where the projected benefi
 Functional requirements define the core behaviors of the system:
 - **Authentication & RBAC**: Secure multi-role login system for Admin and Super Admin roles.
 - **Content CMS**: Full CRUD capabilities for managing products, services, FAQs, and job listings.
-- **Recruitment Engine**: Career portal for job seekers to browse listings and submit applications with resume uploads.
+- **Company Info Management**: Dedicated admin interface for curating categorized Q&A pairs that the chatbot uses exclusively to answer company-related questions.
+- **Recruitment Engine**: Career portal for job seekers to browse listings and submit applications with resume uploads. Clicking a job card auto-fills the "Job Position" field in the contact form.
 - **Communication Hub**: Functional interaction through the chatbot and contact form with automated email alerts.
 - **Analytics Module**: Real-time data visualization on the dashboard for tracking inquiry and application trends.
 - **Global Search**: Unified search engine to query public content across the entire application.
+- **Responsive Admin UI**: Full three-tier responsive design for all admin pages (mobile card views, tablet-optimized tables, desktop full layout).
 
 ### 4.2 Non-Functional Requirements
 Non-functional requirements specify the quality attributes:
@@ -281,18 +287,31 @@ flowchart TD
     
     IntentMatch -- "Greeting" --> GreetResponse[Return Welcome Message]
     IntentMatch -- "Navigation (Career/Products)" --> NavResponse[Return Action: 'navigate' + Target Path]
+    IntentMatch -- "Contact/Appointment" --> NavContact[Navigate to Contact Page]
     IntentMatch -- "Contact Info" --> ContactResponse[Return Specific Contact Details]
     IntentMatch -- "Product Search" --> DBQuery[Query MongoDB Products Collection]
     
+    IntentMatch -- "Other" --> CompanyInfoCheck[Step 3b: Search CompanyInfo Collection]
+    CompanyInfoCheck --> KeywordMatch{Keyword Match?}
+    KeywordMatch -- "Yes" --> CompanyInfoResponse[Return Admin-Curated Answer]
+    KeywordMatch -- "No" --> FuzzyMatch{Fuzzy Question Match?}
+    FuzzyMatch -- "Yes" --> CompanyInfoResponse
+    FuzzyMatch -- "No" --> FAQSearch[Step 4: Query FAQs Collection]
+    
+    FAQSearch --> FAQFound{FAQ Match?}
+    FAQFound -- "Yes" --> FAQResponse[Return FAQ Answer]
+    FAQFound -- "No" --> Fallback[Suggest Manual Search]
+    
     DBQuery --> SearchFound{Matching Item?}
     SearchFound -- "Yes" --> ItemResponse[Return Formatted Item Details]
-    SearchFound -- "No" --> Fallback[Suggest FAQ or Manual Search]
-    
-    IntentMatch -- "Unrecognized" --> Fallback
+    SearchFound -- "No" --> CompanyInfoCheck
     
     GreetResponse --> Log[Log Interaction to ChatbotInteraction Model]
     NavResponse --> Log
+    NavContact --> Log
     ContactResponse --> Log
+    CompanyInfoResponse --> Log
+    FAQResponse --> Log
     ItemResponse --> Log
     Fallback --> Log
     
@@ -327,9 +346,227 @@ classDiagram
         +String department
         +Boolean isActive
     }
+    class FAQModel {
+        +String question
+        +String answer
+        +Number order
+        +Boolean isActive
+    }
+    class CompanyInfoModel {
+        +String category
+        +String question
+        +String[] keywords
+        +String answer
+        +Boolean isActive
+        +Number order
+    }
+    class ChatbotInteractionModel {
+        +String sessionId
+        +String userMessage
+        +String botResponse
+        +String matchedSource
+    }
     
     JobModel "1" -- "0..*" ApplicationModel : attracts
+    CompanyInfoModel "*" -- "1" ChatbotInteractionModel : sources
+    FAQModel "*" -- "1" ChatbotInteractionModel : sources
 ```
+
+## 9. SYSTEM TESTING AND IMPLEMENTATION
+
+### 9.1 Introduction
+The Testing and Implementation phase is the final quality assurance gate before the DiPharma system enters a live production environment. Testing ensures that the software is not only functional but also secure and high-performing under real-world conditions. Implementation focuses on the systematic deployment of the application, ensuring that the cloud environment, database, and third-party services are correctly configured for industrial use. Together, these processes guarantee the reliability and professionalism of the pharmaceutical management platform.
+
+The testing strategy was expanded to cover all new modules introduced in v2.0:
+- **Unit Testing**: Validation of individual functions, such as the chatbot's intent matching logic, Company Info keyword normalization, and authentication utilities.
+- **Integration Testing**: Ensuring the seamless communication between the Node.js backend and the MongoDB/Cloudinary/Brevo service layers; specifically verifying that the Company Info matching step is correctly prioritized before the FAQ fallback.
+- **Security Testing**: Rigorous evaluation of the JWT lifecycle, CORS preflight headers (including the `x-session-id` custom header), rate-limiting per endpoint, and role-based route protection.
+- **UI/UX Testing**: Cross-device verification that the three-tier responsive layout (mobile card view < 640px, tablet table 640–899px, desktop ≥ 900px) renders correctly across Chrome, Edge, Firefox, and Safari.
+
+## 7. NEW MODULES & ENHANCEMENTS (v2.0)
+
+This section documents all new features and improvements added to the DiPharma platform in the second development cycle.
+
+---
+
+### 7.1 Chatbot Infrastructure Fixes
+
+Three structural bugs in the chatbot subsystem were identified and resolved:
+
+| # | Bug | Root Cause | Fix Applied |
+|---|---|---|---|
+| 1 | **CORS Preflight Failure** | `x-session-id` custom header was not listed in `allowedHeaders` in `cors.js` | Added `"x-session-id"` to the `allowedHeaders` array |
+| 2 | **RTK Query Header Overwrite** | RTK Query's base `prepareHeaders` was silently overwriting the per-mutation custom header | Moved `sessionId` from a request header into the **request body** |
+| 3 | **Aggressive Rate Limiting** | The global limiter (100 req / 15 min) was too strict for chatbot conversations | Created a dedicated `chatbotLimiter` (200 req / 15 min) applied only to `POST /api/v1/chatbot/message` |
+
+**Files modified:** `src/config/cors.js`, `src/middleware/rateLimiter.js`, `src/routes/chatbotRoutes.js`, `src/controllers/chatbotController.js`, `DiPharma_frontend/src/store/api.js`
+
+---
+
+### 7.2 Company Info — Chatbot Knowledge Base
+
+A new dedicated module was built to allow administrators to feed structured company knowledge directly to the chatbot without polluting the public FAQ section.
+
+#### 7.2.1 Backend Implementation
+
+**New MongoDB Model — `CompanyInfo`:**
+
+| Field | Type | Description |
+|---|---|---|
+| `category` | `String` | Grouping label (General, Contact, About, Operations, etc.) |
+| `question` | `String` | The topic or canonical question |
+| `keywords` | `[String]` | Comma-separated trigger words that activate this entry |
+| `answer` | `String` | The full response the chatbot will return |
+| `isActive` | `Boolean` | Whether this entry is currently served by the chatbot |
+| `order` | `Number` | Display order in the admin table |
+
+**New API Endpoints (`/api/v1/company-info`):**
+
+| Method | Route | Auth | Description |
+|---|---|---|---|
+| `GET` | `/` | Public | Returns all active entries |
+| `POST` | `/` | Admin+ | Creates a new entry |
+| `PUT` | `/:id` | Admin+ | Updates an existing entry |
+| `DELETE` | `/:id` | Admin+ | Deletes an entry |
+
+**Chatbot Matching Priority (updated Step 3b):**
+
+The `chatbotController.js` was updated to query the `CompanyInfo` collection before falling back to FAQs:
+
+```
+Step 1 → Built-in greeting/navigation intents
+Step 2 → Product database search  
+Step 3 → MongoDB Company Info (keyword OR fuzzy question match)  ← NEW
+Step 4 → FAQ fallback
+Step 5 → "I don't know" fallback
+```
+
+#### 7.2.2 Frontend Implementation
+
+- **New Admin Page:** `AdminCompanyInfo.jsx` — full CRUD interface with category filter tabs, a data table with keyword tag chips, and a modal form.
+- **New RTK Query Endpoints:** `useGetCompanyInfoQuery`, `useCreateCompanyInfoMutation`, `useUpdateCompanyInfoMutation`, `useDeleteCompanyInfoMutation` (added to `api.js`).
+- **Routing:** Added routes `/admin/company-info` and `/super-admin/company-info` in `App.jsx`.
+- **Navigation:** Added "🤖 Company Info" nav item to both `AdminLayout.jsx` and `SuperAdminLayout.jsx` sidebars.
+
+#### 7.2.3 How to Use
+
+1. Go to **Admin Dashboard → Company Info**.
+2. Click **+ Add Entry** and fill in the category, question, keywords (comma-separated), and answer.
+3. Save. The chatbot will now match any user message containing those keywords and return the configured answer.
+
+> **Example:** Keywords `address, location, where are you` → Answer `"Our headquarters is at 123 Pharma Street, Chennai."`
+
+---
+
+### 7.3 Career Page — Job Position Auto-Fill
+
+A UX enhancement was implemented on the `CareerPage.jsx` public page.
+
+**Behaviour:** When a visitor clicks any job listing card (e.g., *"Medical Sales Representative"*), the application:
+1. Automatically scrolls to the contact/application form below.
+2. **Pre-fills** the "Job Position" input field with the exact title of the clicked job.
+3. Focuses the input so the user can immediately continue filling the form.
+
+**Implementation:**
+- Added a `roleFieldRef` (`useRef`) attached to the Job Position `<input>`.
+- Created `handleRoleClick(title)` — sets `formData.role`, clears validation errors, calls `scrollIntoView()`, and focuses the ref.
+- Moved `onClick` handlers from the `<ul>` parent to each individual `<li>` job card, passing the specific role title.
+
+**File modified:** `DiPharma_frontend/src/pages/CareerPage.jsx`
+
+---
+
+### 7.4 Admin & Super Admin — 3-Tier Responsive UI Redesign
+
+A complete responsive overhaul was performed on the entire admin and super admin frontend, ensuring a premium experience across all screen sizes.
+
+#### 7.4.1 Design System Upgrade
+
+Both `AdminLayout.css` and `SuperAdminLayout.css` were fully rewritten with:
+- **CSS Custom Properties (variables)** for consistent theming (`--accent`, `--bg-card`, `--border-base`, etc.)
+- **Inter font** (via Google Fonts) replacing the previous Poppins/default fallback
+- **Refined button, badge, and modal styles** with micro-hover animations and box-shadow depth
+
+#### 7.4.2 Responsive Breakpoint Strategy
+
+| Viewport | Width | Sidebar Behavior | Table Behavior |
+|---|---|---|---|
+| **Desktop** | ≥ 900px | Always open, collapsible to 68px icon mode | Full-column tables visible |
+| **Tablet** | 640–899px | Slide-in overlay (☰ toggle), closes on nav click | Horizontal-scroll tables, charts stack 1-col |
+| **Mobile** | < 640px | Slide-in overlay | **Table hidden**, replaced by styled data cards |
+
+#### 7.4.3 Mobile Card System
+
+A new mobile card layout was introduced for all 7 admin data pages. Each record is rendered as a self-contained card with:
+- Title + status badge in the header
+- Key fields as label → value row pairs
+- Action buttons (Edit / Delete / Review) at the card footer
+
+| Admin Page | Desktop Columns | Mobile Card Fields |
+|---|---|---|
+| Applications | 8 (Name, Email, Phone, Position, Resume, Status, Date, Actions) | Name + Role, Email, Phone, Resume link, Date, Actions |
+| Inquiries | 7 (Name, Email, Subject, Message, Status, Date, Actions) | Name + Subject, Email, Message preview, Date, Actions |
+| Products | 6 (Image, Title, Type, Order, Status, Actions) | Thumbnail + Title, Card type, Order, Actions |
+| Services | 5 (Title, Slug, Features, Status, Actions) | Title + slug, Features count, Actions |
+| Jobs | 5 (Title, Location, Type, Status, Actions) | Title + Location·Type, Actions |
+| FAQs | 4 (Question, Order, Status, Actions) | Question, Order, Actions |
+| Company Info | 5 (Category, Question, Keywords, Status, Actions) | Question + Category, Answer preview, Keywords, Actions |
+
+#### 7.4.4 Per-Table Min-Widths
+
+To ensure no column is ever clipped on tablet, each table has a calibrated minimum width enforced via modifier CSS class:
+
+```css
+.admin-table--applications { min-width: 960px; }
+.admin-table--inquiries    { min-width: 860px; }
+.admin-table--products     { min-width: 660px; }
+.admin-table--services     { min-width: 620px; }
+.admin-table--jobs         { min-width: 580px; }
+.admin-table--faqs         { min-width: 540px; }
+.admin-table--company      { min-width: 680px; }
+```
+
+**Files modified:** `AdminLayout.css`, `SuperAdminLayout.css`, `AdminLayout.jsx`, `SuperAdminLayout.jsx`, `AdminApplications.jsx`, `AdminInquiries.jsx`, `AdminProducts.jsx`, `AdminServices.jsx`, `AdminJobs.jsx`, `AdminFAQs.jsx`, `AdminCompanyInfo.jsx`
+
+---
+
+## 8. UPDATED BACKEND API REFERENCE
+
+### 8.1 Full API Endpoint Table
+
+| Module | Method | Endpoint | Auth | Description |
+|---|---|---|---|---|
+| Auth | POST | `/api/v1/auth/login` | Public | Admin/SuperAdmin login |
+| Auth | POST | `/api/v1/auth/logout` | Admin | Logout |
+| Products | GET | `/api/v1/products` | Public | List all active products |
+| Products | POST | `/api/v1/products` | Admin | Create product |
+| Products | PUT | `/api/v1/products/:id` | Admin | Update product |
+| Products | DELETE | `/api/v1/products/:id` | Admin | Delete product |
+| Services | GET | `/api/v1/services` | Public | List all active services |
+| Services | GET | `/api/v1/services/:slug` | Public | Service detail by slug |
+| Services | POST/PUT/DELETE | `/api/v1/services/...` | Admin | CRUD operations |
+| Jobs | GET | `/api/v1/jobs` | Public | List active jobs |
+| Jobs | POST/PUT/DELETE | `/api/v1/jobs/...` | Admin | CRUD operations |
+| Applications | GET | `/api/v1/applications` | Admin | List applications |
+| Applications | POST | `/api/v1/applications` | Public | Submit application |
+| Applications | PUT | `/api/v1/applications/:id` | Admin | Update status |
+| Applications | GET | `/api/v1/applications/export/excel` | Admin | Download Excel |
+| Inquiries | GET | `/api/v1/inquiries` | Admin | List inquiries |
+| Inquiries | POST | `/api/v1/inquiries` | Public | Submit inquiry |
+| Inquiries | PUT | `/api/v1/inquiries/:id` | Admin | Update status |
+| Inquiries | GET | `/api/v1/inquiries/export/excel` | Admin | Download Excel |
+| FAQs | GET | `/api/v1/faqs` | Public | List active FAQs |
+| FAQs | POST/PUT/DELETE | `/api/v1/faqs/...` | Admin | CRUD operations |
+| **Company Info** | **GET** | **`/api/v1/company-info`** | **Public** | **List all active entries** |
+| **Company Info** | **POST** | **`/api/v1/company-info`** | **Admin** | **Create entry** |
+| **Company Info** | **PUT** | **`/api/v1/company-info/:id`** | **Admin** | **Update entry** |
+| **Company Info** | **DELETE** | **`/api/v1/company-info/:id`** | **Admin** | **Delete entry** |
+| Chatbot | POST | `/api/v1/chatbot/message` | Public | Send message, get bot reply |
+| Chatbot | GET | `/api/v1/chatbot/history` | Admin | View chat logs |
+| Upload | POST | `/api/v1/upload/image` | Admin | Upload image to Cloudinary |
+| Manage Admins | GET/POST/DELETE | `/api/v1/manage-admins/...` | SuperAdmin | Admin user management |
+
+---
 
 ## 9. SYSTEM TESTING AND IMPLEMENTATION
 
@@ -338,10 +575,10 @@ The Testing and Implementation phase is the final quality assurance gate before 
 
 ### 9.2 Strategic Approach of Software Testing
 DiPharma employs a multi-tiered testing strategy:
-- **Unit Testing**: Validation of individual functions, such as the chatbot's intent matching logic and authentication utilities.
-- **Integration Testing**: Ensuring the seamless communication between the Node.js backend and the MongoDB/Cloudinary/Brevo service layers.
-- **Security Testing**: Rigorous evaluation of the JWT lifecycle, password hashing, and role-based route protection to ensure zero unauthorized access.
-- **UI/UX Testing**: Cross-device verification of the React application to ensure that animations and layouts remain responsive and visually premium.
+- **Unit Testing**: Validation of individual functions, such as the chatbot's intent matching logic, Company Info keyword normalization utility, and authentication utilities.
+- **Integration Testing**: Ensuring the seamless communication between the Node.js backend and the MongoDB/Cloudinary/Brevo service layers. Specific tests validate that the Company Info matching step (Step 3b) correctly fires before the FAQ fallback (Step 4).
+- **Security Testing**: Rigorous evaluation of the JWT lifecycle, CORS `allowedHeaders` (including `x-session-id`), per-route rate limiting, and role-based route protection to ensure zero unauthorized access.
+- **UI/UX Testing**: Cross-device verification of the React application to ensure the 3-tier responsive layout renders correctly (mobile cards < 640px, scrollable tables on tablet, full-column tables on desktop).
 
 ### 9.3 Testing Procedures
 Testing begins with a structured preparation phase where test cases are defined for every requirement in the SRS. This is followed by systematic execution using tools like Postman for API validation and manual browser walkthroughs for the frontend. All identified bugs are logged and prioritized based on their impact. After rectification, regression testing is performed to ensure that new fixes haven't introduced side effects. The final phase is User Acceptance Testing (UAT), ensuring the system fully satisfies the organizational needs and is ready for public and administrative use.
@@ -358,9 +595,20 @@ The system implements industrial-grade security controls:
 - **Role-Based Access Control (RBAC)**: Strict middleware-level enforcement ensures that users only access functionality permitted by their role (Admin vs. Super Admin).
 - **Secure Headers**: Deployment of the Helmet middleware to defend against XSS, clickjacking, and other common browser-based attack vectors.
 - **Input Filtering**: Systematic validation of all API inputs using `express-validator` to prevent NoSQL injection and ensure data quality.
+- **CORS Policy**: Fine-grained CORS configuration with an explicit `allowedHeaders` whitelist (including `x-session-id` for chatbot session tracking) ensuring only trusted origins can call the API.
+- **Per-Route Rate Limiting**: A general limiter (100 req/15 min) protects all standard API routes, while a dedicated chatbot limiter (200 req/15 min) prevents conversation interruptions without compromising security.
 
 ## 11. CONCLUSION & FUTURE ENHANCEMENT
 
-The DiPharma Management System is a powerful, modern platform that successfully digitizes the complex operations of a pharmaceutical organization. By integrating high-fidelity visualizations, automated workflows, and robust security into a unified MERN-lite architecture, the project provides a strategic advantage to its stakeholders. The system not only solves current management challenges but also provides a scalable foundation for the company's digital growth.
+The DiPharma Management System v2.0 is a powerful, modern platform that successfully digitizes the complex operations of a pharmaceutical organization. The second development cycle significantly expanded the platform's capabilities, introducing a structured Company Info knowledge base for the chatbot, a smart Career page with job-position pre-fill, and a comprehensive three-tier responsive redesign of the entire admin and super admin interfaces. These improvements ensure that DiPharma delivers an exceptional experience to both public users and internal administrators across all devices.
 
-Future enhancements include the integration of **Large Language Models (LLMs)** to elevate the chatbot's capabilities, the addition of an **E-commerce Engine** for pharmaceutical sales, and the development of a **Native Mobile App** version for on-the-go management. These planned developments will ensure that DiPharma remains at the cutting edge of technological innovation, continuing to deliver value and operational excellence in the pharmaceutical industry.
+The platform's architecture remains firmly MERN-lite at its core, now enriched with a more mature CSS design system (CSS custom properties, Inter font, modular mobile card layout), a more intelligent chatbot pipeline (keyword → fuzzy → FAQ matching with admin-curated data), and a cleaner RESTful API surface with dedicated per-resource rate limiting.
+
+Future enhancements include:
+- **LLM Integration**: Connecting the chatbot to an OpenAI or Google Gemini API so that Company Info entries serve as RAG (Retrieval-Augmented Generation) documents for accurate, generative answers.
+- **E-commerce Engine**: Adding pharmaceutical product ordering and payment processing.
+- **Native Mobile App**: React Native version for on-the-go admin management.
+- **Push Notifications**: Real-time alerts to admins on new applications or inquiries via Web Push or Firebase.
+- **Advanced Analytics**: Role-based exportable report builder with custom date ranges and chart types.
+
+These planned developments will ensure that DiPharma remains at the cutting edge of technological innovation, continuing to deliver value and operational excellence in the pharmaceutical industry.
