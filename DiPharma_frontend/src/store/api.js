@@ -12,7 +12,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Products", "Services", "Jobs", "Applications", "Inquiries", "FAQs", "Dashboard", "SuperAdminDashboard", "Admins"],
+  tagTypes: ["Products", "Services", "Jobs", "Applications", "Inquiries", "FAQs", "Dashboard", "SuperAdminDashboard", "Admins", "CompanyInfo"],
   endpoints: (builder) => ({
     // --- Auth ---
     superAdminLogin: builder.mutation({ query: (body) => ({ url: "/super-admin/login", method: "POST", body }) }),
@@ -71,10 +71,15 @@ export const api = createApi({
       query: ({ message, sessionId }) => ({
         url: "/chatbot/message",
         method: "POST",
-        body: { message },
-        headers: sessionId ? { "x-session-id": sessionId } : {},
+        body: { message, sessionId },
       }),
     }),
+
+    // --- Company Info (Chatbot Data) ---
+    getCompanyInfo: builder.query({ query: () => "/company-info", providesTags: ["CompanyInfo"] }),
+    createCompanyInfo: builder.mutation({ query: (body) => ({ url: "/company-info", method: "POST", body }), invalidatesTags: ["CompanyInfo"] }),
+    updateCompanyInfo: builder.mutation({ query: ({ id, ...body }) => ({ url: `/company-info/${id}`, method: "PUT", body }), invalidatesTags: ["CompanyInfo"] }),
+    deleteCompanyInfo: builder.mutation({ query: (id) => ({ url: `/company-info/${id}`, method: "DELETE" }), invalidatesTags: ["CompanyInfo"] }),
 
     // --- Upload ---
     uploadImage: builder.mutation({
@@ -95,4 +100,8 @@ export const {
   useSearchAllQuery,
   useSendChatMessageMutation,
   useUploadImageMutation,
+  useGetCompanyInfoQuery,
+  useCreateCompanyInfoMutation,
+  useUpdateCompanyInfoMutation,
+  useDeleteCompanyInfoMutation,
 } = api;

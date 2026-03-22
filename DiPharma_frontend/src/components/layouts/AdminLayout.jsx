@@ -7,16 +7,16 @@ import logo from "../../assets/brands/logo.png";
 import ChatbotIcon from "../ChatbotIcon";
 
 const AdminLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 900);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { admin } = useSelector((state) => state.auth);
-  const isMobile = () => window.innerWidth <= 768;
+  const isMobile = () => window.innerWidth <= 900;
 
-  // Close sidebar on resize to mobile
+  // Close sidebar on resize to tablet/mobile
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) setSidebarOpen(true);
+      if (window.innerWidth > 900) setSidebarOpen(true);
       else setSidebarOpen(false);
     };
     window.addEventListener("resize", handleResize);
@@ -44,6 +44,7 @@ const AdminLayout = () => {
     { path: "/admin/applications", label: "Applications", icon: "📝" },
     { path: "/admin/inquiries", label: "Inquiries", icon: "📬" },
     { path: "/admin/faqs", label: "FAQs", icon: "❓" },
+    { path: "/admin/company-info", label: "Company Info", icon: "🤖" },
   ];
 
   return (

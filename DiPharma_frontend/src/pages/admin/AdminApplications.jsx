@@ -17,109 +17,134 @@ const AdminApplications = () => {
 
   const downloadExcel = () => {
     const token = localStorage.getItem("dipharma_token");
-    window.open(
-      `${API_URL}/api/v1/applications/export/excel?token=${token}`,
-      "_blank",
-    );
+    window.open(`${API_URL}/api/v1/applications/export/excel?token=${token}`, "_blank");
   };
+
+  const resumeUrl = (a) =>
+    a.resumePath
+      ? a.resumePath.startsWith("http")
+        ? a.resumePath
+        : `${API_URL}/${a.resumePath}`
+      : null;
 
   return (
     <div>
       <div className="admin-header-row">
         <h1 className="admin-page-title">Applications</h1>
-        <button
-          className="admin-btn admin-btn-success excel-btn"
-          onClick={downloadExcel}
-        >
+        <button className="admin-btn admin-btn-success excel-btn" onClick={downloadExcel}>
           📥 Download Excel
         </button>
       </div>
+
       <div className="admin-card">
         {isLoading ? (
-          <p style={{ color: "#a3a3c2" }}>Loading...</p>
+          <p style={{ color: "#a3a3c2", padding: "20px" }}>Loading...</p>
         ) : applications.length === 0 ? (
-          <div className="empty-state">
-            <p>No applications yet</p>
-          </div>
+          <div className="empty-state"><p>No applications yet</p></div>
         ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Position</th>
-                <th>Resume</th>
-                <th>Status</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* ── Desktop / Tablet Table ── */}
+            <div className="admin-table-wrapper">
+              <table className="admin-table admin-table--applications">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Position</th>
+                    <th>Resume</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {applications.map((a) => (
+                    <tr key={a._id}>
+                      <td style={{ fontWeight: 600, color: "#fff" }}>{a.name}</td>
+                      <td style={{ color: "#a3a3c2" }}>{a.email}</td>
+                      <td style={{ whiteSpace: "nowrap" }}>{a.countryCode} {a.phone}</td>
+                      <td style={{ maxWidth: 160 }}>{a.role}</td>
+                      <td>
+                        {resumeUrl(a) ? (
+                          <a href={resumeUrl(a)} target="_blank" rel="noreferrer"
+                            style={{ color: "#4846FF", fontWeight: 500 }}>View</a>
+                        ) : "—"}
+                      </td>
+                      <td><span className={`admin-badge badge-${a.status}`}>{a.status}</span></td>
+                      <td style={{ fontSize: "12px", color: "#a3a3c2", whiteSpace: "nowrap" }}>
+                        {new Date(a.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="actions-cell">
+                        {a.status === "pending" && (
+                          <button className="admin-btn admin-btn-primary admin-btn-sm"
+                            onClick={() => handleStatus(a._id, "reviewed")}>Review</button>
+                        )}
+                        {a.status === "reviewed" && (
+                          <>
+                            <button className="admin-btn admin-btn-success admin-btn-sm"
+                              onClick={() => handleStatus(a._id, "shortlisted")}>Shortlist</button>
+                            <button className="admin-btn admin-btn-danger admin-btn-sm"
+                              onClick={() => handleStatus(a._id, "rejected")}>Reject</button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* ── Mobile Card View ── */}
+            <div className="admin-mobile-list" style={{ padding: "12px" }}>
               {applications.map((a) => (
-                <tr key={a._id}>
-                  <td>{a.name}</td>
-                  <td>{a.email}</td>
-                  <td>
-                    {a.countryCode} {a.phone}
-                  </td>
-                  <td>{a.role}</td>
-                  <td>
-                    {a.resumePath ? (
-                      <a
-                        href={
-                          a.resumePath.startsWith("http")
-                            ? a.resumePath
-                            : `${API_URL}/${a.resumePath}`
-                        }
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{ color: "#4846FF" }}
-                      >
-                        View
-                      </a>
-                    ) : (
-                      "N/A"
-                    )}
-                  </td>
-                  <td>
-                    <span className={`admin-badge badge-${a.status}`}>
-                      {a.status}
+                <div className="admin-mobile-card" key={a._id}>
+                  <div className="amc-header">
+                    <div>
+                      <div className="amc-title">{a.name}</div>
+                      <div className="amc-subtitle">{a.role}</div>
+                    </div>
+                    <span className={`admin-badge badge-${a.status}`}>{a.status}</span>
+                  </div>
+                  <div className="amc-row">
+                    <span className="amc-label">Email</span>
+                    <span className="amc-value">{a.email}</span>
+                  </div>
+                  <div className="amc-row">
+                    <span className="amc-label">Phone</span>
+                    <span className="amc-value">{a.countryCode} {a.phone}</span>
+                  </div>
+                  <div className="amc-row">
+                    <span className="amc-label">Resume</span>
+                    <span className="amc-value">
+                      {resumeUrl(a) ? (
+                        <a href={resumeUrl(a)} target="_blank" rel="noreferrer"
+                          style={{ color: "#4846FF" }}>View Resume</a>
+                      ) : "—"}
                     </span>
-                  </td>
-                  <td style={{ fontSize: "12px", color: "#a3a3c2" }}>
-                    {new Date(a.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="actions-cell">
+                  </div>
+                  <div className="amc-row">
+                    <span className="amc-label">Date</span>
+                    <span className="amc-value">{new Date(a.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <div className="amc-actions">
                     {a.status === "pending" && (
-                      <button
-                        className="admin-btn admin-btn-primary admin-btn-sm"
-                        onClick={() => handleStatus(a._id, "reviewed")}
-                      >
-                        Review
-                      </button>
+                      <button className="admin-btn admin-btn-primary admin-btn-sm"
+                        onClick={() => handleStatus(a._id, "reviewed")}>✓ Review</button>
                     )}
                     {a.status === "reviewed" && (
                       <>
-                        <button
-                          className="admin-btn admin-btn-success admin-btn-sm"
-                          onClick={() => handleStatus(a._id, "shortlisted")}
-                        >
-                          Shortlist
-                        </button>
-                        <button
-                          className="admin-btn admin-btn-danger admin-btn-sm"
-                          onClick={() => handleStatus(a._id, "rejected")}
-                        >
-                          Reject
-                        </button>
+                        <button className="admin-btn admin-btn-success admin-btn-sm"
+                          onClick={() => handleStatus(a._id, "shortlisted")}>Shortlist</button>
+                        <button className="admin-btn admin-btn-danger admin-btn-sm"
+                          onClick={() => handleStatus(a._id, "rejected")}>Reject</button>
                       </>
                     )}
-                  </td>
-                </tr>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
     </div>

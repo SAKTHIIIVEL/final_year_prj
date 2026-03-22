@@ -26,6 +26,7 @@ import dashboardRoutes from "./src/routes/dashboardRoutes.js";
 import searchRoutes from "./src/routes/searchRoutes.js";
 import chatbotRoutes from "./src/routes/chatbotRoutes.js";
 import uploadRoutes from "./src/routes/upload.routes.js";
+import companyInfoRoutes from "./src/routes/companyInfoRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,6 +60,7 @@ app.use("/api/v1/faqs", faqRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
 app.use("/api/v1/search", searchRoutes);
 app.use("/api/v1/chatbot", chatbotRoutes);
+app.use("/api/v1/company-info", companyInfoRoutes);
 app.use("/api/v1/upload", uploadRoutes);
 
 // --------------- Legacy endpoints (backward compatibility) ---------------

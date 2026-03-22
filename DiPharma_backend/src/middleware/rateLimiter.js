@@ -15,3 +15,11 @@ export const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+export const chatbotLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  message: { success: false, error: { code: "RATE_LIMIT", message: "Too many messages, please wait a moment before trying again." } },
+  standardHeaders: true,
+  legacyHeaders: false,
+});

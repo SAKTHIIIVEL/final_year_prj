@@ -191,6 +191,17 @@ const CareerPage = () => {
     }
   };
 
+  const handleRoleClick = (roleTitle) => {
+    // Pre-fill the Job Position field with the clicked role title
+    setFormData((prev) => ({ ...prev, role: roleTitle }));
+    // Clear any existing role validation error
+    setErrors((prev) => ({ ...prev, role: "" }));
+    // Smooth scroll to the contact/application form
+    document.getElementById("career-contact")?.scrollIntoView({ behavior: "smooth" });
+    // Focus the role input after scroll settles
+    setTimeout(() => roleFieldRef.current?.focus(), 700);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -251,6 +262,7 @@ const CareerPage = () => {
   const portraitRef = useRef(null);
   const contactportraitRef = useRef(null);
   const formRef = useRef(null);
+  const roleFieldRef = useRef(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -345,16 +357,14 @@ const CareerPage = () => {
             <h2 className="section-title">Open Positions</h2>
 
             <div className="hero-card">
-              <ul
-                className="role-list"
-                onClick={() => {
-                  document.getElementById("career-contact")?.scrollIntoView({
-                    behavior: "smooth",
-                  });
-                }}
-              >
+              <ul className="role-list">
                 {openRoles.map((role, idx) => (
-                  <li key={idx} className="role-item">
+                  <li
+                    key={idx}
+                    className="role-item"
+                    onClick={() => handleRoleClick(role.title)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <div>
                       <p className="role-name">{role.title}</p>
                       <p className="role-meta">{role.role_focus}</p>
@@ -362,7 +372,13 @@ const CareerPage = () => {
                         {role.location} • {role.type}
                       </p>
                     </div>
-                    <button className="role-apply">
+                    <button
+                      className="role-apply"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRoleClick(role.title);
+                      }}
+                    >
                       <svg
                         width="12"
                         height="12"
@@ -460,6 +476,7 @@ const CareerPage = () => {
                 </div>
                 <div className="form-group-career">
                   <input
+                    ref={roleFieldRef}
                     type="text"
                     name="role"
                     placeholder="Job Position"

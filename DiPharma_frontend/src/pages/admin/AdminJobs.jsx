@@ -59,59 +59,67 @@ const AdminJobs = () => {
       </div>
       <div className="admin-card">
         {isLoading ? (
-          <p style={{ color: "#a3a3c2" }}>Loading...</p>
+          <p style={{ color: "#a3a3c2", padding: "20px" }}>Loading...</p>
         ) : jobs.length === 0 ? (
-          <div className="empty-state">
-            <p>No jobs yet</p>
-          </div>
+          <div className="empty-state"><p>No jobs yet</p></div>
         ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Location</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* ── Desktop / Tablet Table ── */}
+            <div className="admin-table-wrapper">
+              <table className="admin-table admin-table--jobs">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Location</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {jobs.map((j) => (
+                    <tr key={j._id}>
+                      <td style={{ fontWeight: 600, color: "#fff" }}>{j.title}</td>
+                      <td style={{ color: "#a3a3c2" }}>{j.location}</td>
+                      <td>{j.type}</td>
+                      <td><span className={`admin-badge ${j.isActive ? "badge-active" : "badge-inactive"}`}>
+                        {j.isActive ? "Active" : "Inactive"}
+                      </span></td>
+                      <td className="actions-cell">
+                        <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => openEdit(j)}>Edit</button>
+                        <button className={`admin-btn admin-btn-sm ${j.isActive ? "admin-btn-danger" : "admin-btn-success"}`}
+                          onClick={() => toggleActive(j)}>{j.isActive ? "Deactivate" : "Activate"}</button>
+                        <button className="admin-btn admin-btn-danger admin-btn-sm" onClick={() => handleDelete(j._id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* ── Mobile Card View ── */}
+            <div className="admin-mobile-list" style={{ padding: "12px" }}>
               {jobs.map((j) => (
-                <tr key={j._id}>
-                  <td>{j.title}</td>
-                  <td>{j.location}</td>
-                  <td>{j.type}</td>
-                  <td>
-                    <span
-                      className={`admin-badge ${j.isActive ? "badge-active" : "badge-inactive"}`}
-                    >
+                <div className="admin-mobile-card" key={j._id}>
+                  <div className="amc-header">
+                    <div>
+                      <div className="amc-title">{j.title}</div>
+                      <div className="amc-subtitle">{j.location} · {j.type}</div>
+                    </div>
+                    <span className={`admin-badge ${j.isActive ? "badge-active" : "badge-inactive"}`}>
                       {j.isActive ? "Active" : "Inactive"}
                     </span>
-                  </td>
-                  <td className="actions-cell">
-                    <button
-                      className="admin-btn admin-btn-primary admin-btn-sm"
-                      onClick={() => openEdit(j)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className={`admin-btn admin-btn-sm ${j.isActive ? "admin-btn-danger" : "admin-btn-success"}`}
-                      onClick={() => toggleActive(j)}
-                    >
-                      {j.isActive ? "Deactivate" : "Activate"}
-                    </button>
-                    <button
-                      className="admin-btn admin-btn-danger admin-btn-sm"
-                      onClick={() => handleDelete(j._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
+                  </div>
+                  <div className="amc-actions">
+                    <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => openEdit(j)}>✏️ Edit</button>
+                    <button className={`admin-btn admin-btn-sm ${j.isActive ? "admin-btn-danger" : "admin-btn-success"}`}
+                      onClick={() => toggleActive(j)}>{j.isActive ? "Deactivate" : "Activate"}</button>
+                    <button className="admin-btn admin-btn-danger admin-btn-sm" onClick={() => handleDelete(j._id)}>🗑 Delete</button>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
 

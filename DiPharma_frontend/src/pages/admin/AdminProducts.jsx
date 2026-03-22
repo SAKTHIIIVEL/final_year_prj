@@ -79,85 +79,85 @@ const AdminProducts = () => {
       </div>
       <div className="admin-card">
         {isLoading ? (
-          <p style={{ color: "#a3a3c2" }}>Loading...</p>
+          <p style={{ color: "#a3a3c2", padding: "20px" }}>Loading...</p>
         ) : products.length === 0 ? (
-          <div className="empty-state">
-            <p>No products yet</p>
-          </div>
+          <div className="empty-state"><p>No products yet</p></div>
         ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Type</th>
-                <th>Order</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* ── Desktop / Tablet Table ── */}
+            <div className="admin-table-wrapper">
+              <table className="admin-table admin-table--products">
+                <thead>
+                  <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Order</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((p) => (
+                    <tr key={p._id}>
+                      <td>
+                        {p.image ? (
+                          <img src={p.image} alt={p.title}
+                            style={{ width: 52, height: 36, objectFit: "cover", borderRadius: 6 }} />
+                        ) : (
+                          <span style={{ color: "#555", fontSize: 12 }}>No image</span>
+                        )}
+                      </td>
+                      <td style={{ fontWeight: 600, color: "#fff" }}>{p.title}</td>
+                      <td>
+                        <span className="admin-badge"
+                          style={{ background: p.cardType === "dark" ? "rgba(72,70,255,0.15)" : "rgba(217,217,217,0.15)",
+                            color: p.cardType === "dark" ? "#4846FF" : "#D9D9D9" }}>
+                          {p.cardType}
+                        </span>
+                      </td>
+                      <td>{p.order}</td>
+                      <td><span className={`admin-badge ${p.isActive ? "badge-active" : "badge-inactive"}`}>
+                        {p.isActive ? "Active" : "Inactive"}
+                      </span></td>
+                      <td className="actions-cell">
+                        <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => openEdit(p)}>Edit</button>
+                        <button className="admin-btn admin-btn-danger admin-btn-sm" onClick={() => handleDelete(p._id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* ── Mobile Card View ── */}
+            <div className="admin-mobile-list" style={{ padding: "12px" }}>
               {products.map((p) => (
-                <tr key={p._id}>
-                  <td>
-                    {p.image ? (
-                      <img
-                        src={p.image}
-                        alt={p.title}
-                        style={{
-                          width: 50,
-                          height: 35,
-                          objectFit: "cover",
-                          borderRadius: 6,
-                        }}
-                      />
-                    ) : (
-                      <span style={{ color: "#555", fontSize: 12 }}>
-                        No image
-                      </span>
-                    )}
-                  </td>
-                  <td>{p.title}</td>
-                  <td>
-                    <span
-                      className="admin-badge"
-                      style={{
-                        background:
-                          p.cardType === "dark"
-                            ? "rgba(72,70,255,0.15)"
-                            : "rgba(217,217,217,0.15)",
-                        color: p.cardType === "dark" ? "#4846FF" : "#D9D9D9",
-                      }}
-                    >
-                      {p.cardType}
-                    </span>
-                  </td>
-                  <td>{p.order}</td>
-                  <td>
-                    <span
-                      className={`admin-badge ${p.isActive ? "badge-active" : "badge-inactive"}`}
-                    >
+                <div className="admin-mobile-card" key={p._id}>
+                  <div className="amc-header">
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      {p.image && <img src={p.image} alt={p.title} className="amc-img" />}
+                      <div>
+                        <div className="amc-title">{p.title}</div>
+                        <div className="amc-subtitle">{p.cardType} card</div>
+                      </div>
+                    </div>
+                    <span className={`admin-badge ${p.isActive ? "badge-active" : "badge-inactive"}`}>
                       {p.isActive ? "Active" : "Inactive"}
                     </span>
-                  </td>
-                  <td className="actions-cell">
-                    <button
-                      className="admin-btn admin-btn-primary admin-btn-sm"
-                      onClick={() => openEdit(p)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="admin-btn admin-btn-danger admin-btn-sm"
-                      onClick={() => handleDelete(p._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
+                  </div>
+                  <div className="amc-row">
+                    <span className="amc-label">Display Order</span>
+                    <span className="amc-value">{p.order}</span>
+                  </div>
+                  <div className="amc-actions">
+                    <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => openEdit(p)}>✏️ Edit</button>
+                    <button className="admin-btn admin-btn-danger admin-btn-sm" onClick={() => handleDelete(p._id)}>🗑 Delete</button>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
 

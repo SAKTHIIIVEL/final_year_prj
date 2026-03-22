@@ -30,6 +30,7 @@ import AdminApplications from "./pages/admin/AdminApplications";
 import AdminInquiries from "./pages/admin/AdminInquiries";
 import AdminFAQs from "./pages/admin/AdminFAQs";
 import ManageAdmins from "./pages/admin/ManageAdmins";
+import AdminCompanyInfo from "./pages/admin/AdminCompanyInfo";
 
 function App() {
   return (
@@ -64,6 +65,7 @@ function App() {
             <Route path="/admin/applications" element={<AdminApplications />} />
             <Route path="/admin/inquiries" element={<AdminInquiries />} />
             <Route path="/admin/faqs" element={<AdminFAQs />} />
+            <Route path="/admin/company-info" element={<AdminCompanyInfo />} />
           </Route>
         </Route>
 
@@ -78,6 +80,7 @@ function App() {
             <Route path="/super-admin/applications" element={<AdminApplications />} />
             <Route path="/super-admin/inquiries" element={<AdminInquiries />} />
             <Route path="/super-admin/faqs" element={<AdminFAQs />} />
+            <Route path="/super-admin/company-info" element={<AdminCompanyInfo />} />
           </Route>
         </Route>
       </Routes>

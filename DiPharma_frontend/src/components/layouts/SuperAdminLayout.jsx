@@ -7,15 +7,15 @@ import logo from "../../assets/brands/logo.png";
 import ChatbotIcon from "../ChatbotIcon";
 
 const SuperAdminLayout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 900);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { admin } = useSelector((state) => state.auth);
-  const isMobile = () => window.innerWidth <= 768;
+  const isMobile = () => window.innerWidth <= 900;
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) setSidebarOpen(true);
+      if (window.innerWidth > 900) setSidebarOpen(true);
       else setSidebarOpen(false);
     };
     window.addEventListener("resize", handleResize);
@@ -44,6 +44,7 @@ const SuperAdminLayout = () => {
     { path: "/super-admin/applications", label: "Applications", icon: "📝" },
     { path: "/super-admin/inquiries", label: "Inquiries", icon: "📬" },
     { path: "/super-admin/faqs", label: "FAQs", icon: "❓" },
+    { path: "/super-admin/company-info", label: "Company Info", icon: "🤖" },
   ];
 
   return (

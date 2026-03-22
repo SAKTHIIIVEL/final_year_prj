@@ -172,55 +172,67 @@ const AdminServices = () => {
       </div>
       <div className="admin-card">
         {isLoading ? (
-          <p style={{ color: "#a3a3c2" }}>Loading...</p>
+          <p style={{ color: "#a3a3c2", padding: "20px" }}>Loading...</p>
         ) : services.length === 0 ? (
-          <div className="empty-state">
-            <p>No services yet</p>
-          </div>
+          <div className="empty-state"><p>No services yet</p></div>
         ) : (
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Slug</th>
-                <th>Features</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* ── Desktop / Tablet Table ── */}
+            <div className="admin-table-wrapper">
+              <table className="admin-table admin-table--services">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Slug</th>
+                    <th>Features</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {services.map((s) => (
+                    <tr key={s._id}>
+                      <td style={{ fontWeight: 600, color: "#fff" }}>{s.title}</td>
+                      <td style={{ fontFamily: "monospace", fontSize: "12px", color: "#a3a3c2" }}>{s.slug}</td>
+                      <td>{s.features?.length || 0}</td>
+                      <td><span className={`admin-badge ${s.isActive ? "badge-active" : "badge-inactive"}`}>
+                        {s.isActive ? "Active" : "Inactive"}
+                      </span></td>
+                      <td className="actions-cell">
+                        <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => openEdit(s)}>Edit</button>
+                        <button className="admin-btn admin-btn-danger admin-btn-sm" onClick={() => handleDelete(s._id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* ── Mobile Card View ── */}
+            <div className="admin-mobile-list" style={{ padding: "12px" }}>
               {services.map((s) => (
-                <tr key={s._id}>
-                  <td>{s.title}</td>
-                  <td style={{ fontFamily: "monospace", fontSize: "12px" }}>
-                    {s.slug}
-                  </td>
-                  <td>{s.features?.length || 0}</td>
-                  <td>
-                    <span
-                      className={`admin-badge ${s.isActive ? "badge-active" : "badge-inactive"}`}
-                    >
+                <div className="admin-mobile-card" key={s._id}>
+                  <div className="amc-header">
+                    <div>
+                      <div className="amc-title">{s.title}</div>
+                      <div className="amc-subtitle" style={{ fontFamily: "monospace", fontSize: "0.72rem" }}>{s.slug}</div>
+                    </div>
+                    <span className={`admin-badge ${s.isActive ? "badge-active" : "badge-inactive"}`}>
                       {s.isActive ? "Active" : "Inactive"}
                     </span>
-                  </td>
-                  <td className="actions-cell">
-                    <button
-                      className="admin-btn admin-btn-primary admin-btn-sm"
-                      onClick={() => openEdit(s)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="admin-btn admin-btn-danger admin-btn-sm"
-                      onClick={() => handleDelete(s._id)}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
+                  </div>
+                  <div className="amc-row">
+                    <span className="amc-label">Features</span>
+                    <span className="amc-value">{s.features?.length || 0} items</span>
+                  </div>
+                  <div className="amc-actions">
+                    <button className="admin-btn admin-btn-primary admin-btn-sm" onClick={() => openEdit(s)}>✏️ Edit</button>
+                    <button className="admin-btn admin-btn-danger admin-btn-sm" onClick={() => handleDelete(s._id)}>🗑 Delete</button>
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
 

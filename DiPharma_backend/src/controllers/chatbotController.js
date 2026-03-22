@@ -2,6 +2,7 @@ import ChatbotInteraction from "../models/ChatbotInteraction.js";
 import FAQ from "../models/FAQ.js";
 import Product from "../models/Product.js";
 import Service from "../models/Service.js";
+import CompanyInfo from "../models/CompanyInfo.js";
 
 // ── Navigation intent mapping ──
 const NAV_INTENTS = [
@@ -80,6 +81,36 @@ export const chatbotMessage = async (req, res) => {
       reply = `📧 You can email us at **${COMPANY_INFO.email}**. We typically respond within 24 hours!`;
       logInteraction(message, reply, req);
       return res.json({ success: true, data: { reply } });
+    }
+
+    // 3b. Search dedicated Company Info collection
+    const companyInfoEntries = await CompanyInfo.find({ isActive: true }).sort({ order: 1 });
+    if (companyInfoEntries.length > 0) {
+      // First: exact keyword match
+      for (const entry of companyInfoEntries) {
+        if (entry.keywords?.some((kw) => lowerMsg.includes(kw))) {
+          reply = `${entry.answer}`;
+          logInteraction(message, reply, req);
+          return res.json({ success: true, data: { reply } });
+        }
+      }
+
+      // Second: fuzzy match against question text
+      let bestEntry = null;
+      let bestEntryScore = 0;
+      for (const entry of companyInfoEntries) {
+        const qWords = entry.question.toLowerCase().split(/\s+/).filter((w) => w.length > 2);
+        const score = matchScore(lowerMsg, qWords);
+        if (score > bestEntryScore) {
+          bestEntryScore = score;
+          bestEntry = entry;
+        }
+      }
+      if (bestEntry && bestEntryScore >= 2) {
+        reply = `${bestEntry.answer}`;
+        logInteraction(message, reply, req);
+        return res.json({ success: true, data: { reply } });
+      }
     }
 
     // 4. Try to match against FAQs
@@ -176,6 +207,6 @@ function logInteraction(userMessage, botReply, req) {
   ChatbotInteraction.create({
     userMessage,
     botReply,
-    sessionId: req.headers["x-session-id"] || null,
+    sessionId: req.body.sessionId || req.headers["x-session-id"] || null,
   }).catch((err) => console.error("Chatbot log failed:", err.message));
 }
