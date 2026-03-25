@@ -22,12 +22,13 @@ const formatFullDate = (dateStr) => {
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
+  const isDate = label && /^\d{4}-\d{2}-\d{2}/.test(label) && !isNaN(new Date(label).getTime());
   return (
     <div style={{
       background: "rgba(13, 15, 54, 0.95)", border: "1px solid rgba(167, 139, 250, 0.3)",
       borderRadius: "10px", padding: "10px 14px", color: "#e4e4f8", fontSize: "0.82rem",
     }}>
-      <p style={{ margin: 0, fontWeight: 600, marginBottom: 4 }}>{formatFullDate(label)}</p>
+      <p style={{ margin: 0, fontWeight: 600, marginBottom: 4 }}>{isDate ? formatFullDate(label) : label}</p>
       {payload.map((entry, i) => (
         <p key={i} style={{ margin: 0, color: entry.color }}>
           {entry.name}: {entry.value}

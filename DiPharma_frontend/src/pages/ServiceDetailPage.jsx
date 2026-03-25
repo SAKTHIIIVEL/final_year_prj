@@ -106,11 +106,11 @@ const ServiceDetailPage = () => {
               whileTap={{ scale: 0.95 }}
               onClick={() =>
                 navigate(
-                  `/contact?subject=${encodeURIComponent(`Inquiry about ${service.title}`)}`,
+                  `/contact?subject=${encodeURIComponent(`Inquiry about ${service.title}`)}#contact`,
                 )
               }
             >
-              Get In Touch →
+              Get In Touch {" >>"}
             </motion.button>
           </motion.div>
         </div>
@@ -286,11 +286,11 @@ const ServiceDetailPage = () => {
             whileTap={{ scale: 0.95 }}
             onClick={() =>
               navigate(
-                `/contact?subject=${encodeURIComponent(`Inquiry about ${service.title}`)}`,
+                `/contact?subject=${encodeURIComponent(`Inquiry about ${service.title}`)}#contact`,
               )
             }
           >
-            Contact Us →
+            Contact Us {">>"}
           </motion.button>
         </motion.div>
       </section>

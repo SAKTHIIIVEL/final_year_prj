@@ -1,5 +1,6 @@
 /* ═══ ProductsPage — Premium Theme ═══ */
 .pp-page {
+  margin-top: 80px;
   background: #161952;
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
@@ -28,7 +29,7 @@
 }
 .pp-kicker {
   display: block;
-  color: #4846FF;
+  color: #ffffff;
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;

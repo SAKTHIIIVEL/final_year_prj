@@ -195,79 +195,108 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
+ display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
 }
 
 .role-item {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  align-items: center;
-  padding: 0.9rem 1rem;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
   background: transparent;
-  border-bottom: 1px solid rgb(255, 255, 255);
-  position: relative;
+  min-height: 180px;
+  transition: all 0.35s ease;
+  cursor: pointer;
+  gap: 18px;
 }
 
-.role-item:hover {
-  background: #E7E6F6;
+.role-item:hover,
+.role-item.active {
+  background: #e9e9ef;
+  border-color: #e9e9ef;
 }
 
 .role-item:hover .role-name,
-.role-item:hover .role-meta {
-  color: #1E1E1E;
+.role-item:hover .role-meta,
+.role-item.active .role-name,
+.role-item.active .role-meta {
+  color: #161952;
 }
 
 .role-name {
-  margin: 0;
-  color: #f5f7ff;
+  font-size: 20px;
   font-weight: 600;
-  font-size: 24px;
-  max-width: 89%;
+  color: #ffffff;
 }
 
 .role-meta {
-  margin: 0.25rem 0 0 0;
+  font-size: 14px;
   color: #c6d0ff;
-  font-size: 0.85rem;
+  margin-top: 8px;
 }
 
 .role-apply {
-  position: absolute;
-  top: 10px;
-  right: 16px;
-  border: 1px solid rgb(255, 255, 255);
-  background: #222065;
+  align-self: flex-end;
+  margin-top: auto;
+  background: #ffffff;
+  color: #161952;
+  border-radius: 30px;
+  padding: 10px 18px;
+  border: none;
+  font-weight: 600;
+}
+
+.role-item:hover .role-apply,
+.role-item.active .role-apply {
+  background: #161952;
   color: #ffffff;
-  width: 48px;
-  height: 48px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.pagination button {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid #fff;
+  background: transparent;
+  color: #fff;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
 }
 
 .role-apply:hover {
   border: 1px solid rgba(255, 255, 255, 0);
-  background: #4f8bff;
-  border-color: #4f8bff;
+  background: #161952;
+  color: #ffffff;
 }
 
 .positions-section {
   position: relative;
   z-index: 2;
-  max-width: 1400px;
+   max-width: 1290px;
+  margin-left: 100px;
+  padding-top: 100px;
   margin-right: 0;
   padding-left: 2rem;
-  margin-left: 2.4rem;
 }
 
 .positions-content {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
   gap: 1rem;
   align-items: center;
-  margin-left: 70px;
+  margin-left: 0;
 }
 
 .positions-text {
@@ -347,6 +376,7 @@
   margin: 0rem auto;
   padding-right: 2rem;
   bottom: 0px;
+  padding-top: 100px;
 }
 
 .contact-card {
@@ -651,6 +681,12 @@
 
 /* Responsive Design */
 
+@media (max-width: 1440px) {
+  .positions-section {
+    max-width: 1150px;
+  }
+}
+
 /* Laptop (1024px - 1280px) */
 @media (min-width: 1024px) and (max-width: 1380px) {
   .career-hero-content {
@@ -682,7 +718,7 @@
   }
 
   .positions-section {
-    max-width: 1200px;
+    max-width: 1150px;
     margin-left: 1.5rem;
     padding-top: 2rem;
   }
@@ -713,6 +749,14 @@
   }
 }
 
+@media (max-width: 1220px) {
+  .positions-section {
+    max-width: 1050px;
+  }
+  .role-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 
 
 /* Tablet (768px - 1023px) */
@@ -752,7 +796,8 @@
 
   .positions-section {
     padding-left: 1.5rem;
-    margin-left: 1rem;
+    margin-left: 50px;
+    max-width: 900px;
   }
 
   /* .positions-content {
@@ -854,15 +899,15 @@
     color: #ffffff;
   }
 
-  .role-apply {
+  /* .role-apply {
     background: transparent;
     border-color: #ffffff;
-  }
+  } */
 
   /* Hover state - light background */
-  .role-item:hover {
+  /* .role-item:hover {
     background: #E7E6F6;
-  }
+  } */
 
   .role-item:hover .role-name,
   .role-item:hover .role-meta {
@@ -884,14 +929,23 @@
     margin: 0.3rem 0;
   }
 
-  .role-apply {
-    width: 48px;
-    height: 48px;
-    flex-shrink: 0;
-  }
-
   .role-name {
     font-size: 20px;
+  }
+}
+
+@media (max-width: 980px) {
+  .positions-section{
+    max-width: 850px;
+  }
+}
+
+@media (max-width: 880px) {
+  .positions-section{
+    max-width: 750px;
+  }
+  .role-list{
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -1164,7 +1218,7 @@
   }
 
   .hero-info {
-    /* top: 40px; */
+    top: 0px;
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 0rem;
@@ -1188,7 +1242,7 @@
     padding-left: 1rem;
     margin-left: 0px;
     padding-right: 1rem;
-    padding-top: 0rem;
+    padding-top: 80px;
   }
   .positions-content {
   opacity: 1;
@@ -1225,9 +1279,6 @@
     padding-top: 0;
     margin-bottom: 20px;
     gap: 10px;
-    padding-right:1rem ;
-    padding-left: 0px;
-    margin-right: 50px;
   }
 
   .section-title {
@@ -1259,14 +1310,12 @@
 
   .role-list {
     gap: 1rem;
-    padding-right: 1rem;
+    grid-template-columns: 1fr;
   }
 
   .role-item {
     border-radius: 12px;
     padding: 1.8rem 1.5rem;
-    border-bottom: none;
-    border: none;
     position: relative;
     background: #222065;
   }
@@ -1276,10 +1325,10 @@
     color: #ffffff;
   }
 
-  .role-apply {
+  /* .role-apply {
     background: transparent;
     border-color: #ffffff;
-  }
+  } */
 
   /* Hover state - light background */
   .role-item:hover {
@@ -1289,19 +1338,6 @@
   .role-item:hover .role-name,
   .role-item:hover .role-meta {
     color: #1E1E1E;
-  }
-
-  .role-item:hover .role-apply {
-    background: #222065;
-    border-color: #222065;
-  }
-
-  .role-apply {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.25rem;
-    width: 48px;
-    height: 48px;
   }
 
   .role-meta {
@@ -1404,21 +1440,13 @@
 }
 
 @media (max-width: 420px) {
-  .role-list{
-    padding-right:1.9rem;
+  .positions-text{
+    padding: 10px;
   }
   
 }
 
 @media (max-width: 410px) {
-  .role-list{
-    padding-right:2.8rem;
-  }
-  .role-apply{
-    top: 0.6rem;
-     width: 42px;
-    height: 42px;
-  }
   
 }
 
@@ -1469,10 +1497,6 @@
     padding-right: 0;
     padding-top: 1rem;
   }
-  .positions-text{
-    padding-right:10px;
-    margin-right: 0;
-  }
   .role-list{
     padding-right:0.3rem;
   }
@@ -1507,8 +1531,7 @@
     font-size: 12px;
   }
   .role-apply{
-    width: 38px;
-    height: 38px;
+    font-size: 12px;
   }
 }
 
@@ -1517,17 +1540,10 @@
     max-width: 260px;
     left: 0;
   }
-  .positions-text{
-    padding-right:5px;
-    margin-right: 0;
-  }
   .role-name{
     max-width: 200px;
     font-size: 14px;
   }
-      .role-list {
-        padding-right: 0.5rem;
-    }
 }
 
 @media (max-width: 767px) {

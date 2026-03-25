@@ -20,7 +20,7 @@ const ProductsPage = () => {
 
   const handleContactUs = (title) => {
     navigate(
-      `/contact?subject=${encodeURIComponent(`Request Product: ${title}`)}`,
+      `/contact?subject=${encodeURIComponent(`Request Product: ${title}`)}#contact`,
     );
   };
 
@@ -86,7 +86,7 @@ const ProductsPage = () => {
                       whileTap={{ scale: 0.96 }}
                       onClick={() => handleContactUs(product.title)}
                     >
-                      Contact Us →
+                      Contact Us {">>"}
                     </motion.button>
                   </div>
                 </motion.div>
