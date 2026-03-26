@@ -35,10 +35,15 @@
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  z-index: 999;
+  z-index: 9999;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   animation: chatbot-slide-up 0.3s ease;
+}
+.chatboticon{
+  width: 24px;
+  height: 24px;
+   object-fit: contain;
 }
 
 @keyframes chatbot-slide-up {

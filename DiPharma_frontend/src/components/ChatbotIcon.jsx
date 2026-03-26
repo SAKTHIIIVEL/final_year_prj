@@ -2,10 +2,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSendChatMessageMutation } from "../store/api";
 import "./ChatbotIcon.css";
-
+import chatbotIcon from "../assets/icons/chatbot.png";
 // Generate a simple session ID
 const generateSessionId = () => {
-  return "sess_" + Date.now().toString(36) + "_" + Math.random().toString(36).substring(2, 9);
+  return (
+    "sess_" +
+    Date.now().toString(36) +
+    "_" +
+    Math.random().toString(36).substring(2, 9)
+  );
 };
 
 const ChatbotIcon = () => {
@@ -13,7 +18,7 @@ const ChatbotIcon = () => {
   const [messages, setMessages] = useState([
     {
       type: "bot",
-      text: "Hello! 👋 I'm DiPharma Assistant. Ask me about our products, services, or say \"go to contact\" to navigate!",
+      text: 'Hello! 👋 I\'m DiPharma Assistant. Ask me about our products, services, or say "go to contact" to navigate!',
     },
   ]);
   const [input, setInput] = useState("");
@@ -30,7 +35,8 @@ const ChatbotIcon = () => {
 
   // Initialize speech recognition
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRecognition) {
       const recognition = new SpeechRecognition();
       recognition.continuous = false;
@@ -61,7 +67,10 @@ const ChatbotIcon = () => {
     if (!recognitionRef.current) {
       setMessages((prev) => [
         ...prev,
-        { type: "bot", text: "Voice input is not supported in your browser. Please use Chrome or Edge." },
+        {
+          type: "bot",
+          text: "Voice input is not supported in your browser. Please use Chrome or Edge.",
+        },
       ]);
       return;
     }
@@ -82,10 +91,16 @@ const ChatbotIcon = () => {
     setMessages((prev) => [...prev, { type: "user", text: userMsg }]);
 
     try {
-      const result = await sendMessage({ message: userMsg, sessionId }).unwrap();
+      const result = await sendMessage({
+        message: userMsg,
+        sessionId,
+      }).unwrap();
       const { reply, action, path } = result.data;
 
-      setMessages((prev) => [...prev, { type: "bot", text: reply, action, path }]);
+      setMessages((prev) => [
+        ...prev,
+        { type: "bot", text: reply, action, path },
+      ]);
 
       // Auto-navigate if action is navigate
       if (action === "navigate" && path) {
@@ -109,9 +124,11 @@ const ChatbotIcon = () => {
     if (!text) return text;
     return text.split("\n").map((line, i) => (
       <React.Fragment key={i}>
-        {line.split(/\*\*(.*?)\*\*/g).map((part, j) =>
-          j % 2 === 1 ? <strong key={j}>{part}</strong> : part
-        )}
+        {line
+          .split(/\*\*(.*?)\*\*/g)
+          .map((part, j) =>
+            j % 2 === 1 ? <strong key={j}>{part}</strong> : part,
+          )}
         {i < text.split("\n").length - 1 && <br />}
       </React.Fragment>
     ));
@@ -124,13 +141,17 @@ const ChatbotIcon = () => {
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Chat"
       >
-        {isOpen ? "✕" : "🤖"}
+        {isOpen ? (
+          "✕"
+        ) : (
+          <img src={chatbotIcon} alt="chatbot" className="chatboticon" />
+        )}
       </button>
 
       {isOpen && (
         <div className="chatbot-popup">
           <div className="chatbot-header">
-            <span className="chatbot-title">🤖 DiPharma Assistant</span>
+            <span className="chatbot-title">💬 DiPharma Assistant</span>
           </div>
           <div className="chatbot-messages">
             {messages.map((msg, i) => (

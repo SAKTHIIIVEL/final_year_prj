@@ -1,614 +1,1639 @@
 # FINAL PROJECT DOCUMENTATION: DIPHARMA MANAGEMENT SYSTEM
 
-> **Document Version:** 2.0 &nbsp;|&nbsp; **Last Updated:** March 2026
-> 
-> **Change Summary (v2.0):** Added Company Info chatbot data system, Career page job-position pre-fill, complete Admin & Super Admin UI responsive redesign, chatbot CORS & rate-limit fixes, and updated all diagrams to reflect the expanded architecture.
+> **Document Version:** 3.0 &nbsp;|&nbsp; **Last Updated:** March 2026
+>
+> **Change Summary (v3.0):** Added Super Admin Analytics Dashboard with Recharts visualizations, fixed "Invalid Date" tooltip bug in Applications by Role bar chart (CustomTooltip date-guard), updated all API references, detailed all 9 database models, and expanded every chapter to comprehensive 100-page report quality.
+
+---
+
+## TABLE OF CONTENTS
+
+1. Introduction
+2. System Analysis
+3. Feasibility Report
+4. Software Requirement Specification (SRS)
+5. System Development Environment & Technology Stack
+6. System Design & Workflow Diagrams
+7. Database Design — Detailed Schema Reference
+8. Backend Architecture — API & Controller Reference
+9. Frontend Architecture — Pages, Components & State Management
+10. New Modules & Enhancements (v2.0 / v3.0)
+11. Super Admin Analytics Dashboard
+12. Security Architecture
+13. System Testing & Implementation
+14. Conclusion & Future Enhancements
+
+---
 
 ## 1. INTRODUCTION
 
 ### 1.1 Introduction to Project
-The DiPharma Management System is a comprehensive, enterprise-level full-stack web application meticulously engineered to modernize the operational framework of a contemporary pharmaceutical organization. In today's rapidly evolving digital economy, pharmaceutical companies require more than just a web presence; they need an integrated ecosystem capable of managing complex data, facilitating stakeholder engagement, and providing real-time operational insights. DiPharma addresses these needs by providing a scalable, secure, and highly interactive platform that bridges the gap between public engagement and internal administration.
 
-The system's architecture is built on the principles of modularity and high availability. By employing a decoupled Client-Server model, the project ensures that the presentation layer (React.js) and the logic layer (Node.js/Express) can be scaled and maintained independently. This design philosophy not only enhances the system's performance but also provides the flexibility required to adapt to changing business requirements. The integration of advanced features such as interactive 3D visualizations, automated communication workflows, and a rule-based chatbot positions the DiPharma project at the cutting edge of pharmaceutical information technology.
+The DiPharma Management System is a comprehensive, enterprise-level full-stack web application meticulously engineered to modernize the operational framework of a contemporary pharmaceutical organization. In today's rapidly evolving digital economy, pharmaceutical companies require more than just a web presence; they need an integrated ecosystem capable of managing complex data, facilitating stakeholder engagement, and providing real-time operational insights. DiPharma addresses these needs through a scalable, secure, and highly interactive platform that bridges the gap between public engagement and internal administration.
 
-Furthermore, DiPharma emphasizes the importance of data-driven governance. The platform is equipped with an advanced analytics suite that transforms raw operational data into actionable visual insights. Whether tracking recruitment trends through job applications or measuring customer interest through inquiries, the system provides administrators with the tools necessary to make informed strategic decisions. This holistic approach to system design ensures that DiPharma is not merely a software product but a strategic asset that enhances the organization's credibility, efficiency, and market competitiveness.
+The system is built on the three-tier client-server architecture using a JavaScript-first technology stack — React 18 on the client, Node.js/Express 5 on the server, and MongoDB as the persistence layer. This unified language strategy eliminates the conceptual friction between frontend and backend teams, enables sharing of data-validation logic, and simplifies the overall developer experience significantly.
 
-Finally, the project serves as a robust demonstration of modern web engineering capabilities. It integrates a diverse tech stack—including MongoDB for persistence, Cloudinary for media, and Brevo for messaging—into a unified workflow. The meticulous attention to detail in the user interface, combined with the rigorous security protocols at the backend, ensures a premium experience for all users. DiPharma sets a new standard for pharmaceutical management systems, offering a future-proof foundation for the digital evolution of the pharmaceutical industry.
+DiPharma serves multiple categories of users simultaneously. Public visitors interact with the pharmaceutical company's digital presence through product catalogues, service descriptions, career portals, and a rule-based AI-assisted chatbot. Internal administrators manage this content through a fully-protected dashboard equipped with CRUD capabilities, application review workflows, inquiry management, and email automation. A super administrator gains access to an elevated analytics dashboard with real-time visual charts, trend graphs, and system health statistics — providing the executive-level visibility required for strategic decision-making.
+
+The integration of advanced technologies — such as interactive animations with GSAP and Framer Motion, automated email communication through the Brevo API, cloud-hosted media through Cloudinary, and chart-driven analytics through the Recharts library — positions the DiPharma project at the cutting edge of pharmaceutical information technology.
 
 ### 1.2 Purpose of the Project
-The primary purpose of the DiPharma project is to establish a centralized, high-performance digital repository for all pharmaceutical data and stakeholder interactions. Historically, many pharmaceutical SMEs have struggled with fragmented data management, relying on disconnected legacy systems or manual record-keeping. The DiPharma system solves this by providing a "single source of truth," where product information, service details, career listings, and customer inquiries are stored in a unified MongoDB database. This centralization ensures data integrity and provides a consistent experience across all digital touchpoints.
 
-Another critical purpose is the optimization of organizational workflows through automation. The system is designed to handle high-volume administrative tasks—such as job application processing and inquiry management—with minimal human intervention. Automated email notifications and acknowledgments ensure that the company maintains a professional and responsive communication channel with its stakeholders. By reducing the manual burden on HR and support staff, the system allows the organization to reallocate resources toward higher-value activities, thereby improving overall operational agility.
+The primary purpose of the DiPharma project is to establish a centralized, high-performance digital repository for all pharmaceutical data and stakeholder interactions. Historically, many pharmaceutical SMEs have struggled with fragmented data management — relying on disconnected legacy systems or manual record-keeping. The DiPharma system solves this by providing a "single source of truth," where product information, service details, career listings, inquiry records, and chatbot interactions are all stored in a unified MongoDB database with consistent schema validation enforced by Mongoose.
 
-The project also aims to enhance the professional brand identity of the pharmaceutical firm. In an industry where trust and precision are paramount, the premium aesthetic and technical sophistication of the DiPharma platform serve as a powerful branding tool. Features like the interactive 3D globe and the voice-activated chatbot demonstrate a commitment to innovation and user accessibility. This enhanced digital presence not only builds trust with existing clients but also serves as a strategic differentiator in an increasingly competitive global market.
+A second critical purpose is the optimization of organizational workflows through automation. When a job seeker submits their application through the career portal, the system simultaneously stores the application record, uploads the resume to Cloudinary, and fires two transactional emails via the Brevo API — one to the HR administrator containing the applicant's resume as an attachment, and one acknowledgment email to the applicant. This end-to-end automation eliminates the need for manual email forwarding and ensures professional-grade communication with zero human intervention.
 
-Ultimately, the purpose of DiPharma is to provide a scalable and extensible foundation for the organization's digital future. The system is designed with a long-term vision, allowing for easy integration of future enhancements such as AI-driven predictive analytics, e-commerce capabilities, and native mobile applications. By investing in a robust, modern architecture from the outset, the organization ensures that its digital infrastructure can grow in tandem with its business objectives, maintaining its technological leadership in the pharmaceutical sector for years to come.
+The project further aims to enhance the company's brand identity in the digital space. In an industry where trust and precision are paramount, the premium aesthetic of the platform — built with curated color palettes, glassmorphism-inspired UI cards, fluid micro-animations, and a responsive three-tier layout — serves as a powerful branding tool. Features like the rule-based chatbot with voice input support demonstrate a commitment to accessibility and innovation.
+
+Ultimately, the DiPharma system is designed to be an extensible digital foundation. All modules are decoupled and independently scalable. Future integrations — such as an LLM-backed generative chatbot, a native mobile application, or an e-commerce payment layer — can be added without refactoring the existing architecture.
+
+### 1.3 Project Scope
+
+The scope of DiPharma covers the following functional boundaries:
+
+**In Scope:**
+- A public-facing multi-page website for pharmaceutical company information
+- A rule-based chatbot with database-driven knowledge and voice input capability
+- An Admin CMS for managing products, services, jobs, FAQs, and company-info records
+- A career portal with job-position auto-fill and resume submission
+- A contact/inquiry management system with automated email notifications
+- An analytics dashboard (Admin and Super Admin variants) with real-time chart visualizations
+- Role-based access control with JWT authentication for Admin and Super Admin roles
+- Excel report export for applications and inquiries
+- Full three-tier responsive design for all admin and public pages
+
+**Out of Scope (Future Work):**
+- E-commerce / payment gateway integration
+- Native iOS/Android mobile application
+- LLM-based generative AI chatbot
+- Multi-language (i18n) support
+
+---
 
 ## 2. SYSTEM ANALYSIS
 
 ### 2.1 Introduction
-System Analysis is a foundational phase in the DiPharma development lifecycle, focusing on the meticulous examination of the pharmaceutical management domain. This phase involved a comprehensive study of the existing processes within the organization to identify structural weaknesses and opportunities for digital optimization. By conducting a systematic analysis, the team was able to define the functional boundaries of the system and establish a rigorous set of requirements that align with both business objectives and technical constraints.
 
-The analysis phase also utilized various modeling techniques to abstract the system's complexities into manageable logical components. This included the use of Data Flow Diagrams (DFDs) to map information movement and Use Case modeling to define actor-system interactions. This rigorous analytical foundation ensured that every feature implemented in the final system—from the chatbot's navigation logic to the dashboard's analytics engine—is built upon a clear understanding of the real-world challenges it is intended to solve.
+System Analysis is the foundational phase in the DiPharma development lifecycle, focusing on the examination of the pharmaceutical management domain to identify gaps and opportunities for digital transformation. This phase involved a comprehensive study of existing processes within similar organizations to identify structural weaknesses and define the functional boundaries of the proposed system.
 
-Moreover, the system analysis focus extended to the data requirements of the pharmaceutical industry, emphasizing the need for structured, scalable storage. The analysis identified the core entities (Products, Services, Jobs, Inquiries) and their complex interrelationships, which directly informed the design of the MongoDB schema. This focus on data analysis ensures that the system can handle large volumes of diverse information while maintaining the high levels of query performance and data integrity required for enterprise-grade pharmaceutical management.
+The analysis phase utilized standard software engineering modeling techniques including Data Flow Diagrams (DFD), Use Case modeling, and Entity-Relationship (ER) modeling. These tools were used to abstract the system's complexity into manageable logical components, each with clearly defined responsibilities and interaction patterns.
 
 ### 2.2 Analysis Model
-The Analysis Model for DiPharma is rooted in the principles of Object-Oriented Analysis (OOA), where the system is viewed as a collection of interacting objects. Each core entity, such as a 'Service' or an 'Application,' is modeled with specific attributes and behaviors. This modeling approach ensures that the system is modular and that logical concerns are encapsulated within their respective domain objects. This not only simplifies the development process but also ensures that the system is highly maintainable and adaptable to future changes in business logic.
 
-Furthermore, the system employs a Resource-Oriented Analysis model, aligning with RESTful architectural standards. Every piece of data in the system is considered a resource with a unique URI, and interactions are modeled around standard HTTP verbs. This clean abstraction provides a solid contract between the frontend (React) and the backend (Express), ensuring that data is exchanged in a structured, predictable JSON format. This model-driven approach to API design is essential for building a robust and scalable communication layer between the client and server.
+The Analysis Model for DiPharma is grounded in Resource-Oriented Analysis, aligning with RESTful architectural standards. Every piece of data is treated as a named resource with a unique URI, and system interactions are modeled around HTTP verbs (GET, POST, PUT, PATCH, DELETE). This clean abstraction provides a solid contract between the frontend and backend, ensuring that data is exchanged in structured, predictable JSON format.
 
-In addition to structural modeling, the analysis also incorporates a security-centric behavioral model. This involves modeling the system's response to various authentication states and user roles. By explicitly modeling the transitions between standard, admin, and super-admin states, the analysis ensures that the system's role-based access control (RBAC) is logically sound and consistently enforced across all modules. This integrated approach to modeling is critical for maintaining the high security standards expected in pharmaceutical information management.
+The system also incorporates a security-centric behavioral model. All state transitions — from anonymous visitor to authenticated admin, to elevated super-admin — are explicitly modeled with JWT middleware gates and role-checking decorators. This ensures that the RBAC layer is logically sound and consistently enforced across every route in the application.
 
 ### 2.3 SDLC Phases
-The development of DiPharma followed the **Agile-Scrum** framework, characterized by iterative cycles and a strong emphasis on stakeholder feedback. The project was divided into several phases:
-1.  **Inception & Requirements**: Definition of the project's vision and the documentation of functional and non-functional requirements in a rigorous SRS.
-2.  **Architectural Design**: Formation of the technical blueprint, including the database schema, API contracts, and high-fidelity UI/UX mockups.
-3.  **Iterative Development (Sprints)**: The core implementation phase where features were developed in two-week intervals. Concurrent development of the frontend and backend ensured that integration issues were identified and resolved early.
-4.  **Rigorous Testing**: A multi-tiered testing cycle involving unit, integration, and end-to-end system testing to ensure the platform's reliability and security.
-5.  **Deployment & Launch**: Hosting the application on industrial cloud platforms and performing final environmental configurations.
-6.  **Continuous Maintenance**: Ongoing monitoring and optimization of the system to ensure it remains secure and performs at peak efficiency.
 
-This structured SDLC ensured that the project was delivered on time and within scope while maintaining a high level of software quality. The Agile approach allowed for continuous refinement of features based on evolving needs, ensuring that the final product is a perfect fit for the organization's requirements.
+The DiPharma development lifecycle followed an **Agile-Scrum** methodology with bi-weekly sprint cycles:
+
+| Phase | Activities | Deliverables |
+|---|---|---|
+| **Inception** | Requirements elicitation, stakeholder interviews, domain research | SRS Document, Use Case Diagrams |
+| **Architectural Design** | DB schema design, API contract drafting, UI/UX wireframing | ERD, API blueprint, Figma mockups |
+| **Sprint 1 — Core Backend** | Auth system, Product/Service CRUD, Inquiry engine | REST API with JWT auth |
+| **Sprint 2 — Public Frontend** | HomePage, ServicePage, ProductsPage, CareerPage | Public React SPA |
+| **Sprint 3 — Admin CMS** | Admin dashboard, all management pages, Excel export | Admin portal |
+| **Sprint 4 — Chatbot & Search** | Rule-based chatbot, company-info KB, global search | Chatbot + Search API |
+| **Sprint 5 — Analytics** | Super Admin dashboard, Recharts integration | Analytics dashboard |
+| **Sprint 6 — Polish & Fixes** | Responsive redesign, bug fixes (Invalid Date tooltip), documentation | v3.0 Release |
+| **Testing** | Unit, integration, security, cross-browser testing | Test reports |
+| **Deployment** | Cloud hosting, environment configuration, go-live | Production URL |
 
 ### 2.4 Hardware & Software Requirements
-To maintain the high-performance standards of the DiPharma system, the following hardware and software benchmarks are recommended:
 
 **Hardware Requirements:**
-- **Server Infrastructure:** High-performance multi-core processor (Min 4 cores), 16GB RAM for optimal concurrency, and 100GB+ SSD storage. Stable, high-bandwidth fiber-optic connectivity for real-time API performance.
-- **Client Infrastructure:** Modern PC or mobile device with a minimum of 4GB RAM and a high-definition display. A modern GPU is recommended for optimal rendering of GSAP and SVG animations.
+
+| Component | Minimum | Recommended |
+|---|---|---|
+| Server CPU | 2 cores @ 2.4 GHz | 4+ cores @ 3.0 GHz |
+| Server RAM | 4 GB | 16 GB |
+| Server Storage | 20 GB SSD | 100 GB SSD |
+| Network Bandwidth | 10 Mbps | 100 Mbps fiber |
+| Client Device | Any modern PC/mobile | PC with dedicated GPU for animations |
+| Client Display | 720p | 1080p or higher |
 
 **Software Requirements:**
-- **Runtime Environment:** Node.js v18.x or v20.x (LTS recommended).
-- **Database Layer:** MongoDB Enterprise or Atlas managed instance (v6.0+).
-- **Browser Compatibility:** Latest versions of Chrome, Edge, Firefox, and Safari (to support Web Speech API and advanced CSS/JS animations).
-- **Operating Systems:** Fully compatible with Windows Server, Linux (Ubuntu/Debian), and macOS.
-- **DevOps Tools:** Git for version control, Docker for containerization (optional), and PM2 for process management in production.
 
-### 2.5 Input and Output
-The system's processing logic is driven by a diverse set of inputs that are transformed into high-value outputs. **Inputs** include structured form data from inquiries and job applications, multi-part file uploads (resumes), and administrative content updates. The chatbot also processes natural language text and voice-transcribed audio. These inputs are rigorously validated at the API layer to ensure they conform to the system's data integrity rules before being persisted in the database.
+| Layer | Technology | Version |
+|---|---|---|
+| Runtime | Node.js | v18.x / v20.x LTS |
+| Package Manager | npm | v9.x+ |
+| Database | MongoDB Atlas | v6.0+ |
+| Browser | Chrome / Edge / Firefox / Safari | Latest stable |
+| OS | Windows / Ubuntu / macOS | Any LTS |
+| Process Manager | PM2 (production) | v5.x |
 
-**Outputs** are delivered in multiple formats to provide maximum utility:
-- **Dynamic Web Views**: High-fidelity React components that present products, services, and company information.
-- **Analytical Dashboards**: Real-time visual reports using charts and graphs for executive-level insights.
-- **Transactional Communications**: Automated HTML emails sent via the Brevo API to notify users and administrators of system events.
-- **Structured Data Reports**: Downloadable XLSX files for offline data analysis and historical record-keeping.
-- **System Logs**: Comprehensive traces of API activity and error states, essential for technical monitoring and auditing.
+### 2.5 Input and Output Specification
+
+**System Inputs:**
+
+| Input Type | Source | Format | Validation |
+|---|---|---|---|
+| Admin credentials | Admin login form | JSON `{email, password}` | Email format, min 6 chars |
+| Product/Service data | Admin CMS forms | JSON with optional image URL | Required fields enforced by Mongoose |
+| Job application | Career portal form | Multipart form (resume file + fields) | File type validation (PDF/DOCX only), max 5MB |
+| Contact inquiry | Contact page form | JSON `{firstName, lastName, email, phone, subject, message}` | All fields required |
+| Chatbot message | Chat widget | JSON `{message, sessionId}` | Non-empty string |
+| Company info entry | Admin CompanyInfo page | JSON `{category, question, keywords[], answer}` | Required fields |
+| Image upload | Admin forms | Multipart form data | Image MIME types only, Cloudinary processing |
+
+**System Outputs:**
+
+| Output Type | Target | Technology |
+|---|---|---|
+| Dynamic web pages | Public visitors | React SPA (Vite build) |
+| Admin CMS views | Admin/Super Admin | React admin pages |
+| Analytics charts | Super Admin | Recharts (Bar, Area, Line, Pie charts) |
+| Success/Error responses | API consumers | JSON `{success, data, error}` |
+| Transactional emails | Applicants/HR | Brevo SMTP API, HTML templates |
+| Excel reports | Admin (download) | ExcelJS → XLSX file stream |
+| Chatbot replies | Website visitors | JSON `{reply, action?, path?}` |
+| System logs | Server console | Winston structured logs |
 
 ### 2.6 Limitations
-While DiPharma is a robust enterprise-grade application, it has defined boundaries that guide its current scope. The system's chatbot utilizes a rule-based intent matching algorithm; while highly effective for structured queries, it does not possess the generative capabilities of modern LLMs. The system's chatbot now also leverages a dedicated Company Info database table, which enables administrators to curate structured answers; however, this still relies on keyword matching rather than semantic understanding. Additionally, the system's external functionalities, such as image hosting and email delivery, are dependent on the uptime of third-party cloud architectures (Cloudinary and Brevo).
 
-Another limitation is its optimization for modern web browsers. While the system is now fully responsive across mobile, tablet, and desktop viewports, users on extremely legacy browsers may encounter minor visual discrepancies or reduced performance in complex animations. Furthermore, the system is primarily focused on information management and lead generation; as such, it does not currently include native e-commerce transaction capabilities. These limitations are clearly documented to provide a baseline for future architectural expansions and feature updates.
+While DiPharma is a robust enterprise-grade application, it has defined boundaries:
 
-### 2.7 Existing System
-Existing methods in many pharmaceutical organizations are characterized by extreme fragmentation. Many firms still rely on static websites that lack interactivity and require manual coding for updates. Communication is often handled through generic email addresses without any structured tracking, leading to delayed responses. Recruitment is particularly inefficient, with resumes scattered across multiple inboxes without a centralized database for filtering or status tracking.
+1. **Chatbot Intelligence:** The chatbot uses rule-based keyword and fuzzy matching — not neural language understanding. Complex or ambiguous user questions may result in fallback responses.
+2. **Third-party Dependencies:** Email (Brevo) and image (Cloudinary) services depend on external uptime. Service degradation is gracefully handled (fire-and-forget email pattern, local fallback storage for resumes).
+3. **Browser Compatibility:** The Web Speech API (voice chatbot input) is only fully supported in Chromium-based browsers.
+4. **No Real-time WebSocket:** Dashboard polling occurs every 60 seconds via RTK Query `pollingInterval`. True real-time updates would require WebSocket/SSE.
+5. **No E-commerce:** The system manages product information but does not support transactional purchasing.
 
-Furthermore, legacy systems typically provide zero analytical visibility. Management has no way of knowing which products are drawing interest or how users are engaging with their content. Security is also a major concern, as these systems often lack robust authentication and input validation, making them vulnerable to modern cyber-threats. The absence of a unified management platform results in operational inefficiencies and a sub-optimal brand experience for modern users.
+### 2.7 Existing System Analysis
+
+Existing pharmaceutical company websites typically suffer from:
+
+- **Static HTML pages** with no CMS — every content update requires a developer
+- **No centralized inquiry tracking** — emails are lost across multiple inboxes
+- **No recruitment pipeline** — resumes scattered in email attachments without status tracking
+- **Zero analytics** — no visibility into which products or services draw the most interest
+- **No chatbot or search** — users must manually browse to find information
+- **No security model** — no authentication, no role separation, vulnerable to form spam
 
 ### 2.8 Proposed System
-The proposed DiPharma system replaces these fragmented processes with a unified, high-performance enterprise ecosystem. Built on the MERN-lite stack, the system provides a centralized repository for all organizational data, ensuring consistency and accuracy across all modules. The integration of advanced features such as the rule-based chatbot and the visual analytics dashboard significantly improves engagement and strategic visibility. Automation is at the core of the proposed system, reducing the manual administrative burden and ensuring professional-grade communication.
 
-Security and scalability are prioritized through the use of JWT-based authentication, RBAC, and a decoupled architecture. This ensures that the system can grow in tandem with the organization's needs while maintaining the highest standards of data protection. The DiPharma system moves the organization from a reactive, manual mode of operation to a proactive, data-driven digital presence, establishing a premium brand identity in the competitive pharmaceutical market.
+The DiPharma system replaces fragmented processes with an integrated, data-driven ecosystem:
+
+- **CMS-driven content** — all products, services, jobs, and FAQs are managed through a protected admin interface, no developer needed for content updates
+- **Structured inquiry pipeline** — every contact form submission is stored with status tracking (`unread → read → resolved`)
+- **Recruitment engine** — resume upload, Cloudinary storage, status pipeline (`pending → reviewed → shortlisted → rejected`), and automated applicant notifications
+- **Analytics dashboard** — real-time charts for inquiries, applications, and chatbot engagement trends
+- **Multi-tier security** — JWT auth, bcrypt hashing, RBAC, Helmet headers, CORS whitelist, and per-route rate limiting
+
+---
 
 ## 3. FEASIBILITY REPORT
 
 ### 3.1 Technical Feasibility
-Technical feasibility centers on the project's viability using existing technological resources and expertise. DiPharma leverages the JavaScript ecosystem (React, Node, Express, MongoDB), which is the most supported and well-documented stack in modern engineering. The development team is highly proficient in these technologies, ensuring that complex integrations like the chatbot's navigation logic and the dashboard's analytics can be implemented without significant risk. The use of specialized cloud APIs for media and messaging further enhances the system's technical robustness, providing industrial-grade scaling capabilities from the outset.
+
+The DiPharma system is technically feasible for the following reasons:
+
+**Technology Maturity:** The entire stack — React, Node.js, Express, MongoDB, Mongoose — is production-proven at massive scale (used by Netflix, LinkedIn, eBay). The ecosystem's maturity ensures reliability, extensive community support, and abundant third-party libraries.
+
+**Team Expertise:** The development team holds strong proficiency in JavaScript full-stack development, enabling concurrent frontend and backend development without knowledge silos.
+
+**Cloud API Availability:** Cloudinary and Brevo provide well-documented REST APIs with generous free tiers, reducing infrastructure cost and eliminating the need for self-managed SMTP or media servers.
+
+**Build Toolchain:** Vite provides near-instant hot module replacement (HMR) during development and optimized production builds with tree-shaking, ensuring that the frontend remains lightweight and performant.
+
+**Risk Assessment:**
+
+| Risk | Likelihood | Mitigation |
+|---|---|---|
+| Cloudinary API downtime | Low | Local file fallback (`uploads/` directory) |
+| Brevo email failure | Low | Fire-and-forget pattern; non-blocking |
+| MongoDB Atlas connectivity | Very Low | MongoDB's 99.95% SLA |
+| JWT token compromise | Very Low | Short expiry (24h), refresh token rotation |
 
 ### 3.2 Operational Feasibility
-Operational feasibility evaluates how well the system will be integrated into the organization's daily workflows. DiPharma is designed with a strong focus on administrative usability, featuring an intuitive dashboard that requires minimal technical training. The automated recruitment and inquiry workflows significantly reduce the manual workload on HR and support staff, making the system an operational asset. Furthermore, the system's mobile responsiveness ensures that administrators can monitor and manage the platform from anywhere, supporting a modern and flexible organizational environment.
+
+DiPharma is operationally feasible from all stakeholder perspectives:
+
+- **For Administrators:** The admin panel features an intuitive sidebar navigation, search/filter capabilities, paginated data tables, responsive mobile card views, and SweetAlert2-powered confirmations. No technical training is required to operate any CMS function.
+- **For Super Administrators:** The analytics dashboard with visual charts provides executive-level visibility. The "Manage Admins" feature allows super admins to onboard, view, and remove admin accounts without touching the database.
+- **For Public Users:** The website is fully responsive (mobile-first), accessible via keyboard, and provides instant feedback through the chatbot widget available on every public page.
+- **For HR Teams:** Excel export functionality allows HR teams to download all applications or inquiries into spreadsheets for offline review and record-keeping.
 
 ### 3.3 Economic Feasibility
-Economic feasibility involves a cost-benefit analysis where the projected benefits are weighed against the development and operational costs. By utilizing open-source frameworks and scalable cloud services with generous free tiers, the initial investment is kept manageable. The long-term benefits are substantial: increased operational efficiency through automation, improved lead conversion through better inquiry management, and a significant boost to the organization's digital brand value. The strategic insights provided by the analytics module offer high strategic value, making the DiPharma project an economically sound and high-ROI investment.
 
-## 4. SOFTWARE REQUIREMENT SPECIFICATION
+**Cost Analysis:**
+
+| Component | Technology | Cost |
+|---|---|---|
+| Frontend Hosting | Vercel / Netlify | Free tier sufficient |
+| Backend Hosting | Railway / Render | Free / ~$5/month |
+| Database | MongoDB Atlas M0 | Free (512MB shared) |
+| Media Storage | Cloudinary | Free (25GB bandwidth) |
+| Email Service | Brevo | Free (300 emails/day) |
+| Domain | Custom domain | ~$10/year |
+
+**Benefit Analysis:**
+- **Operational savings:** Automating inquiry and application management saves an estimated 10–15 hours/week of manual admin work
+- **Brand value:** A premium, animated, responsive website significantly improves first-impression credibility for pharmaceutical buyers and partners
+- **Strategic intelligence:** The analytics dashboard provides actionable data for marketing and HR decision-making — previously unavailable with static websites
+- **Scalability:** The serverless-compatible architecture scales horizontally at negligible cost, supporting organizational growth
+
+**Conclusion:** The economic cost is minimal (near-zero for early-stage deployment) while the operational and strategic value is high. ROI is positive within the first month of operation.
+
+---
+
+## 4. SOFTWARE REQUIREMENT SPECIFICATION (SRS)
 
 ### 4.1 Functional Requirements
-Functional requirements define the core behaviors of the system:
-- **Authentication & RBAC**: Secure multi-role login system for Admin and Super Admin roles.
-- **Content CMS**: Full CRUD capabilities for managing products, services, FAQs, and job listings.
-- **Company Info Management**: Dedicated admin interface for curating categorized Q&A pairs that the chatbot uses exclusively to answer company-related questions.
-- **Recruitment Engine**: Career portal for job seekers to browse listings and submit applications with resume uploads. Clicking a job card auto-fills the "Job Position" field in the contact form.
-- **Communication Hub**: Functional interaction through the chatbot and contact form with automated email alerts.
-- **Analytics Module**: Real-time data visualization on the dashboard for tracking inquiry and application trends.
-- **Global Search**: Unified search engine to query public content across the entire application.
-- **Responsive Admin UI**: Full three-tier responsive design for all admin pages (mobile card views, tablet-optimized tables, desktop full layout).
+
+The following table details every functional requirement of the DiPharma system, organized by module:
+
+#### 4.1.1 Authentication Module
+
+| ID | Requirement | Actor | Priority |
+|---|---|---|---|
+| FR-AUTH-01 | The system shall allow admins to log in using email and password | Admin | Critical |
+| FR-AUTH-02 | The system shall allow super admins to log in via a separate login URL | Super Admin | Critical |
+| FR-AUTH-03 | The system shall issue a JWT access token (24h expiry) and refresh token (7d expiry) upon successful login | System | Critical |
+| FR-AUTH-04 | The system shall store tokens in `localStorage` on the client | Frontend | High |
+| FR-AUTH-05 | The system shall automatically refresh expired access tokens using the refresh token | System | High |
+| FR-AUTH-06 | The system shall prevent access to protected routes without a valid token | System | Critical |
+| FR-AUTH-07 | The system shall enforce role separation — ADMIN routes shall not be accessible to accounts with role SUPER_ADMIN only, and vice versa | System | Critical |
+
+#### 4.1.2 Content Management (CMS) Module
+
+| ID | Requirement | Actor | Priority |
+|---|---|---|---|
+| FR-CMS-01 | Admin shall create, read, update, and delete pharmaceutical Products | Admin | Critical |
+| FR-CMS-02 | Admin shall manage product display order and card type (dark/light) | Admin | High |
+| FR-CMS-03 | Admin shall create, read, update, and delete Services with rich nested content (features[], benefits[], multiple images) | Admin | Critical |
+| FR-CMS-04 | Admin shall manage job listings with type, location, and active status | Admin | Critical |
+| FR-CMS-05 | Admin shall manage the public FAQ knowledge base | Admin | High |
+| FR-CMS-06 | Admin shall manage Company Info entries for the chatbot knowledge base, including category, keywords, and answer | Admin | High |
+| FR-CMS-07 | All CMS changes shall be reflected immediately on the public-facing website via RTK Query cache invalidation | System | Critical |
+
+#### 4.1.3 Recruitment Module
+
+| ID | Requirement | Actor | Priority |
+|---|---|---|---|
+| FR-REC-01 | Public users shall browse all active job listings on the Career page | Public | Critical |
+| FR-REC-02 | Clicking a job card shall auto-fill the "Job Position" field in the application form and scroll/focus the input | Public | High |
+| FR-REC-03 | Public users shall submit job applications with name, email, phone, role, message, and a resume file (PDF or DOCX, max 5MB) | Public | Critical |
+| FR-REC-04 | The system shall upload the resume to Cloudinary and store the public URL in the database | System | Critical |
+| FR-REC-05 | The system shall send an HR notification email with applicant details (and resume attachment if not Cloudinary-hosted) | System | High |
+| FR-REC-06 | The system shall send an acknowledgment email to the applicant | System | High |
+| FR-REC-07 | Admin shall view all submitted applications with pagination and status filtering | Admin | Critical |
+| FR-REC-08 | Admin shall update application status (`pending → reviewed → shortlisted → rejected`) | Admin | Critical |
+| FR-REC-09 | Status change to `shortlisted` shall trigger an automated shortlist email to the applicant | System | High |
+| FR-REC-10 | Status change to `rejected` shall trigger an automated rejection email to the applicant | System | High |
+| FR-REC-11 | Admin shall export all applications to a formatted XLSX file | Admin | Medium |
+
+#### 4.1.4 Inquiry Module
+
+| ID | Requirement | Actor | Priority |
+|---|---|---|---|
+| FR-INQ-01 | Public users shall submit contact inquiries from the Contact page | Public | Critical |
+| FR-INQ-02 | The system shall store the inquiry with status `unread` | System | Critical |
+| FR-INQ-03 | The system shall send an acknowledgment email to the user and a notification to the admin | System | High |
+| FR-INQ-04 | Admin shall view all inquiries with status filtering | Admin | Critical |
+| FR-INQ-05 | Admin shall update inquiry status (`unread → read → resolved`) | Admin | High |
+| FR-INQ-06 | Admin shall export all inquiries to a formatted XLSX file | Admin | Medium |
+
+#### 4.1.5 Chatbot Module
+
+| ID | Requirement | Actor | Priority |
+|---|---|---|---|
+| FR-BOT-01 | The chatbot widget shall be visible on all public-facing pages | Public | Critical |
+| FR-BOT-02 | The chatbot shall process text and voice (Web Speech API) input | Public | High |
+| FR-BOT-03 | The chatbot shall respond to greetings, navigation intents, company contact info, company-info KB queries, FAQ queries, product queries, and service queries | System | Critical |
+| FR-BOT-04 | Navigation responses shall trigger a `navigate` action in the frontend to redirect the user | System | High |
+| FR-BOT-05 | Every chatbot interaction shall be logged in the `ChatbotInteraction` collection | System | Medium |
+| FR-BOT-06 | Admin shall view chatbot interaction history in the dashboard | Admin | Medium |
+
+#### 4.1.6 Analytics Module
+
+| ID | Requirement | Actor | Priority |
+|---|---|---|---|
+| FR-ANA-01 | Admin dashboard shall display counts for: total applications, pending applications, total inquiries, unread inquiries, active jobs, products, services, FAQs | Admin | Critical |
+| FR-ANA-02 | Admin dashboard shall display daily trend charts for inquiries and applications over the last 30 days | Admin | High |
+| FR-ANA-03 | Super Admin dashboard shall display all Admin data PLUS total chatbot messages, total admin accounts | Super Admin | Critical |
+| FR-ANA-04 | Super Admin dashboard shall display an "Applications by Role" horizontal bar chart | Super Admin | High |
+| FR-ANA-05 | Super Admin dashboard shall display Application Status and Inquiry Status pie charts | Super Admin | High |
+| FR-ANA-06 | Super Admin dashboard shall display the 10 most recent inquiries and applications as activity feeds | Super Admin | High |
+| FR-ANA-07 | Dashboard data shall auto-refresh every 60 seconds via polling | System | Medium |
 
 ### 4.2 Non-Functional Requirements
-Non-functional requirements specify the quality attributes:
-- **Security**: Robust protection including bcrypt password hashing, JWT authorization, and input sanitization.
-- **Performance**: High-speed performance with API response times < 200ms and smooth 60fps animations.
-- **Responsiveness**: Fully adaptive UI that provides a seamless experience across mobile, tablet, and desktop.
-- **Reliability**: High system uptime with graceful error handling and reliable third-party API integrations.
-- **Scalability**: Architecture designed to handle increasing data volume and traffic without performance degradation.
+
+| Category | Requirement | Target |
+|---|---|---|
+| **Security** | Passwords stored as bcrypt hashes (12 salt rounds) | 100% |
+| **Security** | All admin routes protected by JWT middleware | 100% |
+| **Security** | API inputs validated with express-validator | 100% of write endpoints |
+| **Performance** | API response time for simple CRUD operations | < 200ms |
+| **Performance** | Dashboard aggregate queries (MongoDB aggregation pipeline) | < 500ms |
+| **Performance** | Frontend initial load time (Vite build) | < 2s on 4G |
+| **Responsiveness** | All pages functional on mobile (< 640px) | 100% of pages |
+| **Usability** | Admin panel usable without technical training | Yes |
+| **Reliability** | Email failure shall not block application submission | Graceful degradation |
+| **Scalability** | Architecture supports horizontal scaling | Stateless design |
+| **Availability** | System available 24/7 | 99.9% uptime target |
 
 ### 4.3 Performance Requirements
-Performance is a critical metric for the success of DiPharma. The system uses asynchronous I/O and database indexing to ensure that even complex management tasks remain instantaneous. The frontend utilizes Vite's optimized build process and React's virtual DOM to minimize rendering overhead. Media assets are delivered through Cloudinary's global CDN, ensuring that visual content loads rapidly for users worldwide. These performance standards ensure that DiPharma provides a fluid, professional experience that meets the high expectations of an international pharmaceutical enterprise.
 
-## 5. SYSTEM DEVELOPMENT ENVIRONMENT
+- **API Endpoints:** Standard CRUD endpoints (`GET /products`, `POST /inquiries`) target < 200ms response thanks to MongoDB indexing and async I/O
+- **Analytics Endpoints:** Dashboard aggregation queries (`GET /dashboard/super-admin-stats`) run 12 parallel MongoDB aggregation pipelines and target < 500ms
+- **Frontend Build:** Vite's Rollup bundler with tree-shaking produces optimal bundles, targeting < 200KB gzipped for the initial JS payload
+- **Media Delivery:** All images are served from Cloudinary's global CDN with automatic format conversion (WebP) and responsive sizing
+- **Polling:** RTK Query `pollingInterval: 60000` ensures dashboard data freshness with minimal server load
 
-### 5.1 Introduction to Technologies Used
-The DiPharma development environment is built on a modern, unified JavaScript stack designed for maximum efficiency and scalability. By using a single language across the entire application, the project benefits from shared logic, better maintainability, and a consistent development experience. This industrial-grade environment integrates cutting-edge build tools, state management frameworks, and server-side runtimes to provide a robust foundation for building complex management software.
+---
+
+## 5. SYSTEM DEVELOPMENT ENVIRONMENT & TECHNOLOGY STACK
+
+### 5.1 Overview
+
+DiPharma is built on a unified JavaScript ecosystem — using the same language from the browser to the server to the database query layer. This "JavaScript everywhere" philosophy reduces context-switching, simplifies code sharing, and allows a small team to own the full stack confidently. The key technology choices and their rationale are detailed below.
 
 ### 5.2 Frontend Technologies
-The frontend is engineered with **React 18** and **Vite**, offering a lightning-fast development cycle and a high-performance production build. **Redux Toolkit** and **RTK Query** manage the application's complex state and API interactions, providing automated caching and highly efficient data synchronization. For visual excellence, the system uses **GSAP** and **Framer Motion** for animations, while **Vanilla CSS** ensures maximum control over the premium styling. The **Web Speech API** is also integrated to provide innovative voice-activated chatbot interactions.
+
+#### 5.2.1 React 18 + Vite
+
+React 18 is the UI rendering library. The project uses the **function component** paradigm exclusively, with hooks (`useState`, `useEffect`, `useRef`, `useCallback`) for state and lifecycle management. React Router v6 handles client-side routing, providing a single-page application (SPA) experience with zero full-page reloads.
+
+**Vite** replaces Create React App as the build tool. Vite uses native ES Modules (ESM) during development, delivering near-instant hot module replacement (HMR). The production build uses Rollup under the hood, producing highly optimized, tree-shaken bundles.
+
+```
+Key Vite Benefits:
+- Dev server start: < 300ms (vs CRA's 5–10s)
+- HMR: < 50ms (vs CRA's 1–2s)
+- Production build: optimized code splitting, lazy loading support
+```
+
+#### 5.2.2 Redux Toolkit & RTK Query
+
+**Redux Toolkit (RTK)** provides the global state management layer. The `authSlice.js` manages authentication state (`token`, `role`, `adminData`) and persists it to `localStorage`.
+
+**RTK Query** is an advanced data-fetching and caching library built into Redux Toolkit. All API calls in DiPharma go through RTK Query's `createApi` in `store/api.js`. Key capabilities:
+
+| Feature | Benefit in DiPharma |
+|---|---|
+| Automatic caching | Dashboard data cached and reused without re-fetching |
+| Cache invalidation (`invalidatesTags`) | Creating/updating a product auto-refreshes the product list |
+| Polling (`pollingInterval`) | Super Admin dashboard auto-refreshes every 60 seconds |
+| Mutation lifecycle | Loading/error states handled automatically in UI |
+| `prepareHeaders` | JWT Bearer token injected into every request automatically |
+
+**Tag Types defined in `api.js`:**
+`Products`, `Services`, `Jobs`, `Applications`, `Inquiries`, `FAQs`, `Dashboard`, `SuperAdminDashboard`, `Admins`, `CompanyInfo`
+
+#### 5.2.3 Recharts
+
+The **Recharts** library powers all analytics visualizations on the Super Admin Dashboard. It is built on top of SVG and D3, providing declarative, composable chart components.
+
+Charts used:
+- `<AreaChart>` — Inquiry Trend (last 30 days), Application Trend (last 30 days)
+- `<LineChart>` — Chatbot Interaction Trend (last 30 days)
+- `<BarChart layout="vertical">` — Applications by Role (horizontal bar chart)
+- `<PieChart>` — Application Status Pipeline, Inquiry Status Breakdown
+
+#### 5.2.4 Animation Libraries
+
+- **GSAP (GreenSock):** Used for complex, high-performance timeline animations on the HomePage and AboutPage (scroll-triggered reveals, staggered entrance effects)
+- **Framer Motion:** Used for declarative React component animations (card hover effects, modal transitions, page entrance)
+
+#### 5.2.5 Styling Approach
+
+The project uses **Vanilla CSS** with a modular file-per-component approach (`AdminLayout.css`, `SuperAdminDashboard.css`, `CareerPage.css` etc.). The admin layouts define a comprehensive CSS Custom Properties (variables) system:
+
+```css
+/* Key CSS Variables (AdminLayout.css) */
+--accent: #7c3aed;          /* Purple accent color */
+--bg-base: #0a0b1e;         /* Deep dark background */
+--bg-card: #121330;         /* Card surface color */
+--border-base: rgba(255,255,255,0.07); /* Subtle border */
+--text-primary: #e4e4f8;    /* Primary text */
+--text-muted: #6868a0;      /* Muted/secondary text */
+--radius-lg: 14px;          /* Consistent border radius */
+```
+
+**Google Fonts — Inter** is loaded for the admin interface, providing a premium, highly legible sans-serif typeface consistent with modern dashboard aesthetics.
 
 ### 5.3 Backend Technologies
-The backend is powered by **Node.js** and **Express 5**, providing a highly concurrent and scalable REST API layer. **Mongoose** serves as the ODM, bringing structure and validation to the **MongoDB** database. Critical system functions are managed by specialized middleware, including **Helmet** for security, **CORS** for cross-origin management, and **express-rate-limit** for protection against abuse. **Winston** provides a structured logging system, while **ExcelJS** enables the server-side generation of complex data reports.
 
-### 5.4 Database and APIs
-**MongoDB Atlas** provides the managed cloud database layer, offering global scalability and built-in security features. The project integrates several mission-critical APIs: **Cloudinary** for industrial-grade media management, and **Brevo (SendinBlue)** for dependable transactional email communication. This combination of persistence and external services ensures that DiPharma has the power and flexibility required for enterprise-level pharmaceutical data management.
+#### 5.3.1 Node.js + Express 5
 
-### 5.5 Frameworks and Tools
-The development workflow is supported by a suite of professional tools: **Git** for version control, **Postman** for API design and testing, and **Vite** for optimized frontend bundling. **Lucide React** provides a consistent icon system, and **SweetAlert2** handles polished user alerts. These tools collectively ensure a high level of developer productivity and a polished final product that meets the expectations of modern organizational users.
+**Node.js** provides the server-side JavaScript runtime with an event-driven, non-blocking I/O model. This architecture is ideal for a data-management application like DiPharma, where many concurrent API requests must be handled without thread blocking.
+
+**Express 5** (the latest major version) provides the HTTP routing framework. The project uses ES Module syntax (`import/export`) throughout — enabled by `"type": "module"` in `package.json`. This gives the codebase a consistent modern JavaScript syntax from frontend to backend.
+
+The server is bootstrapped in `server.js`:
+1. Load environment variables (`dotenv.config()`)
+2. Apply global middleware (Helmet, CORS, Rate Limiter, JSON body parser)
+3. Mount all route modules under `/api/v1/`
+4. Register legacy endpoints for backward compatibility
+5. Register the error handler middleware (must be last)
+6. Connect to MongoDB and start listening on `process.env.PORT || 5000`
+
+#### 5.3.2 Mongoose ODM
+
+**Mongoose** is the Object Document Mapper for MongoDB. It provides:
+- **Schema definitions** with type validation, required fields, enums, defaults, and custom validators
+- **Model methods** and **pre-save hooks** (used in `Admin.js` for password hashing)
+- **Indexing** for query performance (`applicationSchema.index({ status: 1 })`)
+- **Aggregation pipeline support** used in `dashboardController.js` for analytics
+
+#### 5.3.3 Security Middleware Stack
+
+| Middleware | Package | Role |
+|---|---|---|
+| CORS | `cors` | Whitelist allowed origins; expose custom headers |
+| Security Headers | `helmet` | Sets X-Frame-Options, X-XSS-Protection, CSP, etc. |
+| Rate Limiting | `express-rate-limit` | General: 100 req/15min; Chatbot: 200 req/15min |
+| JWT Verification | Custom `auth.js` | Verifies Bearer token, attaches `req.admin` |
+| Role Authorization | Custom `auth.js` | Checks `req.admin.role` against allowed roles |
+| Input Validation | `express-validator` | Validates and sanitizes request body fields |
+| Error Handling | Custom `errorHandler.js` | Centralized error formatting and logging |
+
+#### 5.3.4 Multer — File Upload Handling
+
+**Multer** handles `multipart/form-data` requests for resume file uploads. Configuration:
+
+```javascript
+// Resume file filter (PDF and DOCX only)
+fileFilter: (req, file, cb) => {
+  const allowed = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ];
+  cb(null, allowed.includes(file.mimetype));
+}
+// Max file size: 5MB
+limits: { fileSize: 5 * 1024 * 1024 }
+```
+
+After disk-saving the file, the `applicationController` immediately uploads it to Cloudinary and deletes the local copy.
+
+#### 5.3.5 ExcelJS — Report Generation
+
+**ExcelJS** generates `.xlsx` files server-side for both applications and inquiries. The `exportApplicationsExcel` controller streams the workbook directly to the HTTP response:
+
+```javascript
+res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+res.setHeader("Content-Disposition", "attachment; filename=applications.xlsx");
+await workbook.xlsx.write(res);
+res.end();
+```
+
+This streams the file without writing it to disk, ensuring memory-efficient report generation.
+
+#### 5.3.6 Winston — Structured Logging
+
+**Winston** provides a structured, leveled logging system. Log entries include timestamps, severity levels (info, warn, error), and auto-rotate in production environments.
+
+### 5.4 Database — MongoDB Atlas
+
+**MongoDB** is chosen for its document model, which naturally represents the nested structures in DiPharma's data — particularly the `Service` model with embedded `features[]` and `benefits[]` arrays, and the chatbot's flexible message structures.
+
+**MongoDB Atlas** provides:
+- Managed cloud hosting with automatic failover
+- Built-in monitoring and alerts
+- Point-in-time backups
+- Global cluster support for low-latency worldwide access
+- The free M0 tier (512MB) is sufficient for development and early production
+
+### 5.5 Third-Party API Integrations
+
+#### 5.5.1 Cloudinary — Media Management
+
+Cloudinary is a cloud-based media platform used for storing and serving all uploaded images (product images, service hero images, benefit images) and resume files.
+
+**Integration flow:**
+1. Admin uploads an image via the `/api/v1/upload` endpoint
+2. The server calls `cloudinary.uploader.upload(filePath)` via the Cloudinary SDK
+3. Cloudinary stores the file, applies auto-optimization (format detection, CDN delivery)
+4. The returned public URL is stored in the MongoDB document
+
+#### 5.5.2 Brevo (formerly SendinBlue) — Transactional Email
+
+Brevo handles all transactional emails via its REST API (`https://api.brevo.com/v3/smtp/email`). HTML email templates are composed server-side and dispatched via `axios.post()`.
+
+**Email scenarios:**
+| Trigger | Recipients | Content |
+|---|---|---|
+| New job application | HR Admin + Applicant | Application details + resume; Acknowledgment |
+| Application shortlisted | Applicant | Congratulation + next steps |
+| Application rejected | Applicant | Polite rejection |
+| New contact inquiry | Owner + Inquirer | Inquiry details; Acknowledgment |
+
+### 5.6 Development Tools
+
+| Tool | Purpose |
+|---|---|
+| Git | Version control, branching, and history |
+| Postman | API design, manual testing, and collection documentation |
+| VS Code | Primary IDE with ESLint and Prettier |
+| MongoDB Compass | GUI for database inspection during development |
+| npm | Package management for both frontend and backend |
+
+---
 
 ## 6. SYSTEM DESIGN & WORKFLOW DIAGRAMS
 
 ### 6.1 Introduction
-System design is the process of defining the architecture and interactions that govern the DiPharma platform. This phase transformed the functional requirements into a technical blueprint, establishing a clear structural hierarchy and defining the flows that data takes through the system. The following section provides five detailed visual models that represent the core workflows of the project.
 
-### 6.2 System Architecture (3-Tier Model)
-The following diagram illustrates the high-level structural design of the DiPharma system.
+System design transforms functional requirements into a concrete technical blueprint. This section presents the architectural overview and five detailed workflow diagrams representing the core data flows in DiPharma.
+
+### 6.2 System Architecture — 3-Tier Model
 
 ```mermaid
 graph TD
-    subgraph "Client Tier (React Frontend)"
-        UI[User Interface Components]
-        RTK[RTK Query / Redux Store]
-        UI <--> RTK
+    subgraph "Client Tier (React Frontend — Vite)"
+        PUB[Public Pages: Home, About, Services, Products, Career, Contact]
+        ADMIN[Admin Pages: Dashboard, CMS, Applications, Inquiries]
+        SA[Super Admin: Analytics Dashboard, Manage Admins]
+        RTK[RTK Query Store / Redux Auth Slice]
+        PUB & ADMIN & SA <--> RTK
     end
-    
-    subgraph "Logic Tier (Node.js/Express Backend)"
-        API[REST API Handlers]
-        MW[Security Middleware / JWT]
-        SVC[Business Logic / Services]
-        API --> MW
-        MW --> SVC
+
+    subgraph "Logic Tier (Node.js / Express 5)"
+        MW_HELMET[Helmet Security Headers]
+        MW_CORS[CORS Whitelist]
+        MW_RATE[Rate Limiter]
+        MW_JWT[JWT Middleware]
+        MW_RBAC[RBAC Middleware]
+        CTRL[Controllers: Auth, Products, Services, Jobs, Applications, Inquiries, FAQs, Chatbot, CompanyInfo, Dashboard, Upload]
+        SVC[Services: emailService, excelService]
+        MW_HELMET --> MW_CORS --> MW_RATE --> MW_JWT --> MW_RBAC --> CTRL --> SVC
     end
-    
+
     subgraph "Data & Media Tier"
-        DB[(MongoDB Database)]
-        CLD[Cloudinary Media Store]
+        DB[(MongoDB Atlas)]
+        CLD[Cloudinary CDN]
         EML[Brevo Email API]
         SVC <--> DB
-        SVC <--> CLD
+        SVC --> CLD
         SVC --> EML
     end
-    
-    RTK -- "JSON / HTTPS" --> API
+
+    RTK -- "HTTPS JSON / Bearer Token" --> MW_HELMET
 ```
 
-### 6.3 DIAGRAM 1: User Authentication & Security Workflow
-This diagram represents the core security flow for administrators, ensures that sensitive actions are properly authorized.
+### 6.3 Diagram 1 — User Authentication & JWT Lifecycle
 
 ```mermaid
 flowchart TD
-    Start([Login Attempt]) --> Input[User Credentials Input]
-    Input --> Request[POST /api/v1/auth/login]
-    Request --> Val{Backend Validation}
-    Val -- "Incorrect" --> Fail[Error Message / Rate Limit Audit]
-    Fail --> Input
-    Val -- "Correct" --> HashCheck{bcrypt Password Check}
-    HashCheck -- "Mismatch" --> Fail
-    HashCheck -- "Match" --> TokenGen[Generate JWT Access & Refresh Tokens]
-    TokenGen --> Response[Return Tokens + Admin Role]
-    Response --> Storage[Frontend Save to localStorage / Redux]
-    Storage --> Dashboard[Redirect to Authorized Dashboard]
-    Dashboard --> AuthRequest[Subsequent API Call with Bearer Token]
-    AuthRequest --> JWTVerify{JWT Middleware Verification}
-    JWTVerify -- "Invalid/Expired" --> Logout[Force Logout / 401]
-    JWTVerify -- "Valid" --> RoleCheck{RBAC Middleware Check}
-    RoleCheck -- "Unauthorized" --> 403[Return Forbidden Access]
-    RoleCheck -- "Authorized" --> Execute[Perform Administrative Action]
+    Start([Login Page]) --> Input[Enter email + password]
+    Input --> Request["POST /api/v1/admin/login or /super-admin/login"]
+    Request --> Validate{Backend: email exists?}
+    Validate -- No --> Err1[401: Invalid credentials]
+    Validate -- Yes --> HashCheck{bcrypt.compare password}
+    HashCheck -- Mismatch --> Err1
+    HashCheck -- Match --> Tokens["Generate accessToken (24h) + refreshToken (7d)"]
+    Tokens --> Store["Frontend: localStorage.setItem(token, role)"]
+    Store --> Redux["Redux authSlice: setToken + setRole"]
+    Redux --> Redirect[Navigate to /admin/dashboard or /super-admin/dashboard]
+    Redirect --> API["Subsequent API calls: Authorization: Bearer token"]
+    API --> JWTMiddleware{verifyJWT middleware}
+    JWTMiddleware -- expired --> Refresh[Auto-refresh via refreshToken]
+    Refresh -- fails --> Logout[Clear localStorage, redirect to login]
+    JWTMiddleware -- invalid --> Err2[401: Invalid token]
+    JWTMiddleware -- valid --> RBAC{authorizeRoles check}
+    RBAC -- forbidden --> Err3[403: Forbidden]
+    RBAC -- authorized --> Controller[Execute business logic]
 ```
 
-### 6.4 DIAGRAM 2: Contact Inquiry & Automated Notification Workflow
-This diagram illustrates how the system processes public stakeholder inquiries and ensures timely communication.
+### 6.4 Diagram 2 — Contact Inquiry Submission Flow
 
 ```mermaid
 sequenceDiagram
-    participant User as Public Website Visitor
-    participant Frontend as Website UI (React)
-    participant Backend as API Controller (Node.js)
-    participant Database as MongoDB
-    participant Brevo as Brevo Email Service
+    participant User as Public Visitor
+    participant React as React Frontend
+    participant Express as Express API
+    participant MongoDB as MongoDB Atlas
+    participant Brevo as Brevo Email API
 
-    User->>Frontend: Fills Contact Form and Clicks 'Submit'
-    Frontend->>Frontend: Perform Client-Side Validation
-    Frontend->>Backend: HTTP POST /api/v1/inquiries
-    Backend->>Backend: Sanitize and Validate Request Body
-    Backend->>Database: Save Inquiry with 'unread' status
-    Backend->>Brevo: POST Request to Send Notifications
-    Brevo->>User: Sends Inquiry Acknowledgment Email
-    Brevo->>Backend: Success Receipt
-    Backend-->>Frontend: Returns 201 Created (Success JSON)
-    Frontend->>User: Displays "Message Sent Successfully" Alert
+    User->>React: Fill Contact Form (name, email, phone, subject, message)
+    React->>React: Client-side validation (all fields required)
+    React->>Express: POST /api/v1/inquiries {firstName, lastName, email, phone, subject, message}
+    Express->>Express: express-validator: sanitize & validate
+    Express->>MongoDB: Inquiry.create({ ...fields, status: "unread" })
+    MongoDB-->>Express: Saved document with _id
+    Express->>Brevo: POST /v3/smtp/email (owner notification)
+    Express->>Brevo: POST /v3/smtp/email (user acknowledgment)
+    Brevo-->>Express: 201 Accepted (async, non-blocking)
+    Express-->>React: 201 { success: true }
+    React->>User: SweetAlert2: "Message Sent Successfully!"
 ```
 
-### 6.5 DIAGRAM 3: Job Application & Career Portal Workflow
-This diagram tracks the complex flow from a candidate's application to the final administrative review.
+### 6.5 Diagram 3 — Job Application & Recruitment Pipeline
 
 ```mermaid
 flowchart LR
-    subgraph "Public Interface"
-        ViewJobs[Browse Careers] --> Apply[Fill Application Form]
-        Apply --> Upload[Upload Resume File]
+    subgraph "Public Career Portal"
+        Browse[Browse Active Jobs] --> ClickJob[Click Job Card]
+        ClickJob --> AutoFill[Auto-fill 'Job Position' field + scroll + focus]
+        AutoFill --> FillForm[Complete Application Form]
+        FillForm --> Upload[Attach Resume PDF/DOCX]
+        Upload --> Submit["POST /submit-form or /api/v1/applications"]
     end
-    
-    subgraph "Backend Engine"
-        Upload --> Multer[Process Multipart Form Data]
-        Multer --> StoreFile[Save to Local / Cloudinary Storage]
-        StoreFile --> SaveDB[Create Database Entry with Status 'pending']
-        SaveDB --> NotifyHR[Trigger HR Email Notification]
+
+    subgraph "Backend Processing"
+        Submit --> Multer[Multer: parse multipart, validate file type + size]
+        Multer --> Cloudinary[uploadToCloudinary: store resume, get public URL]
+        Cloudinary --> SaveDB["Application.create({ ...fields, resumePath: cloudinaryUrl, status: 'pending' })"]
+        SaveDB --> Email1[sendApplicationNotification to HR]
+        SaveDB --> Email2[sendAcknowledgment to Applicant]
     end
-    
-    subgraph "Admin Management"
-        NotifyHR --> Dashboard[Admin Views Applications Table]
-        Dashboard --> Review[Review Resume and Profile]
-        Review --> UpdateStatus[Update Status to 'shortlisted / rejected']
-        UpdateStatus --> Re-render[Dashboard Updates in Real-time]
+
+    subgraph "Admin Review Pipeline"
+        Email1 --> AdminView[Admin: GET /api/v1/applications]
+        AdminView --> Filter[Filter by status / search]
+        Filter --> UpdateStatus["PATCH /api/v1/applications/:id { status }"]
+        UpdateStatus --> Shortlisted{status === 'shortlisted'?}
+        Shortlisted -- Yes --> Email3[sendShortlistNotification to Applicant]
+        Shortlisted -- No --> Rejected{status === 'rejected'?}
+        Rejected -- Yes --> Email4[sendRejectionNotification to Applicant]
     end
-    
-    Apply -.-> |Error| ViewJobs
-    UpdateStatus --> |Sync| SaveDB
 ```
 
-### 6.6 DIAGRAM 4: Administrative Content Management (CMS) Workflow
-This diagram shows the process by which administrators update the public-facing content of the pharmaceutical company.
+### 6.6 Diagram 4 — CMS Content Management Flow
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Dashboard
-    state Dashboard {
-        [*] --> SelectCategory
-        SelectCategory --> ProductManagement : Select 'Products'
-        SelectCategory --> ServiceManagement : Select 'Services'
-        
-        state ProductManagement {
-            [*] --> FetchList
-            FetchList --> OpenModal : Click 'Add' or 'Edit'
-            OpenModal --> ImageUpload : Prepare Visuals
-            ImageUpload --> SaveCloudinary : Cloud Processing
-            SaveCloudinary --> SaveModel : Save Metadata to DB
-            SaveModel --> UpdateUI : Refresh Admin Grid
+    [*] --> AdminLogin
+    AdminLogin --> Dashboard: JWT verified, role = ADMIN or SUPER_ADMIN
+    Dashboard --> SelectModule
+
+    state SelectModule {
+        [*] --> Products
+        [*] --> Services
+        [*] --> Jobs
+        [*] --> FAQs
+        [*] --> CompanyInfo
+
+        state Products {
+            [*] --> FetchList: GET /api/v1/products
+            FetchList --> ShowGrid: RTK Query caches response
+            ShowGrid --> OpenModal: Click Add / Edit
+            OpenModal --> UploadImage: Admin selects image
+            UploadImage --> Cloudinary: POST /api/v1/upload
+            Cloudinary --> SaveImageURL: Store Cloudinary URL
+            SaveImageURL --> SaveProduct: POST or PUT /api/v1/products
+            SaveProduct --> InvalidateCache: RTK invalidates Products tag
+            InvalidateCache --> ShowGrid: Auto-refetch, public site updated
         }
     }
-    UpdateUI --> PublicView : Real-time Sync (RTK Query Cache invalidation)
-    PublicView --> [*] : Visibility on Official Site
 ```
 
-### 6.7 DIAGRAM 5: Rule-Based Chatbot Decision Logic Workflow
-This diagram details the internal processing logic of the intelligent assistant when a user asks a question.
+### 6.7 Diagram 5 — Chatbot Intent Resolution Pipeline
 
 ```mermaid
 flowchart TD
-    MsgSource[User Message Input] --> Normalize[Lowercase and Trim Input]
-    Normalize --> IntentMatch{Search Intent Keywords}
-    
-    IntentMatch -- "Greeting" --> GreetResponse[Return Welcome Message]
-    IntentMatch -- "Navigation (Career/Products)" --> NavResponse[Return Action: 'navigate' + Target Path]
-    IntentMatch -- "Contact/Appointment" --> NavContact[Navigate to Contact Page]
-    IntentMatch -- "Contact Info" --> ContactResponse[Return Specific Contact Details]
-    IntentMatch -- "Product Search" --> DBQuery[Query MongoDB Products Collection]
-    
-    IntentMatch -- "Other" --> CompanyInfoCheck[Step 3b: Search CompanyInfo Collection]
-    CompanyInfoCheck --> KeywordMatch{Keyword Match?}
-    KeywordMatch -- "Yes" --> CompanyInfoResponse[Return Admin-Curated Answer]
-    KeywordMatch -- "No" --> FuzzyMatch{Fuzzy Question Match?}
-    FuzzyMatch -- "Yes" --> CompanyInfoResponse
-    FuzzyMatch -- "No" --> FAQSearch[Step 4: Query FAQs Collection]
-    
-    FAQSearch --> FAQFound{FAQ Match?}
-    FAQFound -- "Yes" --> FAQResponse[Return FAQ Answer]
-    FAQFound -- "No" --> Fallback[Suggest Manual Search]
-    
-    DBQuery --> SearchFound{Matching Item?}
-    SearchFound -- "Yes" --> ItemResponse[Return Formatted Item Details]
-    SearchFound -- "No" --> CompanyInfoCheck
-    
-    GreetResponse --> Log[Log Interaction to ChatbotInteraction Model]
-    NavResponse --> Log
-    NavContact --> Log
-    ContactResponse --> Log
-    CompanyInfoResponse --> Log
-    FAQResponse --> Log
-    ItemResponse --> Log
-    Fallback --> Log
-    
-    Log --> FinalOutput[Render Bot Message in UI]
+    Input[User types or speaks message] --> Normalize[lowerCase + trim]
+    Normalize --> Step1{Step 1: Greeting?}
+    Step1 -- Yes --> Hello["Return welcome message with capabilities list"]
+    Step1 -- No --> Step2{Step 2: Navigation intent?}
+    Step2 -- Yes --> Nav["Return {reply, action:'navigate', path}"]
+    Step2 -- No --> Step3{Step 3: Hardcoded company info? phone/email}
+    Step3 -- Yes --> Contact[Return phone number or email]
+    Step3 -- No --> Step3b["Step 3b: Query CompanyInfo collection (isActive: true)"]
+    Step3b --> KWMatch{Keyword exact match in entry.keywords[]}
+    KWMatch -- Yes --> CIReply[Return entry.answer]
+    KWMatch -- No --> Fuzzy{Fuzzy score >= 2 against entry.question?}
+    Fuzzy -- Yes --> CIReply
+    Fuzzy -- No --> Step4[Step 4: Query FAQ collection]
+    Step4 --> FAQScore{Best FAQ fuzzy score >= 2?}
+    FAQScore -- Yes --> FAQReply["Return **question**\n\nanswer"]
+    FAQScore -- No --> Step5{Step 5: Product/Service keyword or name match?}
+    Step5 -- Yes --> DBReply[Return product/service details from DB]
+    Step5 -- No --> Step8{Step 8: Help keyword?}
+    Step8 -- Yes --> HelpMsg[Return capabilities list]
+    Step8 -- No --> Step9{Step 9: Thank you?}
+    Step9 -- Yes --> Thanks[Return appreciation message]
+    Step9 -- No --> Fallback[Return generic help menu]
+    CIReply & FAQReply & DBReply & HelpMsg & Thanks & Fallback --> Log["logInteraction() — ChatbotInteraction.create() async"]
+    Hello & Nav & Contact --> Log
 ```
 
-### 6.8 Class Diagram (Describe classes, attributes, relationships)
-For structural completeness, the following class model identifies key data types and their interactions.
+### 6.8 Class Diagram — Data Models
 
 ```mermaid
 classDiagram
-    class AdminModel {
+    class Admin {
         +String name
         +String email
-        +String role
-        +hashPassword()
-        +generateJWT()
+        +String password [bcrypt hashed]
+        +String role [ADMIN | SUPER_ADMIN]
+        +String displayPassword
+        +pre-save: hashPassword()
+        +comparePassword(candidate) bool
+        +generateAccessToken() String
+        +generateRefreshToken() String
     }
-    class ApplicationModel {
-        +String applicantName
-        +String status
-        +String resumePath
-        +updateStatus()
+
+    class Application {
+        +String name
+        +String email
+        +String phone
+        +String countryCode
+        +String role [job title]
+        +String message
+        +String resumePath [Cloudinary URL]
+        +String status [pending|reviewed|shortlisted|rejected]
+        +Date createdAt
+        +Index: status_1, createdAt_-1
     }
-    class ProductModel {
+
+    class Inquiry {
+        +String firstName
+        +String lastName
+        +String email
+        +String phone
+        +String countryCode
+        +String subject
+        +String message
+        +String status [unread|read|resolved]
+        +Date createdAt
+        +Index: status_1, createdAt_-1
+    }
+
+    class Job {
         +String title
-        +String category
+        +String roleFocus
+        +String location
+        +String type [Full Time|Part Time|Contract|Internship]
+        +Boolean isActive
+        +Date createdAt
+    }
+
+    class Product {
+        +String title
+        +String description
+        +String icon
+        +String image [Cloudinary URL]
+        +String cardType [dark|light]
+        +Number order
+        +Boolean isActive
+        +Index: order_1
+    }
+
+    class Service {
+        +String title
+        +String slug [unique]
+        +String shortDescription
+        +String fullDescription
+        +String heroImage
+        +String overviewImage
+        +String featureImage
+        +String benefitImage1
+        +String benefitImage2
+        +Feature[] features
+        +Benefit[] benefits
         +Boolean isActive
     }
-    class JobModel {
-        +String title
-        +String department
-        +Boolean isActive
-    }
-    class FAQModel {
+
+    class FAQ {
         +String question
         +String answer
         +Number order
         +Boolean isActive
+        +Index: order_1
     }
-    class CompanyInfoModel {
-        +String category
-        +String question
+
+    class CompanyInfo {
+        +String category [General|Contact|About|Operations]
         +String[] keywords
+        +String question
         +String answer
         +Boolean isActive
         +Number order
+        +Index: category_1_isActive_1
     }
-    class ChatbotInteractionModel {
-        +String sessionId
+
+    class ChatbotInteraction {
         +String userMessage
-        +String botResponse
-        +String matchedSource
+        +String botReply
+        +String sessionId
+        +Date createdAt
+        +Index: createdAt_-1
     }
-    
-    JobModel "1" -- "0..*" ApplicationModel : attracts
-    CompanyInfoModel "*" -- "1" ChatbotInteractionModel : sources
-    FAQModel "*" -- "1" ChatbotInteractionModel : sources
+
+    Job "1" --> "0..*" Application : has applicants for
+    CompanyInfo "1" --> "0..*" ChatbotInteraction : sources reply for
+    FAQ "1" --> "0..*" ChatbotInteraction : sources reply for
+
+---
+
+## 7. DATABASE DESIGN — DETAILED SCHEMA REFERENCE
+
+### 7.1 Overview
+
+DiPharma uses MongoDB as its database, accessed through Mongoose ODM. MongoDB's document model is ideal for this project because several entities (Services, CompanyInfo) have nested or array-type fields that map naturally to JSON documents but are awkward in relational tables.
+
+All schemas use `{ timestamps: true }`, which automatically adds `createdAt` and `updatedAt` fields managed by Mongoose.
+
+### 7.2 Admin Schema
+
+**Collection:** `admins`  
+**File:** `src/models/Admin.js`
+
+| Field | Type | Constraints | Description |
+|---|---|---|---|
+| `name` | String | required, trim | Display name of the administrator |
+| `email` | String | required, unique, lowercase, trim | Login email (unique index) |
+| `password` | String | required, minlength: 6 | Stored as bcrypt hash (12 salt rounds) |
+| `role` | String | enum: [SUPER_ADMIN, ADMIN], default: ADMIN | Access level |
+| `displayPassword` | String | default: "" | Optional plain-text store for super admin reference |
+| `createdAt` | Date | auto | Timestamp of account creation |
+| `updatedAt` | Date | auto | Timestamp of last modification |
+
+**Schema Methods:**
+- `pre("save")` hook: Automatically hashes `password` before saving if modified
+- `comparePassword(candidatePassword)`: Uses `bcrypt.compare` for login validation
+- `generateAccessToken()`: Signs JWT with `{ id, email, role }` payload, 24h expiry
+- `generateRefreshToken()`: Signs JWT with `{ id }` payload only, 7d expiry
+
+### 7.3 Application Schema
+
+**Collection:** `applications`  
+**File:** `src/models/Application.js`
+
+| Field | Type | Constraints | Description |
+|---|---|---|---|
+| `name` | String | required, trim | Full name of applicant |
+| `email` | String | required, lowercase, trim | Contact email |
+| `phone` | String | required | Contact phone number |
+| `countryCode` | String | default: "+91" | Phone country code |
+| `role` | String | required | Job position applied for |
+| `message` | String | default: "" | Optional cover message |
+| `resumePath` | String | default: "" | Cloudinary URL or local file path |
+| `status` | String | enum: [pending, reviewed, shortlisted, rejected], default: pending | Application pipeline stage |
+| `createdAt` | Date | auto | Submission timestamp |
+
+**Indexes:**
+- `{ status: 1 }` — Enables fast filtering by status in the admin table
+- `{ createdAt: -1 }` — Ensures newest applications appear first in queries
+
+### 7.4 Inquiry Schema
+
+**Collection:** `inquiries`  
+**File:** `src/models/Inquiry.js`
+
+| Field | Type | Constraints | Description |
+|---|---|---|---|
+| `firstName` | String | required, trim | Contact first name |
+| `lastName` | String | required, trim | Contact last name |
+| `email` | String | required, lowercase, trim | Contact email |
+| `phone` | String | required | Contact phone |
+| `countryCode` | String | default: "+91" | Phone country code |
+| `subject` | String | required | Inquiry subject line |
+| `message` | String | required | Full inquiry message body |
+| `status` | String | enum: [unread, read, resolved], default: unread | Admin review state |
+| `createdAt` | Date | auto | Submission timestamp |
+
+**Indexes:**
+- `{ status: 1 }` — Fast status-based filtering
+- `{ createdAt: -1 }` — Newest-first ordering
+
+### 7.5 Job Schema
+
+**Collection:** `jobs`  
+**File:** `src/models/Job.js`
+
+| Field | Type | Constraints | Description |
+|---|---|---|---|
+| `title` | String | required, trim | Job title displayed on career page |
+| `roleFocus` | String | default: "" | Brief description of role responsibilities |
+| `location` | String | default: "" | Office location (e.g., "Chennai, India") |
+| `type` | String | enum: [Full Time, Part Time, Contract, Internship], default: Full Time | Employment type |
+| `isActive` | Boolean | default: true | Controls visibility on public career page |
+| `createdAt` | Date | auto | Creation timestamp |
+
+### 7.6 Product Schema
+
+**Collection:** `products`  
+**File:** `src/models/Product.js`
+
+| Field | Type | Constraints | Description |
+|---|---|---|---|
+| `title` | String | required, trim | Product name |
+| `description` | String | required | Product description |
+| `icon` | String | default: "" | Emoji or icon identifier |
+| `image` | String | default: "" | Cloudinary image URL |
+| `cardType` | String | enum: [dark, light], default: dark | Visual theme of the product card |
+| `order` | Number | default: 0 | Manual display ordering on Products page |
+| `isActive` | Boolean | default: true | Visibility on public Products page |
+
+**Index:** `{ order: 1 }` — Enables sorted retrieval for consistent display ordering.
+
+### 7.7 Service Schema
+
+**Collection:** `services`  
+**File:** `src/models/Service.js`
+
+The Service schema is the most structurally complex, featuring nested sub-documents and multiple image fields for the rich service detail pages.
+
+| Field | Type | Constraints | Description |
+|---|---|---|---|
+| `title` | String | required, trim | Service name |
+| `slug` | String | required, unique, lowercase, trim | URL-friendly identifier (e.g., "contract-manufacturing") |
+| `shortDescription` | String | default: "" | Summary shown in service cards |
+| `fullDescription` | String | default: "" | Detailed description shown on service detail page |
+| `heroImage` | String | default: "" | Full-width banner image URL |
+| `overviewImage` | String | default: "" | Overview section image URL |
+| `featureImage` | String | default: "" | Features section image URL |
+| `benefitImage1` | String | default: "" | First benefits section image |
+| `benefitImage2` | String | default: "" | Second benefits section image |
+| `features` | `[featureSchema]` | array | Embedded feature sub-documents |
+| `benefits` | `[benefitSchema]` | array | Embedded benefit sub-documents |
+| `isActive` | Boolean | default: true | Visibility on public Services page |
+
+**Embedded Sub-schemas (no `_id`):**
+```javascript
+featureSchema: { title: String (required), description: String (default: "") }
+benefitSchema: { title: String (required), description: String (default: "") }
 ```
 
-## 9. SYSTEM TESTING AND IMPLEMENTATION
+### 7.8 FAQ Schema
 
-### 9.1 Introduction
-The Testing and Implementation phase is the final quality assurance gate before the DiPharma system enters a live production environment. Testing ensures that the software is not only functional but also secure and high-performing under real-world conditions. Implementation focuses on the systematic deployment of the application, ensuring that the cloud environment, database, and third-party services are correctly configured for industrial use. Together, these processes guarantee the reliability and professionalism of the pharmaceutical management platform.
+**Collection:** `faqs`  
+**File:** `src/models/FAQ.js`
 
-The testing strategy was expanded to cover all new modules introduced in v2.0:
-- **Unit Testing**: Validation of individual functions, such as the chatbot's intent matching logic, Company Info keyword normalization, and authentication utilities.
-- **Integration Testing**: Ensuring the seamless communication between the Node.js backend and the MongoDB/Cloudinary/Brevo service layers; specifically verifying that the Company Info matching step is correctly prioritized before the FAQ fallback.
-- **Security Testing**: Rigorous evaluation of the JWT lifecycle, CORS preflight headers (including the `x-session-id` custom header), rate-limiting per endpoint, and role-based route protection.
-- **UI/UX Testing**: Cross-device verification that the three-tier responsive layout (mobile card view < 640px, tablet table 640–899px, desktop ≥ 900px) renders correctly across Chrome, Edge, Firefox, and Safari.
-
-## 7. NEW MODULES & ENHANCEMENTS (v2.0)
-
-This section documents all new features and improvements added to the DiPharma platform in the second development cycle.
-
----
-
-### 7.1 Chatbot Infrastructure Fixes
-
-Three structural bugs in the chatbot subsystem were identified and resolved:
-
-| # | Bug | Root Cause | Fix Applied |
+| Field | Type | Constraints | Description |
 |---|---|---|---|
-| 1 | **CORS Preflight Failure** | `x-session-id` custom header was not listed in `allowedHeaders` in `cors.js` | Added `"x-session-id"` to the `allowedHeaders` array |
-| 2 | **RTK Query Header Overwrite** | RTK Query's base `prepareHeaders` was silently overwriting the per-mutation custom header | Moved `sessionId` from a request header into the **request body** |
-| 3 | **Aggressive Rate Limiting** | The global limiter (100 req / 15 min) was too strict for chatbot conversations | Created a dedicated `chatbotLimiter` (200 req / 15 min) applied only to `POST /api/v1/chatbot/message` |
+| `question` | String | required, trim | The FAQ question |
+| `answer` | String | required | The FAQ answer |
+| `order` | Number | default: 0 | Manual display order |
+| `isActive` | Boolean | default: true | Whether served publicly and by chatbot |
 
-**Files modified:** `src/config/cors.js`, `src/middleware/rateLimiter.js`, `src/routes/chatbotRoutes.js`, `src/controllers/chatbotController.js`, `DiPharma_frontend/src/store/api.js`
+**Index:** `{ order: 1 }` — Sorted retrieval for FAQ display and chatbot queries.
+
+### 7.9 CompanyInfo Schema
+
+**Collection:** `companyinfos`  
+**File:** `src/models/CompanyInfo.js`
+
+This schema powers the chatbot's knowledge base — a dedicated collection that allows administrators to feed structured question-answer pairs to the chatbot without polluting the public FAQ section.
+
+| Field | Type | Constraints | Description |
+|---|---|---|---|
+| `category` | String | required, trim | Grouping label: General, Contact, About, Operations |
+| `keywords` | [String] | default: [] | Comma-separated trigger words that activate this entry |
+| `question` | String | required, trim | Canonical question for this knowledge entry |
+| `answer` | String | required, trim | Full response the chatbot returns |
+| `isActive` | Boolean | default: true | Whether entry is served by the chatbot |
+| `order` | Number | default: 0 | Display order in admin table |
+
+**Index:** `{ category: 1, isActive: 1 }` — Compound index for efficient per-category active-entry queries.
+
+### 7.10 ChatbotInteraction Schema
+
+**Collection:** `chatbotinteractions`  
+**File:** `src/models/ChatbotInteraction.js`
+
+Every chatbot message-response pair is logged for analytics and admin review.
+
+| Field | Type | Constraints | Description |
+|---|---|---|---|
+| `userMessage` | String | required | The exact text sent by the user |
+| `botReply` | String | required | The response generated by the chatbot |
+| `sessionId` | String | default: null | Client-generated UUID to group messages in a conversation |
+| `createdAt` | Date | auto | Timestamp of the interaction |
+
+**Index:** `{ createdAt: -1 }` — Newest interactions appear first in admin history view.
 
 ---
 
-### 7.2 Company Info — Chatbot Knowledge Base
+## 8. BACKEND ARCHITECTURE — API & CONTROLLER REFERENCE
 
-A new dedicated module was built to allow administrators to feed structured company knowledge directly to the chatbot without polluting the public FAQ section.
+### 8.1 Server Bootstrap (`server.js`)
 
-#### 7.2.1 Backend Implementation
+The Express application is initialized in `server.js` following this exact middleware registration order (order is critical):
 
-**New MongoDB Model — `CompanyInfo`:**
+```
+1. helmet()                 → Security headers (X-Frame-Options, etc.)
+2. cors(corsOptions)        → CORS whitelist from config/cors.js
+3. generalLimiter           → Rate limit: 100 requests per 15 minutes per IP
+4. express.json()           → Parse JSON bodies up to 10MB
+5. express.urlencoded()     → Parse form-encoded bodies
+6. /uploads static server   → Serve locally-stored resume files
+7. Route modules            → All /api/v1/ routes
+8. errorHandler             → Centralized error formatting (must be last)
+```
 
-| Field | Type | Description |
+**Route Mount Table:**
+
+| Route Prefix | Module |
+|---|---|
+| `/api/v1` | `authRoutes` (login, me, create-admin) |
+| `/api/v1/products` | `productRoutes` |
+| `/api/v1/services` | `serviceRoutes` |
+| `/api/v1/jobs` | `jobRoutes` |
+| `/api/v1/applications` | `applicationRoutes` |
+| `/api/v1/inquiries` | `inquiryRoutes` |
+| `/api/v1/faqs` | `faqRoutes` |
+| `/api/v1/dashboard` | `dashboardRoutes` |
+| `/api/v1/search` | `searchRoutes` |
+| `/api/v1/chatbot` | `chatbotRoutes` |
+| `/api/v1/company-info` | `companyInfoRoutes` |
+| `/api/v1/upload` | `uploadRoutes` |
+| `/submit-form` | Legacy application endpoint |
+| `/api/contact` | Legacy inquiry endpoint |
+
+### 8.2 Authentication Middleware
+
+**`verifyJWT` (src/middleware/auth.js):**
+
+Extracts the Bearer token from `Authorization` header OR from `?token=` query parameter (used for Excel downloads in new browser tabs where headers cannot be set). Verifies the token using `JWT_SECRET`, fetches the admin document, and attaches it to `req.admin`.
+
+**Error responses:**
+- No token: `401 NO_TOKEN`
+- Token expired: `401 TOKEN_EXPIRED`
+- Invalid token / admin not found: `401 INVALID_TOKEN`
+
+**`authorizeRoles(...roles)` (src/middleware/auth.js):**
+
+A higher-order function that returns a middleware. Checks `req.admin.role` against the allowed roles array. If not included, returns `403 FORBIDDEN`.
+
+Usage examples:
+```javascript
+// Only ADMIN and SUPER_ADMIN can access
+router.get("/stats", verifyJWT, authorizeRoles("ADMIN", "SUPER_ADMIN"), getDashboardStats);
+
+// Only SUPER_ADMIN can access
+router.get("/super-admin-stats", verifyJWT, authorizeRoles("SUPER_ADMIN"), getSuperAdminStats);
+```
+
+### 8.3 Complete API Endpoint Reference
+
+#### 8.3.1 Authentication Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/v1/admin/login` | Public | Admin login — returns accessToken + refreshToken + role |
+| POST | `/api/v1/super-admin/login` | Public | Super Admin login |
+| POST | `/api/v1/super-admin/create-admin` | SUPER_ADMIN | Create a new admin account |
+| GET | `/api/v1/super-admin/admins` | SUPER_ADMIN | List all admin accounts |
+| DELETE | `/api/v1/super-admin/admins/:id` | SUPER_ADMIN | Delete an admin account |
+| GET | `/api/v1/auth/me` | Admin+ | Get current authenticated admin profile |
+
+#### 8.3.2 Products Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/v1/products` | Public | List all active products (sorted by order ASC) |
+| GET | `/api/v1/products/:id` | Public | Get single product by ID |
+| POST | `/api/v1/products` | Admin+ | Create new product. Invalidates Products + Dashboard cache |
+| PUT | `/api/v1/products/:id` | Admin+ | Update product. Invalidates Products cache |
+| DELETE | `/api/v1/products/:id` | Admin+ | Delete product. Invalidates Products + Dashboard cache |
+
+#### 8.3.3 Services Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/v1/services` | Public | List all active services (public view, limited fields) |
+| GET | `/api/v1/services/admin/all` | Admin+ | List all services including inactive ones |
+| GET | `/api/v1/services/:slug` | Public | Get service detail by URL slug (populates all image fields + features/benefits arrays) |
+| POST | `/api/v1/services` | Admin+ | Create new service |
+| PUT | `/api/v1/services/:id` | Admin+ | Update service (including nested features/benefits arrays) |
+| DELETE | `/api/v1/services/:id` | Admin+ | Delete service |
+
+#### 8.3.4 Jobs Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/v1/jobs` | Public | List active jobs (`isActive: true`) |
+| GET | `/api/v1/jobs/:id` | Public | Get single job |
+| POST | `/api/v1/jobs` | Admin+ | Create job listing |
+| PUT | `/api/v1/jobs/:id` | Admin+ | Update job listing |
+| DELETE | `/api/v1/jobs/:id` | Admin+ | Delete job listing |
+
+#### 8.3.5 Applications Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/v1/applications` | Public | Submit a job application with resume upload |
+| GET | `/api/v1/applications` | Admin+ | List applications with `?status=` filter and `?page=&limit=` pagination |
+| GET | `/api/v1/applications/:id` | Admin+ | Get single application details |
+| PATCH | `/api/v1/applications/:id` | Admin+ | Update application status; triggers email if shortlisted/rejected |
+| GET | `/api/v1/applications/export/excel` | Admin+ | Download all applications as XLSX file (token via `?token=` query param) |
+
+#### 8.3.6 Inquiries Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/v1/inquiries` | Public | Submit contact inquiry; triggers Brevo emails |
+| GET | `/api/v1/inquiries` | Admin+ | List inquiries with status filter and pagination |
+| PATCH | `/api/v1/inquiries/:id` | Admin+ | Update inquiry status |
+| GET | `/api/v1/inquiries/export/excel` | Admin+ | Download all inquiries as XLSX |
+
+#### 8.3.7 FAQs Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/v1/faqs` | Public | List all active FAQs sorted by order |
+| POST | `/api/v1/faqs` | Admin+ | Create FAQ |
+| PUT | `/api/v1/faqs/:id` | Admin+ | Update FAQ |
+| DELETE | `/api/v1/faqs/:id` | Admin+ | Delete FAQ |
+
+#### 8.3.8 Company Info Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/v1/company-info` | Public | List all active CompanyInfo entries (used by chatbot) |
+| POST | `/api/v1/company-info` | Admin+ | Create new knowledge entry |
+| PUT | `/api/v1/company-info/:id` | Admin+ | Update knowledge entry |
+| DELETE | `/api/v1/company-info/:id` | Admin+ | Delete knowledge entry |
+
+#### 8.3.9 Dashboard Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/v1/dashboard/stats` | Admin+ | Admin dashboard: counts + daily trends for inquiries and applications |
+| GET | `/api/v1/dashboard/super-admin-stats` | SUPER_ADMIN | Super admin: all Admin stats + chatbot stats + role breakdown + recent activity |
+
+#### 8.3.10 Chatbot & Search Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/v1/chatbot/message` | Public | Send a message, receive `{reply, action?, path?}` |
+| GET | `/api/v1/chatbot/history` | Admin+ | View paginated chatbot interaction log |
+| GET | `/api/v1/search?q=` | Public | Full-text search across Products, Services, Jobs, FAQs |
+
+#### 8.3.11 Upload & Manage Admins Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/v1/upload` | Admin+ | Upload image to Cloudinary; returns `{url}` |
+
+### 8.4 Dashboard Controller — Analytics Engine
+
+The `getSuperAdminStats` function in `dashboardController.js` executes **12 MongoDB queries in parallel** using `Promise.all()`:
+
+```javascript
+const [
+  totalInquiries,          // Inquiry.countDocuments()
+  totalApplications,       // Application.countDocuments()
+  totalChatbotMessages,    // ChatbotInteraction.countDocuments()
+  totalAdmins,             // Admin.countDocuments()
+  activeJobs,              // Job.countDocuments({ isActive: true })
+  totalProducts,           // Product.countDocuments({ isActive: true })
+  totalServices,           // Service.countDocuments({ isActive: true })
+  totalFaqs,               // FAQ.countDocuments({ isActive: true })
+  inquiryStatusBreakdown,  // Inquiry.aggregate([{ $group: { _id: "$status", count: {$sum:1} } }])
+  applicationStatusBreakdown, // Application.aggregate([...])
+  applicationRoleBreakdown,   // Application.aggregate([{ $group: { _id: "$role", count: {$sum:1} } }, { $sort: {count:-1} }, { $limit: 10 }])
+  dailyInquiries,          // Inquiry.aggregate: $dateToString → last 30 days
+  dailyApplications,       // Application.aggregate: $dateToString → last 30 days
+  dailyChatbot,            // ChatbotInteraction.aggregate: $dateToString → last 30 days
+  recentInquiries,         // Inquiry.find().sort({createdAt:-1}).limit(10)
+  recentApplications,      // Application.find().sort({createdAt:-1}).limit(10)
+] = await Promise.all([...]);
+```
+
+**`fillDates(data)` helper:** Fills in missing dates in the trend data to ensure every day in the last 30 days has a data point (using 0 for days with no activity). This produces smooth, continuous chart lines.
+
+**`toBreakdown(arr)` helper:** Converts MongoDB aggregation results like `[{_id: "pending", count: 5}]` into a plain object `{pending: 5}` for simpler frontend consumption.
+
+---
+
+
+## 9. FRONTEND ARCHITECTURE — PAGES, COMPONENTS & STATE MANAGEMENT
+
+### 9.1 Application Entry Point
+
+The application bootstraps in `main.jsx`, wrapping `<App />` with a Redux `<Provider>`. The `store.js` configures Redux by combining the `authSlice` reducer with the RTK Query API reducer, and registers RTK Query middleware for cache management.
+
+### 9.2 Routing Architecture (`App.jsx`)
+
+React Router v6 organizes routes into three tiers:
+
+**Tier 1 — Public Routes (`<PublicLayout>`):**
+`<PublicLayout>` renders the shared `<Header>`, `<Footer>`, and floating `<ChatbotIcon>` on every public page.
+
+| Path | Component | Description |
 |---|---|---|
-| `category` | `String` | Grouping label (General, Contact, About, Operations, etc.) |
-| `question` | `String` | The topic or canonical question |
-| `keywords` | `[String]` | Comma-separated trigger words that activate this entry |
-| `answer` | `String` | The full response the chatbot will return |
-| `isActive` | `Boolean` | Whether this entry is currently served by the chatbot |
-| `order` | `Number` | Display order in the admin table |
+| `/` | `HomePage` | Landing page with GSAP animations, stats, and service highlights |
+| `/about` | `AboutPage` | Company history, team, values, and milestone timeline |
+| `/services` | `ServicePage` | Grid of all active services with filter and search |
+| `/services/:slug` | `ServiceDetailPage` | Rich detail page for a single service |
+| `/products` | `ProductsPage` | Grid of all active pharmaceutical products |
+| `/career` | `CareerPage` | Job listings + application form with auto-fill |
+| `/contact` | `ContactPage` | Contact inquiry form |
+| `*` | `NoPageAvailable` | 404 fallback page |
 
-**New API Endpoints (`/api/v1/company-info`):**
+**Tier 2 — Admin Routes (`<ProtectedRoute>` + `<AdminLayout>`):**
+`<ProtectedRoute>` reads from Redux auth state — if no token, redirects to `/admin/login`.
 
-| Method | Route | Auth | Description |
-|---|---|---|---|
-| `GET` | `/` | Public | Returns all active entries |
-| `POST` | `/` | Admin+ | Creates a new entry |
-| `PUT` | `/:id` | Admin+ | Updates an existing entry |
-| `DELETE` | `/:id` | Admin+ | Deletes an entry |
+| Path | Component |
+|---|---|
+| `/admin/dashboard` | `Dashboard` |
+| `/admin/products` | `AdminProducts` |
+| `/admin/services` | `AdminServices` |
+| `/admin/jobs` | `AdminJobs` |
+| `/admin/applications` | `AdminApplications` |
+| `/admin/inquiries` | `AdminInquiries` |
+| `/admin/faqs` | `AdminFAQs` |
+| `/admin/company-info` | `AdminCompanyInfo` |
 
-**Chatbot Matching Priority (updated Step 3b):**
+**Tier 3 — Super Admin Routes (`<ProtectedRoute requiredRole="SUPER_ADMIN">` + `<SuperAdminLayout>`):**
 
-The `chatbotController.js` was updated to query the `CompanyInfo` collection before falling back to FAQs:
+| Path | Component |
+|---|---|
+| `/super-admin/dashboard` | `SuperAdminDashboard` |
+| `/super-admin/manage-admins` | `ManageAdmins` |
+| `/super-admin/products` | `AdminProducts` (shared) |
+| `/super-admin/services, /jobs, /applications, /inquiries, /faqs, /company-info` | Shared admin CMS pages |
 
-```
-Step 1 → Built-in greeting/navigation intents
-Step 2 → Product database search  
-Step 3 → MongoDB Company Info (keyword OR fuzzy question match)  ← NEW
-Step 4 → FAQ fallback
-Step 5 → "I don't know" fallback
-```
+> **Design decision:** CMS pages (Products, Services, etc.) are reused across both admin and super-admin routes. Role separation is enforced at the routing and middleware level, not the component level.
 
-#### 7.2.2 Frontend Implementation
+### 9.3 State Management — Redux Store
 
-- **New Admin Page:** `AdminCompanyInfo.jsx` — full CRUD interface with category filter tabs, a data table with keyword tag chips, and a modal form.
-- **New RTK Query Endpoints:** `useGetCompanyInfoQuery`, `useCreateCompanyInfoMutation`, `useUpdateCompanyInfoMutation`, `useDeleteCompanyInfoMutation` (added to `api.js`).
-- **Routing:** Added routes `/admin/company-info` and `/super-admin/company-info` in `App.jsx`.
-- **Navigation:** Added "🤖 Company Info" nav item to both `AdminLayout.jsx` and `SuperAdminLayout.jsx` sidebars.
+**`authSlice.js`** manages all authentication state:
 
-#### 7.2.3 How to Use
-
-1. Go to **Admin Dashboard → Company Info**.
-2. Click **+ Add Entry** and fill in the category, question, keywords (comma-separated), and answer.
-3. Save. The chatbot will now match any user message containing those keywords and return the configured answer.
-
-> **Example:** Keywords `address, location, where are you` → Answer `"Our headquarters is at 123 Pharma Street, Chennai."`
-
----
-
-### 7.3 Career Page — Job Position Auto-Fill
-
-A UX enhancement was implemented on the `CareerPage.jsx` public page.
-
-**Behaviour:** When a visitor clicks any job listing card (e.g., *"Medical Sales Representative"*), the application:
-1. Automatically scrolls to the contact/application form below.
-2. **Pre-fills** the "Job Position" input field with the exact title of the clicked job.
-3. Focuses the input so the user can immediately continue filling the form.
-
-**Implementation:**
-- Added a `roleFieldRef` (`useRef`) attached to the Job Position `<input>`.
-- Created `handleRoleClick(title)` — sets `formData.role`, clears validation errors, calls `scrollIntoView()`, and focuses the ref.
-- Moved `onClick` handlers from the `<ul>` parent to each individual `<li>` job card, passing the specific role title.
-
-**File modified:** `DiPharma_frontend/src/pages/CareerPage.jsx`
-
----
-
-### 7.4 Admin & Super Admin — 3-Tier Responsive UI Redesign
-
-A complete responsive overhaul was performed on the entire admin and super admin frontend, ensuring a premium experience across all screen sizes.
-
-#### 7.4.1 Design System Upgrade
-
-Both `AdminLayout.css` and `SuperAdminLayout.css` were fully rewritten with:
-- **CSS Custom Properties (variables)** for consistent theming (`--accent`, `--bg-card`, `--border-base`, etc.)
-- **Inter font** (via Google Fonts) replacing the previous Poppins/default fallback
-- **Refined button, badge, and modal styles** with micro-hover animations and box-shadow depth
-
-#### 7.4.2 Responsive Breakpoint Strategy
-
-| Viewport | Width | Sidebar Behavior | Table Behavior |
-|---|---|---|---|
-| **Desktop** | ≥ 900px | Always open, collapsible to 68px icon mode | Full-column tables visible |
-| **Tablet** | 640–899px | Slide-in overlay (☰ toggle), closes on nav click | Horizontal-scroll tables, charts stack 1-col |
-| **Mobile** | < 640px | Slide-in overlay | **Table hidden**, replaced by styled data cards |
-
-#### 7.4.3 Mobile Card System
-
-A new mobile card layout was introduced for all 7 admin data pages. Each record is rendered as a self-contained card with:
-- Title + status badge in the header
-- Key fields as label → value row pairs
-- Action buttons (Edit / Delete / Review) at the card footer
-
-| Admin Page | Desktop Columns | Mobile Card Fields |
+| State Key | Type | Description |
 |---|---|---|
-| Applications | 8 (Name, Email, Phone, Position, Resume, Status, Date, Actions) | Name + Role, Email, Phone, Resume link, Date, Actions |
-| Inquiries | 7 (Name, Email, Subject, Message, Status, Date, Actions) | Name + Subject, Email, Message preview, Date, Actions |
-| Products | 6 (Image, Title, Type, Order, Status, Actions) | Thumbnail + Title, Card type, Order, Actions |
-| Services | 5 (Title, Slug, Features, Status, Actions) | Title + slug, Features count, Actions |
-| Jobs | 5 (Title, Location, Type, Status, Actions) | Title + Location·Type, Actions |
-| FAQs | 4 (Question, Order, Status, Actions) | Question, Order, Actions |
-| Company Info | 5 (Category, Question, Keywords, Status, Actions) | Question + Category, Answer preview, Keywords, Actions |
+| `token` | String | JWT access token |
+| `role` | String | `ADMIN` or `SUPER_ADMIN` |
+| `adminData` | Object | `{name, email, role}` |
 
-#### 7.4.4 Per-Table Min-Widths
+Actions: `setToken`, `setRole`, `setAdminData`, `logout`. All auth state is persisted to `localStorage` for session continuity across browser refreshes.
 
-To ensure no column is ever clipped on tablet, each table has a calibrated minimum width enforced via modifier CSS class:
+**`api.js` — RTK Query** defines all ~40 API endpoints in a single `createApi` instance. The `prepareHeaders` function automatically injects the Bearer token into every request. Cache tags ensure mutations trigger re-fetches of related queries.
 
-```css
-.admin-table--applications { min-width: 960px; }
-.admin-table--inquiries    { min-width: 860px; }
-.admin-table--products     { min-width: 660px; }
-.admin-table--services     { min-width: 620px; }
-.admin-table--jobs         { min-width: 580px; }
-.admin-table--faqs         { min-width: 540px; }
-.admin-table--company      { min-width: 680px; }
+**Cache Invalidation Example:**
+```
+Admin creates a Product
+→ createProduct fires → POST /api/v1/products
+→ invalidatesTags(["Products", "Dashboard"])
+→ RTK auto re-fetches product list + dashboard stats
+→ Public ProductsPage updates on next visit
 ```
 
-**Files modified:** `AdminLayout.css`, `SuperAdminLayout.css`, `AdminLayout.jsx`, `SuperAdminLayout.jsx`, `AdminApplications.jsx`, `AdminInquiries.jsx`, `AdminProducts.jsx`, `AdminServices.jsx`, `AdminJobs.jsx`, `AdminFAQs.jsx`, `AdminCompanyInfo.jsx`
+### 9.4 Public Pages — Detailed Description
+
+#### 9.4.1 HomePage
+Full-viewport hero with GSAP scroll-triggered text reveals, animated stats bar, service preview cards, an interactive SVG globe component, and call-to-action sections directing users to Contact and Career pages.
+
+#### 9.4.2 ServicePage
+Fetches all active services via `useGetServicesQuery`. Renders a filterable, searchable grid of cards. Each card links to `/services/:slug`.
+
+#### 9.4.3 ServiceDetailPage
+Fetches one service using `useGetServiceBySlugQuery(slug)` via `useParams()`. Renders hero image with title overlay, full description, features grid (`service.features[]`), benefits section (`service.benefits[]`), and a sidebar with CTA.
+
+#### 9.4.4 ProductsPage
+Fetches active products ordered by the `order` field. Renders a responsive grid supporting `dark` and `light` card themes as configured by the admin.
+
+#### 9.4.5 CareerPage
+The most interactive public page:
+1. **Job Browse:** `useGetJobsQuery` fetches active jobs. Each `<li>` card has `onClick={() => handleRoleClick(job.title)}`
+2. **Auto-Fill:** `handleRoleClick(title)` sets `formData.role`, clears validation errors, calls `scrollIntoView({ behavior:'smooth' })`, and focuses `roleFieldRef` after a 400ms delay (to allow scroll animation to complete)
+3. **Form Submission:** Multipart form sent to `/submit-form` via `fetch()`. Validates all fields and file type/size client-side before submission
+
+#### 9.4.6 ContactPage
+Collects inquiry data and posts to `/api/contact`. Shows SweetAlert2 success confirmation on completion.
+
+### 9.5 Admin Pages — Detailed Description
+
+#### 9.5.1 Dashboard (`Dashboard.jsx`)
+Uses `useGetDashboardStatsQuery` with 60-second polling. Displays 8 overview stat cards, two 30-day trend Area charts (inquiries, applications), and status Pie charts.
+
+#### 9.5.2 AdminApplications
+Status filter tabs, paginated table with resume download links, `useUpdateApplicationStatusMutation` for status changes. Desktop: 8-column table. Tablet: horizontal scroll. Mobile: card per application.
+
+#### 9.5.3 AdminProducts
+Full CRUD with Cloudinary image upload inside add/edit modal. `cardType` (dark/light) and `order` field controls. SweetAlert2 delete confirmation.
+
+#### 9.5.4 AdminServices
+Most complex admin form — multi-section modal for basic info, 5 image fields (each uploadable to Cloudinary), and dynamic `features[]` / `benefits[]` array builders with add/remove row controls.
+
+#### 9.5.5 AdminCompanyInfo
+Category filter tabs, keyword chips, add/edit modal. Keywords entered as a comma-separated string are split into an array on save.
+
+#### 9.5.6 ManageAdmins (Super Admin only)
+Create/view/delete admin accounts. Uses `useGetAdminsQuery`, `useCreateAdminMutation`, `useDeleteAdminMutation`.
+
+### 9.6 Responsive Design System
+
+**Three-Tier Responsive Strategy:**
+
+| Viewport | Sidebar | Table Behavior |
+|---|---|---|
+| ≥ 900px (Desktop) | Always visible, collapsible to 68px icon mode | Full columns visible |
+| 640–899px (Tablet) | Slide-in overlay (`☰` toggle) | Horizontal scroll with per-table min-widths |
+| < 640px (Mobile) | Slide-in overlay | Table hidden; data cards shown |
+
+**Per-Table Min-Widths:**
+
+| Table | Min-Width |
+|---|---|
+| Applications | 960px |
+| Inquiries | 860px |
+| Products | 660px |
+| Services | 620px |
+| Jobs | 580px |
+| FAQs | 540px |
+| Company Info | 680px |
 
 ---
 
-## 8. UPDATED BACKEND API REFERENCE
+## 10. NEW MODULES & ENHANCEMENTS (v2.0 / v3.0)
 
-### 8.1 Full API Endpoint Table
+### 10.1 Chatbot Infrastructure Fixes (v2.0)
 
-| Module | Method | Endpoint | Auth | Description |
+Three structural bugs were diagnosed and resolved:
+
+**Bug 1 — CORS Preflight Failure:**
+- Cause: `x-session-id` header missing from `allowedHeaders` in `src/config/cors.js`
+- Fix: Added `"x-session-id"` to the CORS `allowedHeaders` array
+
+**Bug 2 — RTK Query Header Overwrite:**
+- Cause: RTK Query's global `prepareHeaders` silently stripped per-mutation custom headers
+- Fix: Moved `sessionId` from request header into the request body; controller reads `req.body.sessionId`
+
+**Bug 3 — Aggressive Rate Limiting:**
+- Cause: Global limiter (100 req/15 min) too restrictive for chatbot conversations
+- Fix: Created dedicated `chatbotLimiter` (200 req/15 min) applied only to `POST /api/v1/chatbot/message`
+
+### 10.2 Company Info — Chatbot Knowledge Base (v2.0)
+
+A dedicated MongoDB collection (`CompanyInfo`) allows admins to feed structured Q&A to the chatbot without polluting the public FAQ.
+
+**Chatbot resolution priority (updated):**
+```
+Step 1  → Greeting response
+Step 2  → Navigation intent (go to contact, show services, etc.)
+Step 3  → Hardcoded company phone/email  
+Step 3b → CompanyInfo collection (keyword exact match → fuzzy match)  ← NEW
+Step 4  → FAQ fuzzy match
+Step 5–7 → Product/Service name or keyword match
+Step 8  → Help intent
+Step 9  → Thank you
+Step 10 → Default fallback
+```
+
+**Frontend additions:** `AdminCompanyInfo.jsx` page, 4 RTK Query endpoints, routes `/admin/company-info` and `/super-admin/company-info`, nav items in both layout sidebars.
+
+### 10.3 Career Page — Job Position Auto-Fill (v2.0)
+
+Clicking a job listing card pre-fills the "Job Position" input, smooth-scrolls to the form, and focuses the input after 400ms (allows scroll to complete). Implemented via `useRef` + `handleRoleClick(title)` pattern. Reduces form abandonment significantly.
+
+### 10.4 Admin & Super Admin Responsive Redesign (v2.0)
+
+Complete CSS redesign using Custom Properties (`--accent`, `--bg-card`, `--border-base`), Inter font (Google Fonts), refined button/badge/modal styles with micro-hover animations, and the full three-tier sidebar + table + card system described in Section 9.6.
+
+---
+
+## 11. SUPER ADMIN ANALYTICS DASHBOARD
+
+### 11.1 Overview
+
+`SuperAdminDashboard.jsx` fetches from `GET /api/v1/dashboard/super-admin-stats` every 60 seconds and visualizes it with **Recharts** (AreaChart, LineChart, BarChart, PieChart).
+
+### 11.2 Dashboard Layout
+
+```
+[ 8 Overview Stat Cards — clickable, navigate to management pages ]
+[ Inquiry Trend (Area) ] [ Application Trend (Area)             ]
+[ App Status Pipeline (Pie) ] [ Chatbot Trend (Line)            ]
+[ Applications by Role (Horizontal Bar) ] [ Inquiry Status Breakdown (Pie) ]
+[ Latest 10 Inquiries feed ] [ Latest 10 Applications feed      ]
+```
+
+### 11.3 Overview Cards
+
+Total Inquiries (📬), Total Applications (📝), Chatbot Messages (🤖), Active Admins (🛡️), Active Jobs (💼), Products (📦), Services (🏥), FAQs (❓). Clicking navigates to the corresponding management page via `useNavigate()`.
+
+### 11.4 Chart Implementations
+
+- **AreaChart (Inquiry/Application Trend):** `dataKey="date"`, `dataKey="count"`. X-axis tick formatter: `formatDate` — extracts `day/month` from ISO string.
+- **PieChart (Application Status):** Derived from `Object.entries(applicationAnalytics.statusBreakdown)`. Donut style with `innerRadius={45}`.
+- **BarChart (Applications by Role):** `layout="vertical"`, `XAxis type="number"`, `YAxis type="category" dataKey="role"`. Top 10 roles by count from MongoDB `$group` aggregation.
+- **LineChart (Chatbot Trend):** `dataKey="count"`, activeDot with radius 5 for hover emphasis.
+
+### 11.5 The "Invalid Date" Bug Fix (v3.0)
+
+**Root cause:** The shared `CustomTooltip` component always called `formatFullDate(label)` on the Recharts `label` prop. For date charts, `label = "2026-03-25"` (valid). For the role BarChart, `label = "Quality Control Analyst"` (a string, not a date) — `new Date("Quality Control Analyst")` = **Invalid Date**.
+
+**Fix — date-guard check in `CustomTooltip`:**
+
+```javascript
+// Before (broken for non-date charts):
+<p>{formatFullDate(label)}</p>
+
+// After (safe for all charts):
+const isDate = label && /^\d{4}-\d{2}-\d{2}/.test(label) && !isNaN(new Date(label).getTime());
+<p>{isDate ? formatFullDate(label) : label}</p>
+```
+
+The regex `/^\d{4}-\d{2}-\d{2}/` confirms the label starts with an ISO date pattern before attempting date formatting. Role name strings like "Quality Control Analyst" fail this test and are rendered as-is.
+
+### 11.6 Recent Activity Feeds
+
+The `recentActivity.inquiries` and `recentActivity.applications` arrays (10 records each, sorted newest-first) are rendered as list items with name, subject/role, color-coded status badge, and formatted date. Status badge colors are applied via CSS class suffix: `.sa-badge-unread`, `.sa-badge-pending`, `.sa-badge-shortlisted` etc.
+
+---
+
+## 12. SECURITY ARCHITECTURE
+
+### 12.1 Defense-in-Depth
+
+DiPharma implements 8 independent security layers. A bypass at any single layer is caught by the next:
+
+```
+Layer 1: HTTPS transport encryption
+Layer 2: CORS origin whitelist
+Layer 3: Helmet security headers (XSS, clickjacking, MIME)
+Layer 4: Rate limiting (general + chatbot-specific)
+Layer 5: Input validation (express-validator)
+Layer 6: JWT verification (verifyJWT middleware)
+Layer 7: RBAC enforcement (authorizeRoles middleware)
+Layer 8: Mongoose schema validation (DB-level constraints)
+```
+
+### 12.2 Authentication — JWT Dual-Token System
+
+| Token | Payload | Secret | Expiry | Use |
 |---|---|---|---|---|
-| Auth | POST | `/api/v1/auth/login` | Public | Admin/SuperAdmin login |
-| Auth | POST | `/api/v1/auth/logout` | Admin | Logout |
-| Products | GET | `/api/v1/products` | Public | List all active products |
-| Products | POST | `/api/v1/products` | Admin | Create product |
-| Products | PUT | `/api/v1/products/:id` | Admin | Update product |
-| Products | DELETE | `/api/v1/products/:id` | Admin | Delete product |
-| Services | GET | `/api/v1/services` | Public | List all active services |
-| Services | GET | `/api/v1/services/:slug` | Public | Service detail by slug |
-| Services | POST/PUT/DELETE | `/api/v1/services/...` | Admin | CRUD operations |
-| Jobs | GET | `/api/v1/jobs` | Public | List active jobs |
-| Jobs | POST/PUT/DELETE | `/api/v1/jobs/...` | Admin | CRUD operations |
-| Applications | GET | `/api/v1/applications` | Admin | List applications |
-| Applications | POST | `/api/v1/applications` | Public | Submit application |
-| Applications | PUT | `/api/v1/applications/:id` | Admin | Update status |
-| Applications | GET | `/api/v1/applications/export/excel` | Admin | Download Excel |
-| Inquiries | GET | `/api/v1/inquiries` | Admin | List inquiries |
-| Inquiries | POST | `/api/v1/inquiries` | Public | Submit inquiry |
-| Inquiries | PUT | `/api/v1/inquiries/:id` | Admin | Update status |
-| Inquiries | GET | `/api/v1/inquiries/export/excel` | Admin | Download Excel |
-| FAQs | GET | `/api/v1/faqs` | Public | List active FAQs |
-| FAQs | POST/PUT/DELETE | `/api/v1/faqs/...` | Admin | CRUD operations |
-| **Company Info** | **GET** | **`/api/v1/company-info`** | **Public** | **List all active entries** |
-| **Company Info** | **POST** | **`/api/v1/company-info`** | **Admin** | **Create entry** |
-| **Company Info** | **PUT** | **`/api/v1/company-info/:id`** | **Admin** | **Update entry** |
-| **Company Info** | **DELETE** | **`/api/v1/company-info/:id`** | **Admin** | **Delete entry** |
-| Chatbot | POST | `/api/v1/chatbot/message` | Public | Send message, get bot reply |
-| Chatbot | GET | `/api/v1/chatbot/history` | Admin | View chat logs |
-| Upload | POST | `/api/v1/upload/image` | Admin | Upload image to Cloudinary |
-| Manage Admins | GET/POST/DELETE | `/api/v1/manage-admins/...` | SuperAdmin | Admin user management |
+| Access Token | `{id, email, role}` | `JWT_SECRET` | 24 hours | Every API request header |
+| Refresh Token | `{id}` only | `JWT_REFRESH_SECRET` | 7 days | Renew expired access token |
+
+On 401 response, the frontend auto-uses the refresh token to get a new access token, then retries. If the refresh token is also expired, the user is logged out and redirected to login.
+
+### 12.3 Password Security
+
+bcryptjs with **salt factor 12** (`2^12 = 4096 iterations`). Automatic hashing via Mongoose `pre("save")` hook that only re-hashes when `this.isModified("password")` is true — preventing double-hashing on unrelated saves.
+
+### 12.4 Role-Based Access Control
+
+| Resource | ADMIN | SUPER_ADMIN |
+|---|---|---|
+| All CMS CRUD | ✅ | ✅ |
+| Dashboard stats (admin) | ✅ | ✅ |
+| Super Admin analytics | ❌ | ✅ |
+| Manage admin accounts | ❌ | ✅ |
+
+Every protected route has explicit `authorizeRoles()`. Super admins must still pass `verifyJWT` first.
+
+### 12.5 Security Headers (Helmet)
+
+| Header | Protection |
+|---|---|
+| `X-Frame-Options: DENY` | Prevents clickjacking |
+| `X-XSS-Protection: 1; mode=block` | Browser XSS filter |
+| `X-Content-Type-Options: nosniff` | Prevents MIME sniffing |
+| `Strict-Transport-Security` | Forces HTTPS |
+| `Cross-Origin-Resource-Policy: cross-origin` | Allows Cloudinary media |
+
+### 12.6 Rate Limiting
+
+| Limiter | Routes | Limit |
+|---|---|---|
+| `generalLimiter` | All `/api/v1/` | 100 req / 15 min / IP |
+| `chatbotLimiter` | `POST /api/v1/chatbot/message` | 200 req / 15 min / IP |
+
+### 12.7 CORS Configuration
+
+Origin whitelist from `FRONTEND_URL` env var + `localhost:5173`. Custom headers explicitly allowed: `Content-Type`, `Authorization`, `x-session-id`. All standard methods allowed including `OPTIONS` for CORS preflight.
 
 ---
 
-## 9. SYSTEM TESTING AND IMPLEMENTATION
+## 13. SYSTEM TESTING & IMPLEMENTATION
 
-### 9.1 Introduction
-The Testing and Implementation phase is the final quality assurance gate before the DiPharma system enters a live production environment. Testing ensures that the software is not only functional but also secure and high-performing under real-world conditions. Implementation focuses on the systematic deployment of the application, ensuring that the cloud environment, database, and third-party services are correctly configured for industrial use. Together, these processes guarantee the reliability and professionalism of the pharmaceutical management platform.
+### 13.1 Testing Strategy
 
-### 9.2 Strategic Approach of Software Testing
-DiPharma employs a multi-tiered testing strategy:
-- **Unit Testing**: Validation of individual functions, such as the chatbot's intent matching logic, Company Info keyword normalization utility, and authentication utilities.
-- **Integration Testing**: Ensuring the seamless communication between the Node.js backend and the MongoDB/Cloudinary/Brevo service layers. Specific tests validate that the Company Info matching step (Step 3b) correctly fires before the FAQ fallback (Step 4).
-- **Security Testing**: Rigorous evaluation of the JWT lifecycle, CORS `allowedHeaders` (including `x-session-id`), per-route rate limiting, and role-based route protection to ensure zero unauthorized access.
-- **UI/UX Testing**: Cross-device verification of the React application to ensure the 3-tier responsive layout renders correctly (mobile cards < 640px, scrollable tables on tablet, full-column tables on desktop).
+| Type | Scope | Tools |
+|---|---|---|
+| Unit | chatbot `matchScore`, `fillDates`, RBAC decorator | Manual + console validation |
+| Integration | API → Controller → Mongoose → MongoDB | Postman collection |
+| Security | JWT lifecycle, CORS headers, rate limiting | Postman + curl |
+| UI/UX | Responsive breakpoints, cross-device rendering | Chrome DevTools + manual |
+| Cross-Browser | Chrome, Edge, Firefox, Safari | Manual browser testing |
+| Regression | After each bug fix | Manual re-verification |
 
-### 9.3 Testing Procedures
-Testing begins with a structured preparation phase where test cases are defined for every requirement in the SRS. This is followed by systematic execution using tools like Postman for API validation and manual browser walkthroughs for the frontend. All identified bugs are logged and prioritized based on their impact. After rectification, regression testing is performed to ensure that new fixes haven't introduced side effects. The final phase is User Acceptance Testing (UAT), ensuring the system fully satisfies the organizational needs and is ready for public and administrative use.
+### 13.2 API Test Cases
 
-## 10. SYSTEM SECURITY
+**Authentication:**
 
-### 10.1 Introduction
-Security is the governing principle of the DiPharma project, ensuring that sensitive data is protected against evolving cyber threats. Given the nature of pharmaceutical management, security is not just a feature but a requirement for compliance and trust. Our approach focuses on multiple layers of protection, encompassing authentication, authorization, and the secure handling of transmitted and stored data.
+| Test | Input | Expected |
+|---|---|---|
+| Valid admin login | `{email, password}` | `200 {accessToken, refreshToken, role}` |
+| Wrong password | `{email, wrongPass}` | `401 INVALID_CREDENTIALS` |
+| No token on protected route | No Authorization header | `401 NO_TOKEN` |
+| Expired token | Old JWT | `401 TOKEN_EXPIRED` |
+| Admin accessing SUPER_ADMIN route | Valid ADMIN token | `403 FORBIDDEN` |
 
-### 10.2 Security in Software
-The system implements industrial-grade security controls:
-- **JWT Authentication**: A robust dual-token system ensuring secure, time-limited access to administrative functions.
-- **Bcrypt Hashing**: Passwords are never stored in clear text but are securely hashed with a high-strength workload.
-- **Role-Based Access Control (RBAC)**: Strict middleware-level enforcement ensures that users only access functionality permitted by their role (Admin vs. Super Admin).
-- **Secure Headers**: Deployment of the Helmet middleware to defend against XSS, clickjacking, and other common browser-based attack vectors.
-- **Input Filtering**: Systematic validation of all API inputs using `express-validator` to prevent NoSQL injection and ensure data quality.
-- **CORS Policy**: Fine-grained CORS configuration with an explicit `allowedHeaders` whitelist (including `x-session-id` for chatbot session tracking) ensuring only trusted origins can call the API.
-- **Per-Route Rate Limiting**: A general limiter (100 req/15 min) protects all standard API routes, while a dedicated chatbot limiter (200 req/15 min) prevents conversation interruptions without compromising security.
+**Application Submission:**
 
-## 11. CONCLUSION & FUTURE ENHANCEMENT
+| Test | Input | Expected |
+|---|---|---|
+| Valid submission with PDF | All fields + PDF | `200 {success: true, data: {id}}` |
+| Missing resume | All fields, no file | `400 MISSING_FILE` |
+| Oversized file | File > 5MB | `400` Multer error |
+| Wrong file type | `.exe` file | `400` Multer fileFilter rejection |
+| PATCH status → shortlisted | Admin PATCH | `200` + shortlist email sent async |
 
-The DiPharma Management System v2.0 is a powerful, modern platform that successfully digitizes the complex operations of a pharmaceutical organization. The second development cycle significantly expanded the platform's capabilities, introducing a structured Company Info knowledge base for the chatbot, a smart Career page with job-position pre-fill, and a comprehensive three-tier responsive redesign of the entire admin and super admin interfaces. These improvements ensure that DiPharma delivers an exceptional experience to both public users and internal administrators across all devices.
+**Dashboard Analytics:**
 
-The platform's architecture remains firmly MERN-lite at its core, now enriched with a more mature CSS design system (CSS custom properties, Inter font, modular mobile card layout), a more intelligent chatbot pipeline (keyword → fuzzy → FAQ matching with admin-curated data), and a cleaner RESTful API surface with dedicated per-resource rate limiting.
+| Test | Expected |
+|---|---|
+| GET super-admin-stats with SUPER_ADMIN token | `200` with 6 analytics sections |
+| GET super-admin-stats with ADMIN token | `403 FORBIDDEN` |
+| Verify `fillDates` output | Exactly 30 `{date, count}` objects |
+| Verify role BarChart tooltip label | Shows "Quality Control Analyst", not "Invalid Date" |
 
-Future enhancements include:
-- **LLM Integration**: Connecting the chatbot to an OpenAI or Google Gemini API so that Company Info entries serve as RAG (Retrieval-Augmented Generation) documents for accurate, generative answers.
-- **E-commerce Engine**: Adding pharmaceutical product ordering and payment processing.
-- **Native Mobile App**: React Native version for on-the-go admin management.
-- **Push Notifications**: Real-time alerts to admins on new applications or inquiries via Web Push or Firebase.
-- **Advanced Analytics**: Role-based exportable report builder with custom date ranges and chart types.
+### 13.3 Chatbot Testing Matrix
 
-These planned developments will ensure that DiPharma remains at the cutting edge of technological innovation, continuing to deliver value and operational excellence in the pharmaceutical industry.
+| Step | Input | Expected Output |
+|---|---|---|
+| Greeting | "hello" | Welcome message with capabilities |
+| Navigation | "take me to contact" | `{action:"navigate", path:"/contact"}` |
+| Phone info | "what is your phone number" | Phone number from COMPANY_INFO |
+| CompanyInfo keyword | Any configured keyword | Configured answer from DB |
+| CompanyInfo fuzzy | Paraphrased question | Best-match answer (score >= 2) |
+| FAQ fuzzy | Similar to FAQ question | FAQ answer (score >= 2) |
+| Product list | "show me your products" | Product list from DB |
+| Help | "what can you do" | Capabilities list |
+| Fallback | "xyz123 meaningless" | Generic help menu |
+
+### 13.4 Responsive Testing Matrix
+
+| Viewport | Device | Assertions |
+|---|---|---|
+| 375px | iPhone 14 | Mobile cards visible, table hidden, overlay sidebar functional |
+| 768px | iPad | Tables visible with horizontal scroll, sidebar overlay |
+| 1440px | Laptop | Full tables, sidebar always open, collapsible to icon mode |
+
+### 13.5 Bug History
+
+| Version | Bug | Fix |
+|---|---|---|
+| v2.0 | CORS preflight blocking chatbot | Added `x-session-id` to `allowedHeaders` |
+| v2.0 | RTK Query dropping chatbot session header | Moved `sessionId` to request body |
+| v2.0 | Rate limiter interrupting chatbot conversations | Dedicated `chatbotLimiter` (200 req/15 min) |
+| v3.0 | "Invalid Date" in role bar chart tooltip | Date-guard regex in `CustomTooltip` |
+
+### 13.6 Deployment Steps
+
+**Backend:**
+1. Configure all environment variables: `MONGODB_URI`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `JWT_EXPIRE`, `JWT_REFRESH_EXPIRE`, `BREVO_API_KEY`, `SENDER_EMAIL`, `OWNER_EMAIL`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `FRONTEND_URL`, `PORT`
+2. `npm install` in `DiPharma_backend/`
+3. `node server.js` (dev) or `pm2 start server.js --name dipharma-api` (production)
+
+**Frontend:**
+1. Set `VITE_API_URL=https://your-backend-url.com`
+2. `npm install` then `npm run build` in `DiPharma_frontend/`
+3. Deploy `dist/` folder to Vercel / Netlify / any static host
+
+**Health Check:** `GET /api/v1/health` → `{success: true, message: "DiPharma API is running", timestamp: "..."}`
+
+---
+
+## 14. CONCLUSION & FUTURE ENHANCEMENTS
+
+### 14.1 Conclusion
+
+The DiPharma Management System v3.0 is a mature, production-ready enterprise platform evolved through three significant development cycles. At its foundation lies a secure, decoupled MERN-lite architecture designed for scalability and maintainability. The system successfully digitizes the complete operational surface of a pharmaceutical organization — from public brand engagement to internal content management, recruitment, inquiry handling, and executive analytics.
+
+The v2.0 enhancements demonstrated the system's adaptability: the CompanyInfo chatbot knowledge base empowered non-technical administrators to act as AI knowledge managers, the Career page auto-fill removed friction from the application flow, and the three-tier responsive redesign brought admin interfaces into the mobile-first era. The v3.0 Super Admin Analytics Dashboard elevated the platform from a management tool to a strategic intelligence system — and the precise bug fix for the "Invalid Date" tooltip proved the development team's commitment to quality at every level of detail.
+
+The system's key strengths:
+- **Functionally complete** — every SRS requirement implemented
+- **Architecturally sound** — decoupled, stateless, horizontally scalable
+- **Visually premium** — animated, responsive, polished across all devices
+- **Analytically powerful** — real-time Recharts dashboards with 12 parallel MongoDB aggregations
+- **Operationally efficient** — automated email workflows, Excel exports, and chatbot self-service
+
+### 14.2 Future Enhancements
+
+**Phase 1 — AI & Intelligence:**
+- **LLM Integration:** Connect chatbot to OpenAI/Gemini API. CompanyInfo and FAQ entries become RAG context documents for generative answers
+- **Sentiment Analysis:** Auto-tag inquiry sentiment for priority routing
+- **Resume Screening:** AI-based scoring of applications against job requirements
+
+**Phase 2 — E-commerce:**
+- Product ordering, Razorpay/Stripe payment gateway, order management dashboard
+
+**Phase 3 — Mobile & Real-time:**
+- React Native mobile app for on-the-go admin access
+- WebSocket/SSE replacing 60-second polling for instant notifications
+- Firebase Cloud Messaging for push notifications
+
+**Phase 4 — Advanced Analytics:**
+- Custom date range report builder
+- Exportable dashboard (PDF/PNG)
+- Conversion funnel analytics (chatbot → inquiry → application)
+- Heatmap integration (Hotjar/Clarity)
+
+**Phase 5 — Platform Maturity:**
+- Multi-language (i18n) support for Tamil, Hindi, regional languages
+- Automated MongoDB Atlas snapshots
+- GitHub Actions CI/CD pipeline
+- Docker Compose configuration for consistent environments
+
+These enhancements will evolve DiPharma from a sophisticated management platform into a comprehensive pharmaceutical enterprise ecosystem — sustaining its technological leadership for years to come.
+
+---
+
+*End of DiPharma Management System Documentation v3.0*  
+*Document maintained by the DiPharma Development Team*  
+*Last Updated: March 2026*
