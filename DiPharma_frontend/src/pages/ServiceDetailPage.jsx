@@ -295,7 +295,7 @@ const ServiceDetailPage = () => {
         </motion.div>
       </section>
 
-      <ContactSection />
+      {/* <ContactSection /> */}
     </div>
   );
 };

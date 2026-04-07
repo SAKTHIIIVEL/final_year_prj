@@ -332,6 +332,75 @@
   transition-delay: 0.25s;
 }
 
+/* Error state — shown when API is unreachable */
+.service-cards-error {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 16px;
+  padding: 60px 20px;
+}
+
+/* Loading skeleton — shimmer pulse shown while DB data is fetching */
+.service-card-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.05) 25%,
+    rgba(255, 255, 255, 0.1)  50%,
+    rgba(255, 255, 255, 0.05) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* Pagination bar — appears when there are more than 5 services in the DB */
+.service-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 36px 0 20px;
+}
+
+.service-pagination-btn {
+  padding: 10px 32px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 15px;
+  font-family: "Poppins", system-ui, sans-serif;
+  cursor: pointer;
+  transition: border-color 0.25s ease, color 0.25s ease, background 0.25s ease;
+  letter-spacing: 0.04em;
+}
+
+.service-pagination-btn:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.75);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.service-pagination-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.service-pagination-counter {
+  font-size: 18px;
+  color: #ffffff;
+  font-weight: 500;
+  min-width: 60px;
+  text-align: center;
+  letter-spacing: 0.06em;
+}
 
 /* community section */
 

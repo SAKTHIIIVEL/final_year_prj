@@ -13,6 +13,7 @@ import diwhole from "../assets/brands/di_whole.png";
 import mj7 from "../assets/brands/mj7.png";
 import indocontent from "../assets/brands/ic7.png";
 import { useNavigate } from "react-router-dom";
+import { useGetServicesQuery } from "../store/api";
 
 // const COUNTRY_RULES = {
 //   "+91": { name: "India", min: 10, max: 10 },
@@ -37,6 +38,22 @@ const ServicePage = () => {
   const infoRef = useRef(null);
   const formRef = useRef(null);
   const navigate = useNavigate();
+
+  // ── Fully-dynamic service cards with pagination ──
+  // All 5 cards on every page come from the database.
+  // While loading, 5 skeleton cards are shown so the layout never goes blank.
+  const CARDS_PER_PAGE = 5;
+  const icons = [syringe, tablet, lab, research, globe];
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const { data: servicesData, isLoading: servicesLoading, isError: servicesError } = useGetServicesQuery();
+  const allServices = servicesData?.data || [];
+  const totalPages = Math.max(1, Math.ceil(allServices.length / CARDS_PER_PAGE));
+  const paginatedServices = allServices.slice(
+    (currentPage - 1) * CARDS_PER_PAGE,
+    currentPage * CARDS_PER_PAGE,
+  );
+  const showPagination = allServices.length > CARDS_PER_PAGE;
 
   // const handleChange = (e) => {
   //   const { name, value } = e.target;
@@ -139,7 +156,8 @@ const ServicePage = () => {
     return () => observer.disconnect();
   }, []);
 
-  //for service cards animation
+  //for service cards animation — re-runs when page changes OR when data finishes loading
+  // Adding servicesLoading ensures real cards get observed after the skeleton → real swap
   useEffect(() => {
     const cards = cardsRef.current.querySelectorAll(".service-card");
 
@@ -149,15 +167,19 @@ const ServicePage = () => {
           entry.target.classList.toggle("in-view", entry.isIntersecting);
         });
       },
-      {
-        threshold: 0.25,
-      },
+      { threshold: 0.25 },
     );
 
-    cards.forEach((card) => observer.observe(card));
+    // If cards section is already in the viewport (initial load after skeleton,
+    // or pagination), add in-view immediately so cards are never invisible.
+    const rect = cardsRef.current.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      cards.forEach((card) => card.classList.add("in-view"));
+    }
 
+    cards.forEach((card) => observer.observe(card));
     return () => observer.disconnect();
-  }, []);
+  }, [currentPage, servicesLoading]); // ← servicesLoading triggers re-observe after data loads
 
   //for community section animation
   useEffect(() => {
@@ -221,110 +243,75 @@ const ServicePage = () => {
         </div>
       </section>
 
-      {/* Services Cards */}
+      {/* Services Cards — fully dynamic from DB */}
       <section className="service-cards-section" ref={cardsRef}>
-        <div
-          className="service-card card-1"
-          onClick={() => navigate("/services/doctor-will")}
-          style={{ cursor: "pointer" }}
-        >
-          <div className="service-card-inner">
-            <div className="service-card-icon-wrapper">
-              <img
-                src={syringe}
-                alt="Service Icon"
-                className="service-card-icon"
-              />
-            </div>
-            <h3 className="service-card-title">Doctor will</h3>
-            <p className="service-card-text">
-              Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt.
-              Vestibulum ante ipsum primis Sed porttitor lectus nibh. Nulla
-              porttitor accumsan tincidunt. Vestibulum ante ipsum primis
+
+        {servicesLoading
+          ? /* Skeleton pulse cards — prevents blank screen while API loads */
+            Array.from({ length: CARDS_PER_PAGE }).map((_, i) => (
+              <div key={i} className={`service-card card-${i + 1} service-card-skeleton`} />
+            ))
+          : servicesError
+          ? /* API error — show a soft message instead of a blank void */
+            <p className="service-cards-error">
+              Unable to load services right now. Please try refreshing the page.
             </p>
-          </div>
-        </div>
-        <div
-          className="service-card card-2"
-          onClick={() => navigate("/services/di-wholesale")}
-          style={{ cursor: "pointer" }}
-        >
-          <div className="service-card-inner">
-            <div className="service-card-icon-wrapper">
-              <img
-                src={tablet}
-                alt="Service Icon"
-                className="service-card-icon"
-              />
-            </div>
-            <h3 className="service-card-title">DI wholeSale</h3>
-            <p className="service-card-text">
-              Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt.
-              Vestibulum ante ipsum primis Sed porttitor lectus nibh. Nulla
-              porttitor accumsan tincidunt. Vestibulum ante ipsum primis
-            </p>
-          </div>
-        </div>
-        <div
-          className="service-card card-3"
-          onClick={() => navigate("/services/di-laboratory")}
-          style={{ cursor: "pointer" }}
-        >
-          <div className="service-card-inner">
-            <div className="service-card-icon-wrapper">
-              <img src={lab} alt="Service Icon" className="service-card-icon" />
-            </div>
-            <h3 className="service-card-title">DI Laboratory services</h3>
-            <p className="service-card-text">
-              Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt.
-              Vestibulum ante ipsum primis Sed porttitor lectus nibh. Nulla
-              porttitor accumsan tincidunt. Vestibulum ante ipsum primis
-            </p>
-          </div>
-        </div>
-        <div
-          className="service-card card-4"
-          onClick={() => navigate("/services/di-research")}
-          style={{ cursor: "pointer" }}
-        >
-          <div className="service-card-inner">
-            <div className="service-card-icon-wrapper">
-              <img
-                src={research}
-                alt="Service Icon"
-                className="service-card-icon"
-              />
-            </div>
-            <h3 className="service-card-title">Di Research</h3>
-            <p className="service-card-text">
-              Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt.
-              Vestibulum ante ipsum primis Sed porttitor lectus nibh. Nulla
-              porttitor accumsan tincidunt. Vestibulum ante ipsum primis
-            </p>
-          </div>
-        </div>
-        <div
-          className="service-card card-5"
-          onClick={() => navigate("/services/indocontinental-7")}
-          style={{ cursor: "pointer" }}
-        >
-          <div className="service-card-inner">
-            <div className="service-card-icon-wrapper">
-              <img
-                src={globe}
-                alt="Service Icon"
-                className="service-card-icon"
-              />
-            </div>
-            <h3 className="service-card-title">Indocontinental 7</h3>
-            <p className="service-card-text">
-              Sed porttitor lectus nibh. Nulla porttitor accumsan tincidunt.
-              Vestibulum ante ipsum primis Sed porttitor lectus nibh. Nulla
-              porttitor accumsan tincidunt. Vestibulum ante ipsum primis
-            </p>
-          </div>
-        </div>
+          : paginatedServices.map((service, i) => {
+              const globalIndex = (currentPage - 1) * CARDS_PER_PAGE + i;
+              return (
+                <div
+                  key={service._id}
+                  className={`service-card card-${i + 1}`}
+                  onClick={() => navigate(`/services/${service.slug}`)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <div className="service-card-inner">
+                    <div className="service-card-icon-wrapper">
+                      <img
+                        src={icons[globalIndex % icons.length]}
+                        alt="Service Icon"
+                        className="service-card-icon"
+                      />
+                    </div>
+                    <h3 className="service-card-title">{service.title}</h3>
+                    <p className="service-card-text">
+                      {service.shortDescription || "Click to learn more about this service."}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+
       </section>
+
+      {/* Pagination — appears when there are more than 5 services in the DB */}
+      {!servicesLoading && showPagination && (
+        <div className="service-pagination">
+          <button
+            className="service-pagination-btn"
+            onClick={() => {
+              setCurrentPage((p) => p - 1);
+              cardsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          <span className="service-pagination-counter">
+            {currentPage} / {totalPages}
+          </span>
+          <button
+            className="service-pagination-btn"
+            onClick={() => {
+              setCurrentPage((p) => p + 1);
+              cardsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )}
 
       {/* Stats & Community Section */}
       <section
