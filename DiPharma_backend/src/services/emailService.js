@@ -27,7 +27,35 @@ export const sendApplicationNotification = async ({ name, email, phone, countryC
     to: process.env.OWNER_EMAIL,
     subject: `New Job Application - ${role}`,
     senderName: "Career Portal",
-    htmlContent: `<h3>New Job Application</h3><p><b>Name:</b> ${name}</p><p><b>Email:</b> ${email}</p><p><b>Phone:</b> ${countryCode} ${phone}</p><p><b>Job Position:</b> ${role}</p><p><b>Message:</b><br/>${message}</p>`,
+    htmlContent: `
+      <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #0d0f36; color: #e4e4f8; padding: 32px; border-radius: 16px;">
+        
+        <h2 style="color: #4846ff; margin-top: 0;">New Job Application 🚀</h2>
+
+        <p>A new candidate has applied for a position.</p>
+
+        <div style="background: rgba(72, 70, 255, 0.1); border: 1px solid rgba(72, 70, 255, 0.3); border-radius: 12px; padding: 20px; margin: 20px 0;">
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${countryCode} ${phone}</p>
+          <p><strong>Position:</strong> ${role}</p>
+        </div>
+
+        <div style="margin-top: 16px;">
+          <p><strong>Message:</strong></p>
+          <p style="color:#cfcff5;">${message}</p>
+        </div>
+
+        ${
+          fileBase64
+            ? `<p style="margin-top:20px;">📎 Resume attached with this email.</p>`
+            : ""
+        }
+
+        <br/>
+        <p>Regards,<br/><strong>Career Portal System</strong></p>
+      </div>
+    `,
     attachments: fileBase64 ? [{ content: fileBase64, name: fileName }] : [],
   });
 
@@ -35,7 +63,28 @@ export const sendApplicationNotification = async ({ name, email, phone, countryC
     to: email,
     subject: "Application Received",
     senderName: "HR Team",
-    htmlContent: `<p>Hi ${name},</p><p>Thank you for applying for the <b>${role}</b> position.</p><p>We have received your application and will get back to you shortly.</p><br/><p>Best regards,<br/>HR Team</p>`,
+    htmlContent: `
+      <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #0d0f36; color: #e4e4f8; padding: 32px; border-radius: 16px;">
+        
+        <h2 style="color: #4846ff; margin-top: 0;">Application Received ✅</h2>
+
+        <p>Hi <strong>${name}</strong>,</p>
+
+        <p>Thank you for applying for the <strong>${role}</strong> position.</p>
+
+        <div style="background: rgba(72, 70, 255, 0.1); border: 1px solid rgba(72, 70, 255, 0.3); border-radius: 12px; padding: 20px; margin: 20px 0;">
+          <p>We’ve successfully received your application.</p>
+          <p>Our HR team will review your profile and contact you shortly.</p>
+        </div>
+
+        <p style="color: #a3a3c2; font-size: 13px;">
+          Please keep an eye on your email for further updates.
+        </p>
+
+        <br/>
+        <p>Best regards,<br/><strong>HR Team</strong></p>
+      </div>
+    `,
   });
 };
 
@@ -44,14 +93,59 @@ export const sendContactNotification = async ({ firstName, lastName, email, phon
     to: process.env.OWNER_EMAIL,
     subject: `New Contact Message: ${subject}`,
     senderName: "Website Contact Form",
-    htmlContent: `<h3>New Contact Form Submission</h3><p><b>Name:</b> ${firstName} ${lastName}</p><p><b>Email:</b> ${email}</p><p><b>Phone:</b> ${countryCode} ${phone}</p><p><b>Subject:</b> ${subject}</p><p><b>Message:</b><br/>${message}</p>`,
+    htmlContent: `
+      <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #0d0f36; color: #e4e4f8; padding: 32px; border-radius: 16px;">
+        
+        <h2 style="color: #4846ff; margin-top: 0;">New Contact Message 📩</h2>
+
+        <p>You have received a new message from your website.</p>
+
+        <div style="background: rgba(72, 70, 255, 0.1); border: 1px solid rgba(72, 70, 255, 0.3); border-radius: 12px; padding: 20px; margin: 20px 0;">
+          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${countryCode} ${phone}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+        </div>
+
+        <div>
+          <p><strong>Message:</strong></p>
+          <p style="color:#cfcff5;">${message}</p>
+        </div>
+
+        <br/>
+        <p>Regards,<br/><strong>Website System</strong></p>
+      </div>
+    `,
   });
 
   await sendEmail({
     to: email,
     subject: "We received your message",
     senderName: "Support Team",
-    htmlContent: `<p>Hi ${firstName},</p><p>Thank you for contacting us.</p><p>We've received your message regarding <b>${subject}</b> and will get back to you shortly.</p><br/><p>Best regards,<br/>Support Team</p>`,
+    htmlContent: `
+      <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #0d0f36; color: #e4e4f8; padding: 32px; border-radius: 16px;">
+        
+        <h2 style="color: #4846ff; margin-top: 0;">Message Received 💬</h2>
+
+        <p>Hi <strong>${firstName}</strong>,</p>
+
+        <p>Thank you for contacting us.</p>
+
+        <div style="background: rgba(72, 70, 255, 0.1); border: 1px solid rgba(72, 70, 255, 0.3); border-radius: 12px; padding: 20px; margin: 20px 0;">
+          <p>We’ve received your message regarding:</p>
+          <p><strong>"${subject}"</strong></p>
+        </div>
+
+        <p>Our support team will get back to you shortly.</p>
+
+        <p style="color: #a3a3c2; font-size: 13px;">
+          If your query is urgent, feel free to reach out again.
+        </p>
+
+        <br/>
+        <p>Best regards,<br/><strong>Support Team</strong></p>
+      </div>
+    `,
   });
 };
 
