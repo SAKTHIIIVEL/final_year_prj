@@ -74,7 +74,7 @@ export const updateCompanyInfo = async (req, res) => {
         isActive,
         order,
       },
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
 
     if (!entry) return res.status(404).json({ success: false, error: "Entry not found." });

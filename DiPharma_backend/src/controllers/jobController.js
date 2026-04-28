@@ -24,7 +24,7 @@ export const createJob = async (req, res, next) => {
 
 export const updateJob = async (req, res, next) => {
   try {
-    const job = await Job.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const job = await Job.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
     if (!job) return res.status(404).json({ success: false, error: { code: "NOT_FOUND", message: "Job not found" } });
     res.json({ success: true, data: job });
   } catch (error) { next(error); }

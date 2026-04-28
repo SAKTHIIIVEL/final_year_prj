@@ -58,7 +58,7 @@ export const updateApplicationStatus = async (req, res, next) => {
     const application = await Application.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true, runValidators: true }
+      { returnDocument: 'after', runValidators: true }
     );
     if (!application) return res.status(404).json({ success: false, error: { code: "NOT_FOUND", message: "Application not found" } });
 

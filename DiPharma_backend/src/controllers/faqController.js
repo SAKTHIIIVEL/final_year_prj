@@ -16,7 +16,7 @@ export const createFAQ = async (req, res, next) => {
 
 export const updateFAQ = async (req, res, next) => {
   try {
-    const faq = await FAQ.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const faq = await FAQ.findByIdAndUpdate(req.params.id, req.body, { returnDocument: 'after', runValidators: true });
     if (!faq) return res.status(404).json({ success: false, error: { code: "NOT_FOUND", message: "FAQ not found" } });
     res.json({ success: true, data: faq });
   } catch (error) { next(error); }

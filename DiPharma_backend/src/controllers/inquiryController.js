@@ -34,7 +34,7 @@ export const getInquiries = async (req, res, next) => {
 export const updateInquiryStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
-    const inquiry = await Inquiry.findByIdAndUpdate(req.params.id, { status }, { new: true, runValidators: true });
+    const inquiry = await Inquiry.findByIdAndUpdate(req.params.id, { status }, { returnDocument: 'after', runValidators: true });
     if (!inquiry) return res.status(404).json({ success: false, error: { code: "NOT_FOUND", message: "Inquiry not found" } });
     res.json({ success: true, data: inquiry });
   } catch (error) { next(error); }
